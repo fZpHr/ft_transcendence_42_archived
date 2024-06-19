@@ -1,6 +1,6 @@
 services:
   portainer:
-    build: requirements/portainer/.
+    build: portainer/.
     container_name: portainer
     ports:
       - "8000:8000"
@@ -10,6 +10,41 @@ services:
       - portainer_data:/data
     networks:
       transcendence:
+
+  adminer:
+    build: adminer/.
+    container_name: adminer
+    ports:
+      - "9000"
+    networks:
+      transcendence:
+
+  nginx:
+    build: nginx/.
+    container_name: nginx
+    depends_on:
+      - adminer
+    ports:
+      - "443:443"
+    env_file:
+      - .env
+    networks:
+      transcendence:
+
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=trans_user
+      - POSTGRES_PASSWORD=slt
+      - POSTGRES_DB=trans_db
+    networks:
+      transcendence:
+
+
 volumes:
   portainer_data:
 
