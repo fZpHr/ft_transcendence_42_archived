@@ -1,0 +1,56 @@
+/* button_styles.css */
+.form-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form-btn button {
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 50px;
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+}
+
+.form-btn button:hover {
+    background-color: var(--text-color);
+    color: var(--to-teal-4-rgba);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.connexion-btn-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.connexion-btn {
+    border-radius: 15px;
+    background-color: var(--to-teal-2-rgba);
+    padding: 5px 30px;
+    color: var(--text-color);
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: ease-in-out 0.3s;
+}
+
+.connexion-btn img {
+    width: 30px;
+    margin-right: 10px;
+    height: auto;
+}
+
+.connexion-btn:hover {
+    box-shadow: 0 2px 5px rgba(0.1, 0.1, 0.1, 0.9);
+    padding: 8px 33px;
+}

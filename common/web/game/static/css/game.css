@@ -1,0 +1,11 @@
+.warp-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--to-teal-2-rgba);
+}
+
+canvas {
+    border: 1px solid white;
+}

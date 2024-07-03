@@ -1,0 +1,291 @@
+.box-profil {
+    width: 50vw;
+    padding: 20px;
+    transform: translateY(-45%);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.avatars {
+    width: 30%;
+    padding-bottom: 30%;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+}
+
+.avatars img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.box-profil .avatars .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.box-profil .avatars:hover .overlay {
+    opacity: 1;
+}
+
+.box-profil .overlay label {
+    color: white;
+    cursor: pointer;
+    font-size: 50px;
+}
+
+.user-info {
+    flex: 1;
+    color: var(--text-color);
+    padding: 10px;
+    box-sizing: border-box;
+    margin-top: 100px;
+}
+
+.username-container {
+    display: flex;
+    align-items: center;
+}
+
+.user_data {
+    display: flex;
+    width: 50%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.user-info h1 {
+    margin: 0;
+    font-size: 3rem;
+    display: inline;
+}
+
+.edit-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    margin-left: 30px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline;
+}
+
+.user-info p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+
+/* EDIT PANEL */
+
+.edit-panel {
+    position: fixed;
+    left: -100%;
+    top: 0%;
+    width: 300px;
+    height: 100%;
+    background-color: var(--to-teal-2-rgba);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: left 0.3s ease;
+    padding: 20px;
+    z-index: 1000;
+    color: var(--text-color);
+}
+
+.edit-panel.active {
+    left: 0;
+}
+
+.top-panel {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.bot-panel {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.line-edit-profil {
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    margin-bottom: 20px;
+}
+
+.valid-indicator {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.warp-input {
+    position: relative;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.warp-input input {
+    width: calc(100% - 40px);
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    background: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    color: var(--text-color);
+}
+
+.input-label {
+    position: absolute;
+    top: -15px;
+    left: 0px;
+    transform: translateY(-50%);
+    padding: 0 5px;
+    color: var(--text-color);
+    font-size: 15px;
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+.form-btn {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.form-btn button {
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+}
+
+.form-btn button:hover {
+    background-color: var(--text-color);
+    color: var(--to-teal-4-rgba);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.valid-indicator {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.warp-input input:focus+.input-label+.valid-indicator,
+.warp-input input.filled+.input-label+.valid-indicator {
+    opacity: 1;
+}
+
+.valid-indicator i {
+    font-size: 16px;
+}
+
+.valid {
+    color: #00cc00;
+}
+
+.invalid {
+    color: #cc0000;
+}
+
+
+#edit-password-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+#edit-password-container button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+#edit-password-panel {
+    position: fixed;
+    left: 0%;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background-color: var(--to-teal-2-rgba);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: left 0.3s ease;
+    padding: 20px;
+    z-index: 1000;
+    color: var(--text-color);
+    display: none;
+}
+
+#edit-password-panel.active {
+    display: block;
+}
+
+#edit-password-btn {
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+}
+
+#edit-password-btn:hover {
+    background-color: var(--text-color);
+    color: var(--to-teal-2-rgba);
+}

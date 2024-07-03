@@ -1,0 +1,8 @@
+xpack.security.enabled: true
+xpack.encryptedSavedObjects.encryptionKey: ${KIBANA_ENCRYPTION_KEY}
+monitoring.ui.container.elasticsearch.enabled: true
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "elastic"
+elasticsearch.password: ${ELASTIC_PASSWORD}
+server.host: "0.0.0.0"
+server.port: 5601

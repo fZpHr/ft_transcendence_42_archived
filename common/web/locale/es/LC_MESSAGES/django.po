@@ -1,0 +1,82 @@
+# ALGÚN TÍTULO DESCRIPTIVO.
+# Copyright (C) AÑO TITULAR DE LOS DERECHOS DE AUTOR DEL PAQUETE
+# Este archivo se distribuye bajo la misma licencia que el paquete PACKAGE.
+# PRIMER AUTOR <EMAIL@ADDRESS>, AÑO.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: VERSIÓN DEL PAQUETE\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 05:35+0200\n"
+"PO-Revision-Date: AÑO-MO-DI HO:MI+ZONE\n"
+"Last-Translator: NOMBRE COMPLETO <EMAIL@ADDRESS>\n"
+"Language-Team: IDIOMA <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#: global_templates/footer.html:10
+msgid "À propos"
+msgstr "Sobre nosotros"
+
+#: global_templates/footer.html:12
+msgid ""
+"\n"
+"                    Le projet Transcendence est un projet de l'école 42. "
+"L'objectif est de développer un jeu PONG et d'intégrer différents modules "
+"pour le rendre plus intéressant.\n"
+"                    "
+msgstr ""
+"\n"
+"                    El proyecto Transcendence es un proyecto de la escuela "
+"42. El objetivo es desarrollar un juego PONG e integrar diferentes módulos "
+"para hacerlo más interesante.\n"
+"                    "
+
+#: global_templates/footer.html:17
+msgid "Politique de confidentialité"
+msgstr "Política de privacidad"
+
+#: global_templates/footer.html:21
+msgid "Liens rapides"
+msgstr "Enlaces rápidos"
+
+#: global_templates/footer.html:23 global_templates/header.html:12
+msgid "Accueil"
+msgstr "Inicio"
+
+#: global_templates/footer.html:24 global_templates/header.html:22
+msgid "Profil"
+msgstr "Perfil"
+
+#: global_templates/footer.html:25
+msgid "Contact"
+msgstr "Contacto"
+
+#: global_templates/footer.html:29
+msgid "Contactez-nous"
+msgstr "Contáctenos"
+
+#: global_templates/footer.html:40
+msgid "Tous droits réservés."
+msgstr "Todos los derechos reservados."
+
+#: global_templates/header.html:15
+msgid "leaderboard"
+msgstr ""
+
+#: global_templates/header.html:19
+msgid "Play"
+msgstr "Jugar"
+
+#: global_templates/header.html:25
+msgid "LogOut"
+msgstr "Cerrar sesión"
+
+#: global_templates/header.html:29
+msgid "Login"
+msgstr "Iniciar sesión"

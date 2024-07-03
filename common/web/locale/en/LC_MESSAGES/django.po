@@ -1,0 +1,81 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 05:35+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: global_templates/footer.html:10
+msgid "À propos"
+msgstr "About"
+
+#: global_templates/footer.html:12
+msgid ""
+"\n"
+"                    Le projet Transcendence est un projet de l'école 42. "
+"L'objectif est de développer un jeu PONG et d'intégrer différents modules "
+"pour le rendre plus intéressant.\n"
+"                    "
+msgstr ""
+"\n"
+"                    The Transcendence project is a project by school 42. The "
+"goal is to develop a PONG game and integrate different modules to make it "
+"more interesting.\n"
+"                    "
+
+#: global_templates/footer.html:17
+msgid "Politique de confidentialité"
+msgstr "Privacy Policy"
+
+#: global_templates/footer.html:21
+msgid "Liens rapides"
+msgstr "Quick Links"
+
+#: global_templates/footer.html:23 global_templates/header.html:12
+msgid "Accueil"
+msgstr "Home"
+
+#: global_templates/footer.html:24 global_templates/header.html:22
+msgid "Profil"
+msgstr "Profile"
+
+#: global_templates/footer.html:25
+msgid "Contact"
+msgstr "Contact"
+
+#: global_templates/footer.html:29
+msgid "Contactez-nous"
+msgstr "Contact Us"
+
+#: global_templates/footer.html:40
+msgid "Tous droits réservés."
+msgstr "All rights reserved."
+
+#: global_templates/header.html:15
+msgid "leaderboard"
+msgstr ""
+
+#: global_templates/header.html:19
+msgid "Play"
+msgstr "Play"
+
+#: global_templates/header.html:25
+msgid "LogOut"
+msgstr "Log Out"
+
+#: global_templates/header.html:29
+msgid "Login"
+msgstr "Login"

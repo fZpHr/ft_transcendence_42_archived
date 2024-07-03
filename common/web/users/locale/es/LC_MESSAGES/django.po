@@ -1,0 +1,139 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 05:35+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#: users/templates/login/login_form.html:9
+#: users/templates/login/register_form.html:12
+msgid "Email"
+msgstr "Email"
+
+#: users/templates/login/login_form.html:14
+#: users/templates/login/register_form.html:16
+msgid "Password"
+msgstr "Contraseña"
+
+#: users/templates/login/login_form.html:21
+#: users/templates/login/login_view.html:4
+#: users/templates/login/login_view.html:25
+#: users/templates/login/other_connexion.html:11
+msgid "Login"
+msgstr "Inicio de sesión"
+
+#: users/templates/login/login_view.html:20
+msgid "Welcome"
+msgstr "Bienvenido"
+
+#: users/templates/login/login_view.html:21
+msgid "Sign in to play Pong"
+msgstr "Inicia sesión para jugar a Pong"
+
+#: users/templates/login/login_view.html:26
+#: users/templates/login/register_form.html:22
+msgid "Register"
+msgstr "Regístrese en"
+
+#: users/templates/login/other_connexion.html:7
+msgid "or continue with"
+msgstr "o continuar con"
+
+#: users/templates/login/register_form.html:8
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: users/templates/profil/box-profil.html:9
+msgid " Avatar"
+msgstr ""
+
+#: users/templates/profil/box-profil.html:25
+#, fuzzy
+#| msgid "42 Friend(s)"
+msgid "Friend(s)"
+msgstr "42 Amigo(s)"
+
+#: users/templates/profil/box-profil.html:27
+msgid "ELO"
+msgstr ""
+
+#: users/templates/profil/box-skill.html:7
+msgid "Game Stats Dashboards"
+msgstr ""
+
+#: users/templates/profil/box-skill.html:9
+msgid "Players"
+msgstr "Jugadores"
+
+#: users/templates/profil/box-skill.html:10
+msgid "Time"
+msgstr "Tiempo"
+
+#: users/templates/profil/box-skill.html:11
+msgid "Winner"
+msgstr "Ganador"
+
+#: users/templates/profil/box-skill.html:12
+msgid "ELO Before"
+msgstr "ELO Antes"
+
+#: users/templates/profil/box-skill.html:13
+msgid "ELO After"
+msgstr "ELO Después"
+
+#: users/templates/profil/box-skill.html:27
+msgid "Show My Progress"
+msgstr ""
+
+#: users/templates/profil/profil_view.html:14
+msgid "Profil"
+msgstr "Perfil"
+
+#: users/templates/profil/profil_view.html:19
+msgid " banner"
+msgstr ""
+
+#: users/templates/progress/progress.html:4
+#, fuzzy
+#| msgid "ELO Before"
+msgid "Progress"
+msgstr "ELO Antes"
+
+#: users/templates/progress/progress.html:14
+#: users/templates/progress/progress.html:76
+msgid "Win/Lose Ratio"
+msgstr ""
+
+#: users/templates/progress/progress.html:41
+#, fuzzy
+#| msgid "ELO Before"
+msgid "ELO Progress"
+msgstr "ELO Antes"
+
+#~ msgid " default user avatars"
+#~ msgstr "avatares de usuario por defecto"
+
+#, fuzzy
+#~| msgid "Username"
+#~ msgid "User1"
+#~ msgstr "Nombre de usuario"
+
+#~ msgid "Login successful!"
+#~ msgstr "Inicio de sesión correcto."
+
+#~ msgid "Invalid email or password."
+#~ msgstr "Correo electrónico o contraseña no válidos."

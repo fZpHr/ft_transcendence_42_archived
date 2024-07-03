@@ -1,0 +1,130 @@
+services:
+  portainer:
+    build: common/portainer/.
+    container_name: portainer
+    ports:
+      - "8001:8001"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      transcendence:
+
+  adminer:
+    build: common/adminer/.
+    container_name: adminer
+    ports:
+      - "9000:8080"
+    networks:
+      transcendence:
+
+  nginx:
+    build: common/nginx/.
+    container_name: nginx
+    depends_on:
+      - logstash
+      - adminer
+    ports:
+      - "443:443"
+    env_file:
+      - .env
+    networks:
+      transcendence:
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+    networks:
+      transcendence:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      TZ: "Europe/Paris"
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: "single-node"
+      cluster.name: "elasticsearch"
+      ELASTIC_USER: elastic
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      xpack.security.enabled: "true"
+      xpack.security.authc.api_key.enabled: "true"
+    depends_on:
+      - postgres
+    networks:
+      transcendence:
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.2
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    environment:
+      TZ: "Europe/Paris"
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}
+    env_file:
+      - .env
+    volumes:
+      - ./devops/kibana/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
+    networks:
+      transcendence:
+  
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.2
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5000:5000"
+    environment:
+      TZ: "Europe/Paris"
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      xpack.monitoring.elasticsearch.username: elastic
+      xpack.monitoring.elasticsearch.password: ${ELASTIC_PASSWORD}
+    env_file:
+      - .env
+    volumes:
+      - ./devops/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    networks:
+      transcendence:
+    
+  web:
+    build: common/web/.
+    container_name: web
+    command: >
+      sh -c "pipenv run python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./common/web:/usr/src/app
+    networks:
+      transcendence:
+
+volumes:
+  portainer_data:
+  postgres_data:
+
+networks:
+  transcendence:
+    # driver: bridge
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 172.1.1.0/28

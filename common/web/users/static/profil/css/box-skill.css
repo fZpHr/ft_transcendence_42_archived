@@ -1,0 +1,146 @@
+.box-skill {
+    width: 50vw;
+    margin-top: -60px;
+    padding: 20px;
+    background-color: var(--to-teal-2-rgba);
+    box-sizing: border-box;
+    border-radius: 10px;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.box-skill h2 {
+    width: 100%;
+    margin-top: 0;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--text-color);
+    padding-bottom: 10px;
+}
+
+.match-legend {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 1rem;
+    color: var(--to-teal-5-rgba);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.match-legend .legend-item {
+    flex: 1;
+}
+
+.match-history {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.match {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--to-teal-3-rgba);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-wrap: wrap;
+}
+
+.match:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.match>div {
+    flex: 1;
+    text-align: center;
+    padding: 5px;
+}
+
+.player-info,
+.match-info,
+.match-winner,
+.match-elo {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.match-elo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.match-elo div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.progress-button {
+    background-color: var(--to-teal-1-rgba);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: ease-in-out 0.3s;
+}
+
+.progress-button:hover {
+    padding: 15px 25px;
+}
+
+.progress-button a {
+    text-decoration: none;
+    color: white;
+    width: 100%;
+    height: 100%;
+}
+
+.progress-button a:hover {
+    text-decoration: none;
+    color: white;
+}
+
+.no-match {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#btn-play {
+    background-color: var(--to-teal-3-rgba);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    text-decoration: none;
+    text-align: center;
+}
+
+#btn-play:hover {
+    color: var(--to-teal-3-rgba);
+    background-color: white;
+}
+
+Request.getUsers()

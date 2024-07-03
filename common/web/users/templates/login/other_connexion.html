@@ -1,0 +1,15 @@
+{% load i18n %}
+{% load static %}
+
+{% block other_connexion %}
+<div class="warp-other-connexion">
+	<div class="other-connexion-line"></div>
+	<p class="or-text">{% trans "or continue with" %}</p>
+	<div class="connexion-btn-container">
+		<button class="connexion-btn" id="btn-42">
+			<img src="{% static 'login/img/42_Logo.png' %}" alt="42_Logo">
+			<p>{% trans "Login" %}</p>
+		</button>
+	</div>
+</div>
+{% endblock %}

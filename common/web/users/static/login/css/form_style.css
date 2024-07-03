@@ -1,0 +1,25 @@
+/* form_styles.css */
+.chose-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.chose-form button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 10px 20px;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+.chose-form button.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.warp-form {
+    width: 70%;
+}

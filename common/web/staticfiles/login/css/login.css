@@ -1,0 +1,462 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:wght@500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--to-teal-1-rgba);
+    width: 100vw;
+    min-height: 100vh; /* Utilisation de min-height pour ajuster dynamiquement la hauteur */
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column; /* Utilisation de flex-direction column pour utiliser flex-grow */
+}
+
+:root {
+    --to-teal-1-rgba: #120f17;
+    --to-teal-2-rgba: #191723;
+    --to-teal-3-rgba: #2c2538;
+    --to-teal-4-rgba: #372e47;
+    --to-teal-5-rgba: #5d547c;
+    --text-color: #ffffff;
+
+    --primary-color: #1A6566;
+    --secondary-color: #21445B;
+    --background-color: #f0f0f0;
+    --button-color: #5D8A66;
+    --button-hover-color: #4D7860;
+}
+
+.warp-login {
+    width: 40vw;
+    height: 100%;
+    min-height: 100vh;
+    text-align: center;
+    background-color: var(--to-teal-2-rgba);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.container-login {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-title {
+    margin: 20px 0px 40px 0px;
+}
+
+.form-title h1 {
+    font-weight: 800;
+    font-size: 60px;
+}
+
+.form-title p {
+    margin: 0;
+    font-size: 20px;
+}
+
+.chose-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.chose-form button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 10px 20px;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+.chose-form button.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.warp-form {
+    width: 70%;
+}
+
+.warp-input {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 40px;
+}
+
+.warp-input input {
+    width: calc(100% - 40px);
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    background: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    color: var(--text-color);
+}
+
+.input-label {
+    position: absolute;
+    font-family: 'Poppins';
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    padding: 0 5px;
+    color: var(--text-color);
+    font-size: 15px;
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+.warp-input input:focus + .input-label,
+.warp-input input.filled + .input-label {
+    top: -10px;
+    left: 20px;
+    font-size: 12px;
+    background-color: var(--to-teal-2-rgba);
+    padding: 0 5px;
+    transition: all 0.3s;
+}
+
+.input-label.filled {
+    top: -10px;
+    left: 20px;
+    font-size: 12px;
+    background-color: var(--to-teal-2-rgba);
+    padding: 0 5px;
+}
+
+.toggle-password {
+    position: absolute;
+    left: 90%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.toggle-password:focus {
+    outline: none;
+}
+
+.toggle-password i {
+    color: var(--text-color);
+    font-size: 18px;
+}
+
+.form-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form-btn button {
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 50px;
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+}
+
+.form-btn button:hover {
+    background-color: var(--text-color);
+    color: var(--to-teal-4-rgba);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.warp-other-connexion {
+    color: var(--to-teal-5-rgba);
+    width: 60%;
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 50px;
+}
+
+.valid-indicator {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.warp-input input:focus + .input-label + .valid-indicator,
+.warp-input input.filled + .input-label + .valid-indicator {
+    opacity: 1;
+}
+
+.valid-indicator i {
+    font-size: 16px;
+}
+
+.valid {
+    color: #00cc00;
+}
+
+.invalid {
+    color: #cc0000;
+}
+
+.other-connexion-line {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: var(--to-teal-5-rgba);
+    margin: 10px 0;
+}
+
+.or-text {
+    display: inline-block;
+    font-size: 16px;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 0;
+    transform: translateY(-22px);
+    width: 40%;
+    background-color: var(--to-teal-2-rgba);
+}
+
+.connexion-btn-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.connexion-btn {
+    border-radius: 15px;
+    background-color: var(--to-teal-2-rgba);
+    padding: 5px 30px;
+    color: var(--text-color);
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: ease-in-out 0.3s;
+}
+
+.connexion-btn img {
+    width: 30px;
+    margin-right: 10px;
+    height: auto;
+}
+
+.connexion-btn:hover {
+    box-shadow: 0 2px 5px rgba(0.1, 0.1, 0.1, 0.9);
+    padding: 8px 33px;
+}
+
+.demo {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 60vw;
+    height: 100%;
+}
+
+.demo img {
+    width: 100%;
+    height: 100%;
+}
+
+/* Button part */
+
+.form-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form-btn button {
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 50px;
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+}
+
+.form-btn button:hover {
+    background-color: var(--text-color);
+    color: var(--to-teal-4-rgba);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.connexion-btn-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.connexion-btn {
+    border-radius: 15px;
+    background-color: var(--to-teal-2-rgba);
+    padding: 5px 30px;
+    color: var(--text-color);
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3
+}
+
+/* Indicator part */
+
+.valid-indicator {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.warp-input input:focus + .input-label + .valid-indicator,
+.warp-input input.filled + .input-label + .valid-indicator {
+    opacity: 1;
+}
+
+.valid-indicator i {
+    font-size: 16px;
+}
+
+.valid {
+    color: #00cc00;
+}
+
+.invalid {
+    color: #cc0000;
+}
+
+
+/* Responsive part */
+
+@media screen and (min-width: 1024px) and (max-width: 1400px) {
+    .warp-login {
+        width: 50vw;
+    }
+
+    .demo {
+        width: 50vw;
+    }
+
+    .container-login {
+        width: 100%;
+    }
+
+    .warp-form {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+    .warp-login {
+        width: 100vw;
+    }
+
+    .demo {
+        display: none;
+    }
+
+    .container-login {
+        width: 90%;
+    }
+
+    .warp-form {
+        width: 70%;
+    }
+
+    .form-title h1 {
+        font-size: 40px;
+    }
+
+    .chose-form button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+
+    .form-btn button {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 425px) {
+
+    .warp-login {
+        align-items: start;
+        padding-top: 100px;
+    }
+
+    .container-login {
+        width: 100%;
+    }
+
+    .warp-form {}
+
+    .warp-input {
+        width: 100%;
+    }
+
+    .form-title h1 {
+        font-size: 30px;
+    }
+
+    .chose-form {
+        flex-direction: column;
+    }
+
+    .chose-form button {
+        margin-bottom: 10px;
+    }
+
+    .warp-input input {
+        font-size: 12px;
+    }
+
+    .form-btn button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .connexion-btn {
+        padding: 5px 20px;
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,12 @@
+{% load i18n %}
+
+{% block error_messages %}
+<div class="warp-error">
+	{% if messages %}
+	{% for message in messages %}
+	{{ message }}
+	<a href="#">reset my passowd</a>
+	{% endfor %}
+	{% endif %}
+</div>
+{% endblock %}

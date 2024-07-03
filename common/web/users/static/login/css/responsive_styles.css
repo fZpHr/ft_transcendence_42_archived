@@ -1,0 +1,90 @@
+/* responsive_styles.css */
+@media screen and (min-width: 1024px) and (max-width: 1400px) {
+    .warp-login {
+        width: 50vw;
+    }
+
+    .demo {
+        width: 50vw;
+    }
+
+    .container-login {
+        width: 100%;
+    }
+
+    .warp-form {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+    .warp-login {
+        width: 100vw;
+    }
+
+    .demo {
+        display: none;
+    }
+
+    .container-login {
+        width: 90%;
+    }
+
+    .warp-form {
+        width: 70%;
+    }
+
+    .form-title h1 {
+        font-size: 40px;
+    }
+
+    .chose-form button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+
+    .form-btn button {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .warp-login {
+        align-items: start;
+        padding-top: 100px;
+    }
+
+    .container-login {
+        width: 100%;
+    }
+
+    .warp-input {
+        width: 100%;
+    }
+
+    .form-title h1 {
+        font-size: 30px;
+    }
+
+    .chose-form {
+        flex-direction: column;
+    }
+
+    .chose-form button {
+        margin-bottom: 10px;
+    }
+
+    .warp-input input {
+        font-size: 12px;
+    }
+
+    .form-btn button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .connexion-btn {
+        padding: 5px 20px;
+        font-size: 16px;
+    }
+}

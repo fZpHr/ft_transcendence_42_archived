@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "Progress" %}{% endblock %}
+
+{% block custom_css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'progress/css/progress.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="progress-container">
+	<h2>My progress</h2>
+	<div class="pie-chart-container">
+		<h2>{% trans "Win/Lose Ratio" %}</h2>
+		<canvas id="pieChart" width="100" height="100"></canvas>
+	</div>
+	<div class="chart-container">
+		<canvas id="progressChart" width="400" height="200"></canvas>
+	</div>
+</div>
+
+<!-- Inclure Chart.js et l'adaptateur date-fns -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const ctxProgress = document.getElementById('progressChart').getContext('2d');
+		const ctxPie = document.getElementById('pieChart').getContext('2d');
+
+		const matches = JSON.parse('{{ matches_json|escapejs }}');
+
+		const labels = matches.map(match => match.date);
+		const data = matches.map(match => match.elo);
+
+		const progressChart = new Chart(ctxProgress, {
+			type: 'line',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: '{% trans "ELO Progress" %}',
+					data: data,
+					borderColor: 'rgba(75, 192, 192, 1)',
+					backgroundColor: 'rgba(75, 192, 192, 0.2)',
+					borderWidth: 1
+				}]
+			},
+			options: {
+				responsive: true,
+				scales: {
+					x: {
+						type: 'time',
+						time: {
+							unit: 'day',
+							displayFormats: {
+								day: 'MMM dd'
+							}
+						}
+					},
+					y: {
+						beginAtZero: false
+					}
+				}
+			}
+		});
+
+		const winCount = matches.filter(match => match.winner === '{{ user_data.username }}').length;
+		const loseCount = matches.length - winCount;
+		const ratioData = [winCount, loseCount];
+
+		const pieChart = new Chart(ctxPie, {
+			type: 'pie',
+			data: {
+				labels: ['Win', 'Lose'],
+				datasets: [{
+					label: '{% trans "Win/Lose Ratio" %}',
+					data: ratioData,
+					backgroundColor: [
+						'rgba(75, 192, 192, 0.5)',
+						'rgba(255, 99, 132, 0.5)'
+					],
+					borderColor: [
+						'rgba(75, 192, 192, 1)',
+						'rgba(255, 99, 132, 1)'
+					],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				responsive: true
+			}
+		});
+	});
+</script>
+{% endblock %}

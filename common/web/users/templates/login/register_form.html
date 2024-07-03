@@ -1,0 +1,28 @@
+{% load i18n %}
+
+{% block register_form %}
+<form id="register-form" action="/api/register/" method="post" style="display: none;">
+	{% csrf_token %}
+	<div class="warp-input">
+		<input type="text" name="username" id="username" required>
+		<label for="username" class="input-label">{% trans "Username" %}</label>
+		<span class="valid-indicator" id="username-indicator-register"></span>
+	</div>
+	<div class="warp-input">
+		<input type="email" name="email" id="register-email" required>
+		<label for="register-email" class="input-label">{% trans "Email" %}</label>
+		<span class="valid-indicator" id="email-indicator-register"></span>
+	</div>
+	<div class="warp-input">
+		<input type="password" name="pass" id="register-pass" required>
+		<label for="register-pass" class="input-label">{% trans "Password" %}</label>
+		<button type="button" class="toggle-password" id="togglePasswordRegister">
+			<i class="fa-solid fa-eye-slash"></i>
+		</button>
+		<span class="valid-indicator" id="password-indicator-register"></span>
+	</div>
+	<div class="form-btn">
+		<button type="submit" id="register-btn">{% trans "Register" %}</button>
+	</div>
+</form>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/social.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/radial-menu.css' %}">
+    <link rel="icon"
+        href="https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png" />
+    {% block extra_head %}
+    {% endblock %}
+
+    {% block custom_css %}
+    {% endblock %}
+</head>
+
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% if not no_footer %}
+    {% include 'footer.html' %}
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    {% block chat %}
+    {% include 'menus/menus.html' %}
+    <script src="{% static 'js/api.js' %}"></script>
+    <script src="{% static 'js/ui.js' %}"></script>
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/radial-menu.js' %}"></script>
+    {% endblock %}
+    {% endif %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    {% block extra_scripts %}
+    {% endblock %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
