@@ -8,6 +8,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    environment:
+      TZ: "Europe/Paris"
     networks:
       transcendence:
 
@@ -25,6 +27,8 @@ services:
     depends_on:
       - logstash
       - adminer
+    volumes:
+      - ./devops/logs/nginx/:/var/log/nginx/
     ports:
       - "443:443"
     env_file:
@@ -42,7 +46,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-    - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     networks:
       transcendence:
 
@@ -52,6 +56,8 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
     environment:
       TZ: "Europe/Paris"
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
@@ -60,9 +66,8 @@ services:
       ELASTIC_USER: elastic
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       xpack.security.enabled: "true"
-      xpack.security.authc.api_key.enabled: "true"
     depends_on:
-      - postgres
+      - web
     networks:
       transcendence:
 
@@ -79,8 +84,6 @@ services:
       ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}
     env_file:
       - .env
-    volumes:
-      - ./devops/kibana/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
     networks:
       transcendence:
   
@@ -96,9 +99,12 @@ services:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
       xpack.monitoring.elasticsearch.username: elastic
       xpack.monitoring.elasticsearch.password: ${ELASTIC_PASSWORD}
+      DEBUG: "true"
     env_file:
       - .env
     volumes:
+      - ./devops/logs/web/:/usr/share/logstash/logs/web
+      - ./devops/logs/nginx/:/usr/share/logstash/logs/nginx
       - ./devops/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     networks:
       transcendence:
@@ -107,23 +113,43 @@ services:
     build: common/web/.
     container_name: web
     command: >
-      sh -c "pipenv run python manage.py runserver 0.0.0.0:8000"
+      sh -c "pipenv run python manage.py runserver 0.0.0.0:8000 > /usr/src/app/logs/myapp.log 2>&1"
     ports:
       - "8000:8000"
     env_file:
       - .env
     volumes:
+      - ./devops/logs/web/:/usr/src/app/logs
       - ./common/web:/usr/src/app
     networks:
       transcendence:
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./devops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      transcendence:
+  
+  graphana:
+    image: grafana/grafana
+    container_name: graphana
+    ports:
+      - "3000:3000"
+    networks:
+      transcendence:
+
+
 volumes:
   portainer_data:
   postgres_data:
-
+  elasticsearch_data:
 networks:
   transcendence:
-    # driver: bridge
+    driver: bridge
     # ipam:
     #   driver: default
     #   config:
