@@ -78,6 +78,8 @@ services:
       - elasticsearch
     ports:
       - "5601:5601"
+    volumes:
+      - ./devops/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
     environment:
       TZ: "Europe/Paris"
       ELASTICSEARCH_USERNAME: elastic
@@ -141,7 +143,6 @@ services:
       - "3000:3000"
     networks:
       transcendence:
-
 
 volumes:
   portainer_data:
