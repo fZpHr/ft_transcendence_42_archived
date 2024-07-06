@@ -7,7 +7,7 @@ services:
       - "9443:9443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+      - ./data/portainer:/data
     environment:
       TZ: "Europe/Paris"
     networks:
@@ -46,7 +46,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
     networks:
       transcendence:
 
@@ -57,7 +57,7 @@ services:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
     environment:
       TZ: "Europe/Paris"
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
@@ -126,32 +126,6 @@ services:
     networks:
       transcendence:
 
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    volumes:
-      - ./devops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      transcendence:
-  
-  graphana:
-    image: grafana/grafana
-    container_name: graphana
-    ports:
-      - "3000:3000"
-    networks:
-      transcendence:
-
-volumes:
-  portainer_data:
-  postgres_data:
-  elasticsearch_data:
 networks:
   transcendence:
     driver: bridge
-    # ipam:
-    #   driver: default
-    #   config:
-    #     - subnet: 172.1.1.0/28

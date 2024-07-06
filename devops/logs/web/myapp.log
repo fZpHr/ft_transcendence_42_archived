@@ -2,7 +2,30 @@ Watching for file changes with StatReloader
 Performing system checks...
 
 System check identified no issues (0 silenced).
-July 05, 2024 - 12:25:23
+July 06, 2024 - 13:05:18
 Django version 3.2.25, using settings 'transcendence.settings'
 Starting development server at http://0.0.0.0:8000/
 Quit the server with CONTROL-C.
+[06/Jul/2024 13:23:36] "GET /login HTTP/1.1" 302 0
+[06/Jul/2024 13:23:36] "GET /fr/login/ HTTP/1.1" 200 6442
+[06/Jul/2024 13:23:36] "GET /static/login/css/input_style.css HTTP/1.1" 200 1312
+[06/Jul/2024 13:23:36] "GET /static/login/css/form_style.css HTTP/1.1" 200 466
+[06/Jul/2024 13:23:36] "GET /static/css/base.css HTTP/1.1" 304 0
+[06/Jul/2024 13:23:36] "GET /static/css/header.css HTTP/1.1" 304 0
+[06/Jul/2024 13:23:36] "GET /static/login/css/button_style.css HTTP/1.1" 200 1171
+[06/Jul/2024 13:23:36] "GET /static/login/css/other_connexion.css HTTP/1.1" 200 1069
+[06/Jul/2024 13:23:36] "GET /static/login/css/responsive_styles.css HTTP/1.1" 200 1289
+[06/Jul/2024 13:23:36] "GET /static/css/footer.css HTTP/1.1" 304 0
+[06/Jul/2024 13:23:36] "GET /static/login/css/indicator_style.css HTTP/1.1" 200 703
+[06/Jul/2024 13:23:36] "GET /static/css/radial-menu.css HTTP/1.1" 304 0
+[06/Jul/2024 13:23:36] "GET /static/css/chat.css HTTP/1.1" 304 0
+[06/Jul/2024 13:23:36] "GET /static/css/social.css HTTP/1.1" 304 0
+[06/Jul/2024 13:23:36] "GET /static/login/css/login.css HTTP/1.1" 304 0
+[06/Jul/2024 13:23:36] "GET /static/login/js/login.js HTTP/1.1" 304 0
+[06/Jul/2024 13:23:37] "GET /static/login/img/42_Logo.png HTTP/1.1" 200 4928
+[06/Jul/2024 13:23:37] "GET /static/login/img/pong-demo.gif HTTP/1.1" 200 119533
+[06/Jul/2024 13:27:50] "GET /fr/login/ HTTP/1.1" 200 6442
+[06/Jul/2024 13:27:50] "GET /fr/login/ HTTP/1.1" 200 6442
+[06/Jul/2024 13:27:50] "GET /fr/login/ HTTP/1.1" 200 6442
+[06/Jul/2024 13:27:50] "GET /fr/login/ HTTP/1.1" 200 6442
+[06/Jul/2024 13:27:51] "GET /fr/login/ HTTP/1.1" 200 6442
