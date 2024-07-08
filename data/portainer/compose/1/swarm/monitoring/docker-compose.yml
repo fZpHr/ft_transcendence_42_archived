@@ -21,10 +21,6 @@ services:
         source: grafana-data
         target: /var/lib/grafana
     environment:
-      - GF_SMTP_ENABLED=true
-      - GF_SMTP_HOST=smtp.gmail.com:587
-      - GF_SMTP_USER=smtp42ang@gmail.com
-      - GF_SMTP_PASSWORD=hbfxrxdcodnfgmoe 
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
