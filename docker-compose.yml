@@ -129,6 +129,7 @@ services:
 
   grafana:
     image: grafana/grafana:9.5.2
+    container_name: grafana
     ports:
       - "3000:3000"
     environment:
@@ -146,6 +147,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.44.0
+    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -160,6 +162,7 @@ services:
 
   node-exporter:
     image: prom/node-exporter:v1.5.0
+    container_name: node-exporter
     command:
       - '--path.sysfs=/host/sys'
       - '--path.procfs=/host/proc'
@@ -173,6 +176,7 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: cadvisor
     command: -logtostderr -docker_only
     volumes:
       - /:/rootfs:ro

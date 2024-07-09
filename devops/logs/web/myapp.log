@@ -5,19 +5,14 @@ System check identified no issues (0 silenced).
 
 You have 15 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): api.
 Run 'python manage.py migrate' to apply them.
-July 08, 2024 - 15:03:14
+July 09, 2024 - 11:08:48
 Django version 3.2.25, using settings 'transcendence.settings'
 Starting development server at http://0.0.0.0:8000/
 Quit the server with CONTROL-C.
-[08/Jul/2024 15:08:17] "GET /login HTTP/1.1" 302 0
-[08/Jul/2024 15:08:17] "GET /fr/login/ HTTP/1.1" 200 8709
-[08/Jul/2024 15:08:17] "GET /static/img/bberkrou.jpg HTTP/1.1" 200 837870
-[08/Jul/2024 15:08:17] "GET /static/js/main.js HTTP/1.1" 304 0
-[08/Jul/2024 15:08:17] "GET /static/js/ui.js HTTP/1.1" 304 0
-[08/Jul/2024 15:08:17] "GET /static/js/chat.js HTTP/1.1" 304 0
-[08/Jul/2024 15:08:17] "GET /static/js/api.js HTTP/1.1" 304 0
-[08/Jul/2024 15:08:17] "GET /static/js/radial-menu.js HTTP/1.1" 304 0
-[08/Jul/2024 15:08:17] "GET /static/css/base.css HTTP/1.1" 200 684
+[09/Jul/2024 11:10:54] "GET /fr/login/ HTTP/1.1" 200 8709
+[09/Jul/2024 11:10:54] "GET /fr/login/ HTTP/1.1" 200 8709
+[09/Jul/2024 11:10:54] "GET /fr/login/ HTTP/1.1" 200 8709
+[09/Jul/2024 11:10:55] "GET /fr/login/ HTTP/1.1" 200 8709
 Internal Server Error: /api/@me/
 Traceback (most recent call last):
   File "/root/.local/share/virtualenvs/app-lp47FrbD/lib/python3.11/site-packages/django/db/backends/utils.py", line 84, in _execute
@@ -133,9 +128,8 @@ Traceback (most recent call last):
   File "/root/.local/share/virtualenvs/app-lp47FrbD/lib/python3.11/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
     raise errorclass(errno, errval)
 django.db.utils.OperationalError: (1054, "Unknown column 'api_player.password' in 'field list'")
-[08/Jul/2024 15:08:18] "GET /api/@me/ HTTP/1.1" 500 227196
-[08/Jul/2024 15:08:20] "GET /fr/login/ HTTP/1.1" 200 8709
-Internal Server Error: /api/@me/
+[09/Jul/2024 11:10:55] "GET /api/@me/ HTTP/1.1" 500 227033
+Internal Server Error: /api/login_player/
 Traceback (most recent call last):
   File "/root/.local/share/virtualenvs/app-lp47FrbD/lib/python3.11/site-packages/django/db/backends/utils.py", line 84, in _execute
     return self.cursor.execute(sql, params)
@@ -192,9 +186,9 @@ Traceback (most recent call last):
   File "/root/.local/share/virtualenvs/app-lp47FrbD/lib/python3.11/site-packages/rest_framework/decorators.py", line 50, in handler
     return func(*args, **kwargs)
            ^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/src/app/api/views.py", line 27, in get_me
-    player = Player.objects.get(username=user)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/src/app/api/views_users.py", line 26, in login_player
+    player = Player.objects.get(mail=mail)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/root/.local/share/virtualenvs/app-lp47FrbD/lib/python3.11/site-packages/django/db/models/manager.py", line 85, in manager_method
     return getattr(self.get_queryset(), name)(*args, **kwargs)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -250,4 +244,4 @@ Traceback (most recent call last):
   File "/root/.local/share/virtualenvs/app-lp47FrbD/lib/python3.11/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
     raise errorclass(errno, errval)
 django.db.utils.OperationalError: (1054, "Unknown column 'api_player.password' in 'field list'")
-[08/Jul/2024 15:08:20] "GET /api/@me/ HTTP/1.1" 500 227196
+[09/Jul/2024 11:11:05] "POST /api/login_player/ HTTP/1.1" 500 228568
