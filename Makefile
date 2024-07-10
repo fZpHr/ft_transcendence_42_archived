@@ -32,7 +32,7 @@ mp_setup:
 mp:
 	@git add .
 	@git commit -m "$(msg)"
-	@git push origin main
-	@git push secondRepo main
-	@git push thirdRepo main
-	@git push fourthRepo main
+	-@git push origin main
+	-@git push secondRepo main
+	-@git push thirdRepo main
+	-@git push fourthRepo main
