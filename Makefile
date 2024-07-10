@@ -23,3 +23,13 @@ req:
 	@echo "deb [arch=$$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $$(. /etc/os-release && echo "$$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 	@sudo apt-get update
 	@sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+mp_setup:
+	@git remote add secondRepo git@github.com:BenjaminBerkrouber/trans.git
+	@git remote -v
+
+mp:
+	@git add .
+	@git commit -m "$(msg)"
+	@git push origin main
+	@git push secondRepo docker
