@@ -35,9 +35,9 @@ mp_setup:
 mp:
 	@git add .
 	@git commit -m "$(msg)"
-	-@git push origin main
-	-@git push oneRepo main
-	-@git push secondRepo main
-	-@git push thirdRepo main
-	-@git push fourthRepo main
-	-@git push fiveRepo main
+	-git push origin main || git push origin main:backup_main
+	-git push oneRepo main || git push oneRepo main:backup_main
+	-git push secondRepo main || git push secondRepo main:backup_main
+	-git push thirdRepo main || git push thirdRepo main:backup_main
+	-git push fourthRepo main || git push fourthRepo main:backup_main
+	-git push fiveRepo main || git push fiveRepo main:backup_main
