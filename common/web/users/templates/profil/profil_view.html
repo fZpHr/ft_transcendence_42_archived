@@ -25,5 +25,8 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{% static 'profil/js/profil.js' %}"></script>
+
+{% if user_data.visited == False and user_data.is42 == False %}
+<script src="{% static 'profil/js/profil.js' %}"></script>\
+{% endif %}
 {% endblock %}

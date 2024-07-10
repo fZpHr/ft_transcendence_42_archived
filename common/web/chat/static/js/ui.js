@@ -96,10 +96,17 @@ function displayChatUsers(chatUsers) {
 	userContainer.innerHTML = '';
 
 	chatUsers.forEach(user => {
+		var imgLink = ''
+	if (user.img.startsWith('profile_pics/')) {
+		imgLink = '/media/' + user.img;
+	} else {
+		imgLink = user.img;
+	}
+	console.log(imgLink);
 		var userHtml = `
             <div class="contact" data-contact-id="${user.id}" data-contact-img="${user.img}">
                 <a href="/visited_profil/${user.username}/">
-                    <img src="${user.img.startsWith('/') ? '/static' + user.img : user.img}" class="contact-img" alt="${user.username}">
+                    <img src="${imgLink}" class="contact-img" alt="${user.username}">
                 </a>
                 <span class="contact-name">${user.username}</span>
             </div>
@@ -131,35 +138,35 @@ function displaySocialUsers(users) {
 
 	users.forEach(user => {
 		var userHtml = `
-            <div class="user">
-                <div class="data">
-                    <a href="/visited_profil/${user.username}/">
-                        <img src="${user.img.startsWith('/') ? user.img : user.img}" alt="pp">
-                    </a>
-                    <span>${user.username}</span>
-                </div>
-        `;
+			<div class="user">
+				<div class="data">
+					<a href="/visited_profil/${user.username}/">
+						<img class="${user.is_online ? "online" : "offline"}" src="${user.img.startsWith('/') ? user.img : user.img}" alt="pp">
+					</a>
+					<span>${user.username}</span>
+				</div>
+		`;
 		if (user.status === 2) {
 			userHtml += `
-                <a href="#" class="add-friend" data-id="${user.id}"><i class="fa-solid fa-user-plus"></i></a>
-            `;
+				<a href="#" class="add-friend" data-id="${user.id}"><i class="fa-solid fa-user-plus"></i></a>
+			`;
 		}
 		else if (user.status === 3) {
 			userHtml += `
-                <i class="fa-regular fa-paper-plane"></i>
-            `;
+				<i class="fa-regular fa-paper-plane"></i>
+			`;
 		} else if (user.status === 1) {
 			userHtml += `
-                <i class="fa-solid fa-hourglass-half"></i>
-            `;
+				<i class="fa-solid fa-hourglass-half"></i>
+			`;
 		} else if (user.status === 0) {
 			userHtml += `
-                <a href="#" class="add-friend" data-id="${user.id}"><i class="fa-solid fa-plus"></i></a>
-            `;
+				<a href="#" class="add-friend" data-id="${user.id}"><i class="fa-solid fa-plus"></i></a>
+			`;
 		}
 		userHtml += `
-            </div>
-        `;
+			</div>
+		`;
 		userContainer.innerHTML += userHtml;
 	});
 

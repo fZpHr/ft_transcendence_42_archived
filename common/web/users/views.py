@@ -5,15 +5,19 @@ from django.contrib import messages
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 import json
-
 from django.utils.translation import gettext as _
-
+from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+import requests
 from django.utils.translation import activate
 from django.views.decorators.cache import cache_page
 from django.contrib.auth.models import User
-from api.models import Player
+from api.models import Player, Game
+from django.core import serializers
+from django.utils.timezone import localtime
 
-# @cache_page(60 * 15)
+
 def login_view(request):
     language_code = request.session.get('django_language', 'en')
     activate(language_code)
@@ -24,68 +28,104 @@ def login_view(request):
     
     return render(request, 'login/login_view.html', context)
 
-# @cache_page(60 * 15)
+@api_view(['GET'])
 def profil_view(request, format=None):
-    data = Player.objects.get(username=request.user)
-    language_code = request.session.get('django_language', 'en')
-    activate(language_code)
-    isDiv = False
-    is42_ = True
-    if (data.img.name.startswith("profile_pics")):
-        is42_ = False
-    if (data.img.name.endswith("default.png") or data.img.name.startswith("profile_pics")):
-        isDiv = True
-    user_data = {
-        'visited': False,
-        'username': data.username,
-        'mail': data.mail,
-        'friends_count': 10,
-        'elo': data.elo,
-        'avatar_url': data.img,
-        'is42': is42_,
-        'isDiv': isDiv, 
-        'matches': [
-            # {'player1': 'User1', 'player2': 'User2', 'time': '10:30', 'winner': 'User1', 'elo_before1': 1260, 'elo_before2': 1200, 'elo_after1': 1280, 'elo_after2': 1180},
-            # {'player1': 'User1', 'player2': 'User3', 'time': '9:45', 'winner': 'User1', 'elo_before1': 1260, 'elo_before2': 1200, 'elo_after1': 1280, 'elo_after2': 1180},
-            # {'player1': 'User1', 'player2': 'User5', 'time': '7:15', 'winner': 'User1', 'elo_before1': 1260, 'elo_before2': 1200, 'elo_after1': 1280, 'elo_after2': 1180}
-        ]
-    }
-    return render(request, 'profil/profil_view.html', {'user_data': user_data})
+    try:
+        data = Player.objects.get(username=request.user)
+        language_code = request.session.get('django_language', 'en')
+        activate(language_code)
+        is42 = True
+        if (data.img.name.startswith("profile_pics")):
+            is42 = False
+        games = Game.objects.filter(player1=data) | Game.objects.filter(player2=data)
+        games = games.order_by('-created_at')
+        
 
+        matches = []
+        for game in games:
+    
+            total_seconds = game.time
+            minutes, seconds = divmod(total_seconds, 60)
+            
+            match_data = {
+                'player1_username': game.player1.username,
+                'player2_username': game.player2.username,
+                'time_minutes': minutes,
+                'time_seconds': seconds,
+                'winner_username': game.winner.username,
+                'elo_before_player1': game.elo_before_player1,
+                'elo_before_player2': game.elo_before_player2,
+                'elo_after_player1': game.elo_after_player1,
+                'elo_after_player2': game.elo_after_player2,
+            }
+            matches.append(match_data)
+        
+        user_data = {
+            'visited': False,
+            'username': data.username,
+            'mail': data.mail,
+            'friends_count': 10,
+            'elo': data.elo,
+            'avatar_url': data.img,
+            'is42': is42,
+            'matches': matches
+        }
+        return render(request, 'profil/profil_view.html', {'user_data': user_data})
+    
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+@api_view(['GET'])
 def visited_profil_view(request, username):
-    data = Player.objects.get(username=username)
-    language_code = request.session.get('django_language', 'en')
-    activate(language_code)
-    print(data.img.name)
-    if (data.img.name.startswith("profile_pics")):
-        is42_ = False
-    else:
-        is42_ = True
-    user_data = {
-        'visited': True,
-        'username': data.username,
-        'friends_count': 10,
-        'elo': data.elo,
-        'avatar_url': data.img,
-        'is42': is42_,
-        'matches': [
-            # {'player1': 'User1', 'player2': 'User2', 'time': '10:30', 'winner': 'User1', 'elo_before1': 1260, 'elo_before2': 1200, 'elo_after1': 1280, 'elo_after2': 1180},
-            # {'player1': 'User1', 'player2': 'User3', 'time': '9:45', 'winner': 'User1', 'elo_before1': 1260, 'elo_before2': 1200, 'elo_after1': 1280, 'elo_after2': 1180},
-            # {'player1': 'User1', 'player2': 'User5', 'time': '7:15', 'winner': 'User1', 'elo_before1': 1260, 'elo_before2': 1200, 'elo_after1': 1280, 'elo_after2': 1180}
-        ]
-    }
-    return render(request, 'profil/profil_view.html', {'user_data': user_data})
+    try:
+        data = Player.objects.get(username=username)
+        language_code = request.session.get('django_language', 'en')
+        activate(language_code)
+        
+        is42 = True
+        if (data.img.name.startswith("profile_pics")):
+            is42 = False
 
-# @cache_page(60 * 15)
+        user_data = {
+            'visited': True,
+            'username': data.username,
+            'mail': data.mail,
+            'friends_count': 10,
+            'elo': data.elo,
+            'avatar_url': data.img,
+            'is42': is42,
+            'matches': []
+        }
+
+        games = Game.objects.filter(player1=data) | Game.objects.filter(player2=data)
+        games = games.order_by('-created_at')
+        
+        for game in games:
+            match_data = {
+                'player1': game.player1,
+                'player2': game.player2,
+                'time': game.time,
+                'winner': game.winner,
+                'elo_before_player1': game.elo_before_player1,
+                'elo_before_player2': game.elo_before_player2,
+                'elo_after_player1': game.elo_after_player1,
+                'elo_after_player': game.elo_after_player2
+            }
+            user_data['matches'].append(match_data)
+
+        return render(request, 'profil/profil_view.html', {'user_data': user_data})
+
+    except Player.DoesNotExist:
+        return Response({"error": "Player not found"}, status=404)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+from django.shortcuts import render
+import json
+
 def progress_view(request):
-    language_code = request.session.get('django_language', 'en')
-    activate(language_code)
-    matches = [
-        {'date': '2024-06-01', 'elo': 1200},
-        {'date': '2024-06-02', 'elo': 1220},
-        {'date': '2024-06-03', 'elo': 1210},
-        {'date': '2024-06-04', 'elo': 1230},
-        {'date': '2024-06-05', 'elo': 1250},
-    ]
-    matches_json = json.dumps(matches)
-    return render(request, 'progress/progress.html', {'matches_json': matches_json, 'no_footer': True})
+    return render(request, 'progress/progress.html')
+
+def visited_progress_view(request, username):
+    return render(request, 'progress/progress.html', {'username': username})

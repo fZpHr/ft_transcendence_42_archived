@@ -6,28 +6,26 @@
 <div class="box-profil">
     <div class="avatars">
         {% if user_data.is42 %}
-        <img src="{{ user_data.avatar_url.name }}" alt="{% trans " Avatar" %}" id="profile-avatar">
+            <img src="{{ user_data.avatar_url.name }}" alt="{% trans " Avatar" %}" id="profile-avatar">
         {% else %}
-        <img src="{{ user_data.avatar_url.url }}" alt="{% trans " Avatar" %}" id="profile-avatar">
-        {% endif %}
-        {% if user_data.isDiv %}
-        <div class="overlay">
-            <label for="uploadAvatar" id="upload-avatar-label">
-                <i class="fa-regular fa-image"></i>
-            </label>
-            <input type="file" id="uploadAvatar" style="display: none;" accept="image/*">
-        </div>
+            <img src="{{ user_data.avatar_url.url }}" alt="{% trans " Avatar" %}" id="profile-avatar">
+            {% if user_data.visited == False %}
+                <div class="overlay">
+                    <label for="uploadAvatar" id="upload-avatar-label">
+                        <i class="fa-regular fa-image"></i>
+                    </label>
+                    <input type="file" id="uploadAvatar" style="display: none;" accept="image/*">
+                </div>
+            {% endif %}
         {% endif %}
     </div>
     <div class="user-info">
         <div class="username-container">
             <h1>{{ user_data.username }}</h1>
-            {% if not user_data.visited %}
-            {% if user_data.isDiv %}
-            <button class="edit-btn" id="edit-btn">
-                <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            {% endif %}
+            {% if user_data.visited == False and user_data.is42 == False %}
+                <button class="edit-btn" id="edit-btn">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
             {% endif %}
         </div>
         <div class="user_data">
@@ -38,72 +36,73 @@
     </div>
 </div>
 
-<div id="edit-panel" class="edit-panel">
-    <div class="top-panel">
-        <h2>Edit Profile</h2>
-        <div class="line-edit-profil"></div>
-    </div>
-    <div class="bot-panel">
-        <form id="edit-form" method="post" action="http://localhost:8000/api/updateData/">{% csrf_token %}
-            <div class="warp-input">
-                <span class="valid-indicator" id="username-indicator"
-                    title="{% trans 'Invalid username format' %}"></span>
-                <input type="text" name="username" id="username" value="{{ user_data.username }}" required>
-                <label for="username" class="input-label">{% trans "Username :" %}</label>
-            </div>
-
-            <div class="warp-input">
-                <span class="valid-indicator" id="email-indicator" title="{% trans 'Invalid email format' %}"></span>
-                <input type="email" name="email" id="email" value="{{ user_data.mail }}" required>
-                <label for="email" class="input-label">{% trans "Email :" %}</label>
-            </div>
-            {% include 'login/error_messages.html' %}
-            <div class="form-btn">
-                <button type="submit">{% trans "Update" %}</button>
-            </div>
-        </form>
-    </div>
-
-    <div id="edit-password-container">
-        <button id="edit-password-btn">{% trans "Change Password" %}</button>
-    </div>
-
-    <div id="edit-password-panel" class="edit-panel">
+{% if user_data.visited == False and user_data.is42 == False %}
+    <div id="edit-panel" class="edit-panel">
         <div class="top-panel">
-            <h2>{% trans "Change Password" %}</h2>
+            <h2>Edit Profile</h2>
             <div class="line-edit-profil"></div>
         </div>
         <div class="bot-panel">
-            <form id="edit-password-form" method="post" action="http://localhost:8000/api/updatePass/">{% csrf_token %}
+            <form id="edit-form" method="post" action="http://localhost:8000/api/updateData/">{% csrf_token %}
                 <div class="warp-input">
-                    <span class="valid-indicator" id="old-password-indicator"
-                        title="{% trans 'Invalid password format' %}"></span>
-                    <input type="password" name="old_password" id="old-password" required>
-                    <label for="old-password" class="input-label">{% trans "Current Password :" %}</label>
+                    <span class="valid-indicator" id="username-indicator"
+                        title="{% trans 'Invalid username format' %}"></span>
+                    <input type="text" name="username" id="username" value="{{ user_data.username }}" required>
+                    <label for="username" class="input-label">{% trans "Username :" %}</label>
                 </div>
 
                 <div class="warp-input">
-                    <span class="valid-indicator" id="new-password-indicator"
-                        title="{% trans 'Invalid password format' %}"></span>
-                    <input type="password" name="new_password" id="new-password" required>
-                    <label for="new-password" class="input-label">{% trans "New Password :" %}</label>
+                    <span class="valid-indicator" id="email-indicator" title="{% trans 'Invalid email format' %}"></span>
+                    <input type="email" name="email" id="email" value="{{ user_data.mail }}" required>
+                    <label for="email" class="input-label">{% trans "Email :" %}</label>
                 </div>
-
-                <div class="warp-input">
-                    <span class="valid-indicator" id="confirm-password-indicator"
-                        title="{% trans 'Passwords do not match' %}"></span>
-                    <input type="password" name="confirm_password" id="confirm-password" required>
-                    <label for="confirm-password" class="input-label">{% trans "Confirm New Password :" %}</label>
-                </div>
-
+                {% include 'login/error_messages.html' %}
                 <div class="form-btn">
                     <button type="submit">{% trans "Update" %}</button>
                 </div>
             </form>
         </div>
-    </div>
 
-</div>
+        <div id="edit-password-container">
+            <button id="edit-password-btn">{% trans "Change Password" %}</button>
+        </div>
+
+        <div id="edit-password-panel" class="edit-panel">
+            <div class="top-panel">
+                <h2>{% trans "Change Password" %}</h2>
+                <div class="line-edit-profil"></div>
+            </div>
+            <div class="bot-panel">
+                <form id="edit-password-form" method="post" action="http://localhost:8000/api/updatePass/">{% csrf_token %}
+                    <div class="warp-input">
+                        <span class="valid-indicator" id="old-password-indicator"
+                            title="{% trans 'Invalid password format' %}"></span>
+                        <input type="password" name="old_password" id="old-password" required>
+                        <label for="old-password" class="input-label">{% trans "Current Password :" %}</label>
+                    </div>
+
+                    <div class="warp-input">
+                        <span class="valid-indicator" id="new-password-indicator"
+                            title="{% trans 'Invalid password format' %}"></span>
+                        <input type="password" name="new_password" id="new-password" required>
+                        <label for="new-password" class="input-label">{% trans "New Password :" %}</label>
+                    </div>
+
+                    <div class="warp-input">
+                        <span class="valid-indicator" id="confirm-password-indicator"
+                            title="{% trans 'Passwords do not match' %}"></span>
+                        <input type="password" name="confirm_password" id="confirm-password" required>
+                        <label for="confirm-password" class="input-label">{% trans "Confirm New Password :" %}</label>
+                    </div>
+
+                    <div class="form-btn">
+                        <button type="submit">{% trans "Update" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
 
 
 {% endblock %}

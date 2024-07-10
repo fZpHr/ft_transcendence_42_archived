@@ -1,20 +1,18 @@
 {% load static %}
 {% load i18n %}
 
+<div id="pannel">
+</div>
+
 <div id="pre-menu">
 	<div id="radial-menu">
-		<div id="chat-btn">
-			<i class="fas fa-comment-alt"></i>
-		</div>
-		<div id="social-btn">
-			<i class="fas fa-user"></i>
-		</div>
 	</div>
 
 	<div id="pre-menu-btn">
 		<i class="fa-solid fa-bars"></i>
 	</div>
 
-	{% include 'chat/chat.html' %}
-	{% include 'social/social.html' %}
+	{% block extra_scripts %}
+		<script src="{% static 'menus/js/menus.js' %}"></script>
+	{% endblock %}
 </div>

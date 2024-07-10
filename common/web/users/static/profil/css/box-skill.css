@@ -1,7 +1,7 @@
 .box-skill {
     width: 50vw;
-    margin-top: -60px;
     padding: 20px;
+    margin-top: -60px;
     background-color: var(--to-teal-2-rgba);
     box-sizing: border-box;
     border-radius: 10px;
@@ -142,5 +142,3 @@
     color: var(--to-teal-3-rgba);
     background-color: white;
 }
-
-Request.getUsers()

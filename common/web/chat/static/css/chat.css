@@ -154,7 +154,6 @@ textarea:active {
     padding: 10px;
     overflow-y: auto;
     max-height: 380px;
-    /* Adjusted for the added search bar height */
 }
 
 #contacts-list::-webkit-scrollbar {
@@ -178,6 +177,7 @@ textarea:active {
 .contact {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -196,6 +196,20 @@ textarea:active {
 
 .contact-name {
     flex: 1;
+}
+
+.contact-online-status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.contact-online-status.online {
+    background-color: rgba(0, 255, 0, 0.5);
+}
+
+.contact-online-status.offline {
+    background-color: rgba(255, 0, 0, 0.5);
 }
 
 #chat-box {
@@ -235,7 +249,7 @@ textarea:active {
     color: rgba(255, 255, 255, 0.5);
 }
 
-#send-btn {
+.action-btn {
     background-color: var(--primary-color);
     color: #fff;
     border: none;
@@ -248,7 +262,7 @@ textarea:active {
     transition: ease-in-out 0.3s;
 }
 
-#send-btn:hover {
+.action-btn:hover {
     background-color: var(--text-color);
     color: var(--to-teal-4-rgba);
 }
@@ -273,6 +287,126 @@ textarea:active {
     background-color: var(--to-teal-5-rgba);
     color: #fff;
 }
+
+.game-invite {
+    padding: 15px 15px;
+    margin-bottom: 15px;
+    width: fit-content;
+    max-width: 80%;
+    background-color: var(--to-teal-5-rgba);
+    color: var(--text-color);
+    display: flex;
+    word-wrap: break-word;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.game-invite-head {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-invite-head img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.choose-games {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 10px;
+}
+
+.choose-games button {
+    transition: ease-in-out 0.3s;
+    color: var(--text-color);
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+.choose-games button:hover {
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+}
+
+.game-invite i {
+    color: var(--text-color);
+}   
+
+.user-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+}
+
+.btn-head {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 30%;
+}
+
+.btn-utils {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: 20%;
+}
+
+.btn-update {
+    position: relative;
+}
+
+.btn-update[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 12px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.btn-update[data-tooltip]:hover::after {
+    opacity: 1;
+}
+
+.btn-head button{
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+    transition: ease-in-out 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.btn-head button:hover {
+    background-color: var(--text-color);
+    color: var(--to-teal-4-rgba);
+
+}
+
 
 @keyframes slideInFromRight {
     0% {

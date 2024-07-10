@@ -16,11 +16,11 @@
     <div class="match-history">
         {% for match in user_data.matches %}
         <div class="match">
-            <div class="player-info">{{ match.player1 }} / {{ match.player2 }}</div>
-            <div class="match-info">{{ match.time }}</div>
-            <div class="match-winner">{{ match.winner }}</div>
-            <div class="match-elo">{{ match.elo_before1 }} / {{ match.elo_before2 }}</div>
-            <div class="match-elo-after">{{ match.elo_after1 }} / {{ match.elo_after2 }}</div>
+            <div class="player-info">{{ match.player1_username }} / {{ match.player2_username }}</div>
+            <div class="match-info">{{ match.time_minutes }}m {{ match.time_seconds }}s</div>
+            <div class="match-winner">{{ match.winner_username }}</div>
+            <div class="match-elo">{{ match.elo_before_player1 }} / {{ match.elo_before_player2 }}</div>
+            <div class="match-elo-after">{{ match.elo_after_player1 }} / {{ match.elo_after_player2 }}</div>
         </div>
         {% endfor %}
     </div>
@@ -28,16 +28,17 @@
         {% if not user_data.visited %}
         <a href="{% url 'progress' %}" class="btn">{% trans "Show My Progress" %}</a>
         {% else %}
-        <a href="{% url 'progress' %}" class="btn">{% trans "Show His Progress" %}</a>
+        <a href="{% url 'progress' %}" class="btn" disable>{% trans "Show His Progress" %}</a>
         {% endif %}
     </div>
     {% else %}
     <div class="no-match">
         {% if not user_data.visited %}
-        <p>{% trans "Vous n'avez aucun match jouer pour le moment"%}</p>
+        <p>{% trans "Vous n'avez aucun match joué pour le moment"%}</p>
         <a href="/play/" id="btn-play">{% trans "Jouer"%}</a>
         {% else %}
-        <p>{% trans "N'as encore aucun match jouer pour le moment"%}</p>
+        <p>{% trans "N'as encore aucun match joué pour le moment"%}</p>
+        <a href="/play/" id="btn-play">{% trans "Play with"%}</a>
         {% endif %}
     </div>
     {% endif %}

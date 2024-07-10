@@ -1,95 +1,106 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+
 {% block title %}{% trans "Progress" %}{% endblock %}
 
 {% block custom_css %}
-	<link rel="stylesheet" type="text/css" href="{% static 'progress/css/progress.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'progress/css/progress.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="progress-container">
-	<h2>My progress</h2>
-	<div class="pie-chart-container">
-		<h2>{% trans "Win/Lose Ratio" %}</h2>
-		<canvas id="pieChart" width="100" height="100"></canvas>
-	</div>
-	<div class="chart-container">
-		<canvas id="progressChart" width="400" height="200"></canvas>
-	</div>
-</div>
+<section class="warp-progress">
+	<aside class="aside-stats">
+		<h2 class="underline">{% trans "Stats Panels" %}</h2>
+		<div class="warp-burger-menus">
+			<h3>Winrate</h3>
+			<canvas id="progress-burger" width="200" height="200"></canvas>
+		</div>
+		<div class="warp-display-stats">
+			<h3>{% trans "Stats" %}</h3>
+			<table id="stats-table">
+				<thead>
+					<tr>
+						<th>{% trans "Statistic" %}</th>
+						<th>{% trans "Value" %}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{% trans "Number of games" %}</td>
+						<td id="games-count">-</td>
+					</tr>
+					<tr>
+						<td>{% trans "Max win streak" %}</td>
+						<td id="max-win-streak">-</td>
+					</tr>
+					<tr>
+						<td>{% trans "Average game time" %}</td>
+						<td id="avg-game-time">-</td>
+					</tr>
+					<tr>
+						<td>{% trans "Current Elo" %}</td>
+						<td id="current-elo">-</td>
+					</tr>
+					<tr>
+						<td>{% trans "Max Elo" %}</td>
+						<td id="max-elo">-</td>
+					</tr>
+					<tr>
+						<td>{% trans "Number of tournament participations" %}</td>
+						<td id="tournament-count">-</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</aside>
+    <section class="warp-stats">
+        <article class="game-graph">
+            <h2 class="underline">{% trans "ELO Progress" %}</h2>
+			<div class="progress-chart">
+                <canvas id="progress-chart" width="1000" height="500"></canvas>
+            </div>
+        </article>
+        <article class="game-history">
+            <h2 class="underline">{% trans "Game Stats Dashboards" %}</h2>
+            <div class="match-legend">
+                <div class="legend-item">{% trans "Players" %}</div>
+                <div class="legend-item">{% trans "Time" %}</div>
+                <div class="legend-item">{% trans "Winner" %}</div>
+                <div class="legend-item">{% trans "ELO Before" %}</div>
+                <div class="legend-item">{% trans "ELO After" %}</div>
+            </div>
+            <div class="match-history" id="match-history-container">
+            </div>
+        </article>
+    </section>
+	<aside class="aside-profil">
+		<div class="img-profil" id="img-profil">
+		</div>
+		<h2 id="profile-username"></h2>
+		<div class="warp-info">
+			<h3>Player Information</h3>
+			<div class="info-items">
+				<p>Last Connexion</p>
+				<p id="last-connexion"> - </p>
+			</div>
+			<div class="info-items">
+				<p>Last Game</p>
+				<p id="last-game-is-win"> - </p>
+			</div>
+			<div class="info-items">
+				<p>Last Tournement</p>
+				<p> - </p>
+			</div>
+		</div>
+		<div>
+			<button id="playwith">Play</button>
+		</div>
+	</aside>
+</section>
 
-<!-- Inclure Chart.js et l'adaptateur date-fns -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+{% endblock %}
 
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-		const ctxProgress = document.getElementById('progressChart').getContext('2d');
-		const ctxPie = document.getElementById('pieChart').getContext('2d');
-
-		const matches = JSON.parse('{{ matches_json|escapejs }}');
-
-		const labels = matches.map(match => match.date);
-		const data = matches.map(match => match.elo);
-
-		const progressChart = new Chart(ctxProgress, {
-			type: 'line',
-			data: {
-				labels: labels,
-				datasets: [{
-					label: '{% trans "ELO Progress" %}',
-					data: data,
-					borderColor: 'rgba(75, 192, 192, 1)',
-					backgroundColor: 'rgba(75, 192, 192, 0.2)',
-					borderWidth: 1
-				}]
-			},
-			options: {
-				responsive: true,
-				scales: {
-					x: {
-						type: 'time',
-						time: {
-							unit: 'day',
-							displayFormats: {
-								day: 'MMM dd'
-							}
-						}
-					},
-					y: {
-						beginAtZero: false
-					}
-				}
-			}
-		});
-
-		const winCount = matches.filter(match => match.winner === '{{ user_data.username }}').length;
-		const loseCount = matches.length - winCount;
-		const ratioData = [winCount, loseCount];
-
-		const pieChart = new Chart(ctxPie, {
-			type: 'pie',
-			data: {
-				labels: ['Win', 'Lose'],
-				datasets: [{
-					label: '{% trans "Win/Lose Ratio" %}',
-					data: ratioData,
-					backgroundColor: [
-						'rgba(75, 192, 192, 0.5)',
-						'rgba(255, 99, 132, 0.5)'
-					],
-					borderColor: [
-						'rgba(75, 192, 192, 1)',
-						'rgba(255, 99, 132, 1)'
-					],
-					borderWidth: 1
-				}]
-			},
-			options: {
-				responsive: true
-			}
-		});
-	});
-</script>
+{% block extra_scripts %}
+	<script src="{% static 'progress/js/progress.js' %}"></script>
 {% endblock %}
