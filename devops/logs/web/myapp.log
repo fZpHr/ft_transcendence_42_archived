@@ -2,32 +2,26 @@ Watching for file changes with StatReloader
 Performing system checks...
 
 System check identified no issues (0 silenced).
-July 10, 2024 - 08:27:33
+July 10, 2024 - 09:50:31
 Django version 3.2.25, using settings 'transcendence.settings'
 Starting ASGI/Channels version 3.0.4 development server at http://0.0.0.0:8000/
 Quit the server with CONTROL-C.
-Invalid HTTP_HOST header: '0.0.0.0:8000'. You may need to add '0.0.0.0' to ALLOWED_HOSTS.
-Bad Request: /login
-HTTP GET /login 400 [0.04, 172.18.0.1:40934]
-Invalid HTTP_HOST header: '0.0.0.0:8000'. You may need to add '0.0.0.0' to ALLOWED_HOSTS.
-Bad Request: /favicon.ico
-HTTP GET /favicon.ico 400 [0.01, 172.18.0.1:40934]
-HTTP GET /login 302 [0.01, 172.18.0.1:45646]
+HTTP GET /login 302 [0.03, 172.18.0.1:33968]
 Session data corrupted
-HTTP GET /fr/login/ 200 [0.22, 172.18.0.1:45646]
-HTTP GET /static/css/base.css 200 [0.01, 172.18.0.1:45646]
-HTTP GET /static/css/footer.css 200 [0.01, 172.18.0.1:45650]
-HTTP GET /static/css/chat.css 200 [0.01, 172.18.0.1:45654]
-HTTP GET /static/css/header.css 200 [0.01, 172.18.0.1:45656]
-HTTP GET /static/css/social.css 200 [0.01, 172.18.0.1:45670]
-HTTP GET /static/css/radial-menu.css 200 [0.01, 172.18.0.1:45674]
-HTTP GET /static/login/css/login.css 200 [0.01, 172.18.0.1:45646]
-HTTP GET /static/login/css/input_style.css 200 [0.01, 172.18.0.1:45650]
-HTTP GET /static/login/css/form_style.css 200 [0.01, 172.18.0.1:45654]
-HTTP GET /static/login/css/button_style.css 200 [0.01, 172.18.0.1:45656]
-HTTP GET /static/login/css/indicator_style.css 200 [0.01, 172.18.0.1:45670]
-HTTP GET /static/login/css/other_connexion.css 200 [0.01, 172.18.0.1:45674]
-HTTP GET /static/login/css/responsive_styles.css 200 [0.01, 172.18.0.1:45646]
-HTTP GET /static/login/js/login.js 200 [0.01, 172.18.0.1:45650]
-HTTP GET /static/login/img/42_Logo.png 200 [0.00, 172.18.0.1:45654]
-HTTP GET /static/login/img/pong-demo.gif 200 [0.01, 172.18.0.1:45646]
+HTTP GET /fr/login/ 200 [0.26, 172.18.0.1:33968]
+HTTP GET /static/css/base.css 200 [0.01, 172.18.0.1:33968]
+HTTP GET /static/css/footer.css 200 [0.01, 172.18.0.1:33974]
+HTTP GET /static/css/header.css 200 [0.01, 172.18.0.1:33986]
+HTTP GET /static/css/social.css 200 [0.01, 172.18.0.1:34006]
+HTTP GET /static/css/chat.css 200 [0.01, 172.18.0.1:33992]
+HTTP GET /static/css/radial-menu.css 200 [0.01, 172.18.0.1:34018]
+HTTP GET /static/login/css/login.css 200 [0.01, 172.18.0.1:33968]
+HTTP GET /static/login/css/input_style.css 200 [0.01, 172.18.0.1:33974]
+HTTP GET /static/login/css/form_style.css 200 [0.01, 172.18.0.1:33986]
+HTTP GET /static/login/css/button_style.css 200 [0.01, 172.18.0.1:34006]
+HTTP GET /static/login/css/indicator_style.css 200 [0.01, 172.18.0.1:33992]
+HTTP GET /static/login/css/other_connexion.css 200 [0.01, 172.18.0.1:34018]
+HTTP GET /static/login/css/responsive_styles.css 200 [0.01, 172.18.0.1:33968]
+HTTP GET /static/login/js/login.js 200 [0.01, 172.18.0.1:33974]
+HTTP GET /static/login/img/42_Logo.png 200 [0.00, 172.18.0.1:33992]
+HTTP GET /static/login/img/pong-demo.gif 200 [0.01, 172.18.0.1:33968]

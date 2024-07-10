@@ -25,15 +25,18 @@ req:
 	@sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 mp_setup:
+	@git remote get-url oneRepo 2>/dev/null || git remote add oneRepo git@github.com:fZpHr/ft_transcendence_42.git
 	@git remote get-url secondRepo 2>/dev/null || git remote add secondRepo git@github.com:BenjaminBerkrouber/ft_transendence.git
 	@git remote get-url thirdRepo 2>/dev/null || git remote add thirdRepo git@github.com:eyJvcy/transcendence.git
 	@git remote get-url fourthRepo 2>/dev/null || git remote add fourthRepo git@github.com:Ezuker/ft_transcendence.git
+	@git remote get-url fiveRepo 2>/dev/null || git remote add fiveRepo git@github.com:Ehlzz/ft_transcendence.git
 	@git remote get-url fiveRepo 2>/dev/null || git remote add fiveRepo git@github.com:Ehlzz/ft_transcendence.git
 	@git remote -v
 mp:
 	@git add .
 	@git commit -m "$(msg)"
 	-@git push origin main
+	-@git push oneRepo main
 	-@git push secondRepo main
 	-@git push thirdRepo main
 	-@git push fourthRepo main
