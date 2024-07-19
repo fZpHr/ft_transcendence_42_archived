@@ -16,6 +16,8 @@ services:
   adminer:
     build: common/adminer/.
     container_name: adminer
+    depends_on:
+      - postgres
     ports:
       - "9000:8080"
     networks:
@@ -27,19 +29,25 @@ services:
     depends_on:
       - logstash
       - adminer
+      - web
+    environment:
+      TZ: "Europe/Paris"
     volumes:
-      - ./devops/logs/nginx/:/var/log/nginx/
+      - ./common/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./data/logs/nginx/:/var/log/nginx/
+      - ./common/nginx/certs:/etc/nginx/certs
+      - ./data/logs/modsecurity:/var/log/modsecurity/
     ports:
       - "443:443"
     env_file:
       - .env
     networks:
-      transcendence:
+      - transcendence
 
   postgres:
     image: postgres:13
-    container_name: postgres
     hostname: postgres_network
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
@@ -94,6 +102,7 @@ services:
     image: docker.elastic.co/logstash/logstash:7.10.2
     container_name: logstash
     depends_on:
+      - web
       - elasticsearch
     ports:
       - "5000:5000"
@@ -106,8 +115,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./devops/logs/web/:/usr/share/logstash/logs/web
-      - ./devops/logs/nginx/:/usr/share/logstash/logs/nginx
+      - ./data/logs/web/:/usr/share/logstash/logs/web
+      - ./data/logs/nginx/:/usr/share/logstash/logs/nginx
       - ./devops/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     networks:
       transcendence:
@@ -115,6 +124,8 @@ services:
   web:
     build: common/web/.
     container_name: web
+    depends_on:
+      - postgres
     command: >
       sh -c "pipenv run python manage.py runserver 0.0.0.0:8000 > /usr/src/app/logs/myapp.log 2>&1"
     ports:
@@ -122,7 +133,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./devops/logs/web/:/usr/src/app/logs
+      - ./data/logs/web/:/usr/src/app/logs
       - ./common/web:/usr/src/app
     networks:
       transcendence:
@@ -130,11 +141,13 @@ services:
   grafana:
     image: grafana/grafana:9.5.2
     container_name: grafana
+    depends_on:
+      - prometheus
     ports:
       - "3000:3000"
     environment:
       - GF_SMTP_ENABLED=true
-      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_HOST=${SMTP_HOST}
       - GF_SMTP_USER=${SMTP_USER}
       - GF_SMTP_PASSWORD=${SMTP_PASSWORD}
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
@@ -148,6 +161,9 @@ services:
   prometheus:
     image: prom/prometheus:v2.44.0
     container_name: prometheus
+    depends_on:
+      - node-exporter
+      - cadvisor
     ports:
       - "9090:9090"
     volumes:
@@ -178,6 +194,8 @@ services:
     image: gcr.io/cadvisor/cadvisor:v0.47.0
     container_name: cadvisor
     command: -logtostderr -docker_only
+    depends_on:
+      - node-exporter
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -186,8 +204,7 @@ services:
       - /dev/disk:/dev/disk:ro
     networks:
       - transcendence
-
+  
 networks:
   transcendence:
     driver: bridge
-    

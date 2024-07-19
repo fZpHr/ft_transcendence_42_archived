@@ -1,0 +1,17 @@
+{
+	"ulid": "01J33Q7161F635MCYHD6Y59BP9",
+	"minTime": 1721152800000,
+	"maxTime": 1721160000000,
+	"stats": {
+		"numSamples": 1192755,
+		"numSeries": 9198,
+		"numChunks": 14838
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01J33Q7161F635MCYHD6Y59BP9"
+		]
+	},
+	"version": 1
+}

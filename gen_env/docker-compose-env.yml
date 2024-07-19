@@ -1,0 +1,14 @@
+services:
+  vault:
+    image: hashicorp/vault
+    container_name: vault
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+    volumes:
+      - ../data/vault:/vault/data:z
+      - ../.env:/.env
+      - ./script_env.sh:/script_env.sh
+      - ../devops/vault/config.hcl:/vault/config/config.hcl
+    entrypoint: ["./script_env.sh"]
+    cap_add:
+      - IPC_LOCK

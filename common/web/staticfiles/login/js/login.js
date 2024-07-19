@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btn42 = document.getElementById('btn-42');
     
     btn42.addEventListener('click', () => {
-        window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Fregister-42%2F&response_type=code';
+        window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193&redirect_uri=http%3A%2F%2Flocalhost:8000%3A8000%2Fapi%2Fregister-42%2F&response_type=code';
     });
     
     const togglePasswordLogin = document.getElementById('togglePasswordLogin');

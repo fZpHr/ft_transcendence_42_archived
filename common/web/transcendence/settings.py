@@ -164,3 +164,18 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# Sécuriser les cookies
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Redirection HTTPS
+SECURE_SSL_REDIRECT = True
+
+# HSTS (optionnel, mais recommandé pour améliorer la sécurité)
+SECURE_HSTS_SECONDS = 31536000  # 1 an
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Indiquer à Django d'utiliser le header 'X-Forwarded-Proto' pour déterminer le schéma de l'URL (http ou https)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

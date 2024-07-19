@@ -32,14 +32,14 @@ def login_player(request):
         user = authenticate(request, username=player.username, password=password)
         if user is not None:
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('http://localhost:8000/profil/')
+            return redirect('https://localhost/profil/')
         else:
             messages.error(request, "Invalid e-mail or password,")
-            return redirect('http://localhost:8000/login/')
+            return redirect('https://localhost/login/')
     except Player.DoesNotExist:
         messages.error(request, "Invalid e-mail or password, ")
         print(messages.get_messages(request))
-        return redirect('http://localhost:8000/login/')
+        return redirect('https://localhost/login/')
 
 
 @api_view(['POST'])
@@ -66,15 +66,15 @@ def register(request, format=None):
         user = authenticate(request, username=username, password=password)
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-        return redirect('http://localhost:8000/profil/')
+        return redirect('https://localhost/profil/')
         
     except ValidationError as e:
         messages.error(request, f"Validation Error: {str(e)}")
-        return redirect('http://localhost:8000/login/')
+        return redirect('https://localhost/login/')
     
     except Exception as e:
         messages.error(request, f"An error occurred: {str(e)}")
-        return redirect('http://localhost:8000/login/')
+        return redirect('https://localhost/login/')
 
 def download_file_from_url(url):
     try:
@@ -99,7 +99,7 @@ def register_42(request, format=None):
         "client_id": "u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193",
         "client_secret": "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",
         "code": request.query_params["code"],
-        "redirect_uri": "http://localhost:8000/api/register-42/"
+        "redirect_uri": "https://localhost/api/register-42/"
     }
     headers = {"Content-Type": "application/json; charset=utf-8"}
     r = requests.post('https://api.intra.42.fr/oauth/token', headers=headers, json=body)
@@ -121,7 +121,7 @@ def register_42(request, format=None):
         data.save()
         user = authenticate(request, username=username, password=password)
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-    return redirect('http://localhost:8000/profil/')
+    return redirect('https://localhost/profil/')
 
 def logout(request):
     auth_logout(request)

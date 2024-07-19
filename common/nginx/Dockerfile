@@ -1,18 +1,16 @@
-FROM debian:bullseye
+# Utiliser une image de base Nginx avec ModSecurity
+FROM elisiano/nginx-modsecurity
 
-RUN apt update && apt install -y nginx
+# Copier les fichiers de configuration de ModSecurity dans le conteneur
+COPY ./modsecurity/owasp-crs /etc/nginx/modsecurity.d/owasp-crs
 
-RUN apt install -y curl
+# Configurer les permissions nécessaires pour le répertoire de ModSecurity
+RUN mkdir -p /etc/nginx/modsecurity.d
+COPY ./modsecurity/modsecurity.conf /etc/nginx/modsecurity.d/modsecurity.conf
+COPY ./modsecurity/includes.conf /etc/nginx/modsecurity.d/includes.conf
+RUN chown -R nginx:nginx /etc/nginx/modsecurity.d
 
-RUN apt-get -y --no-install-recommends install tzdata && ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
+RUN mkdir /var/log/modsecurity
 
-RUN mkdir -p /etc/nginx/ssl
-RUN apt install openssl -y
-RUN openssl req -x509 -nodes -out /etc/nginx/ssl/transcendence.crt -keyout /etc/nginx/ssl/transcendence.key -subj "/C=FR/ST=IDF/L=Angouleme/O=42/OU=42/CN=transcendence/UID=hbelle"
-RUN mkdir -p /var/run/nginx
-RUN chmod 755 /var/www/html
-RUN chown -R www-data:www-data /var/www/html
-
-COPY conf/nginx.conf /etc/nginx/nginx.conf
-
+# Lancer Nginx
 CMD ["nginx", "-g", "daemon off;"]

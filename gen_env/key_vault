@@ -1,0 +1,14 @@
+# HASHICORP VAULT
+# VAULT_DEV_ROOT_TOKEN_ID=hvs.w4oPCidnWWdUPw4j5t6Gvazf
+# VAULT_DEV_LISTEN_ADDRESS=http://127.0.0.1:8200
+# VAULT_API_ADDR=http://127.0.0.1:8200
+# VAULT_TOKEN=hvs.w4oPCidnWWdUPw4j5t6Gvazf
+
+
+# Unseal Key 1: BVDDQaB5bvC8JL3j5DVqRYI0jHX0cDfD4rzTi0DVNs7+
+# Unseal Key 2: WAZWCbX9ggE4URlIdeqED28NI6cjpT4/r8rYyw2KFUKI
+# Unseal Key 3: Ww+w2J+QoNyrqkcEHzTd6j+WRAKwoxKa+/LxBUDJYStT
+# Unseal Key 4: kZ+CbHuGocqcSumc86/IeNdnz7cHRGJyN7OxHu/Xr5iC
+# Unseal Key 5: fvsv4xbG3+9l8ZnzAcKGwayeudTkY/4D64v6EeMumuQL
+
+# Initial Root Token: hvs.w4oPCidnWWdUPw4j5t6Gvazf

@@ -1,13 +1,17 @@
 all:
-	@sudo chmod -R 777 ./data/*
-	@sudo docker compose -f docker-compose.yml up -d
+	@docker compose up --build
 down:
-	@sudo docker compose -f docker-compose.yml down
-	@sudo docker system prune -a -f
-	@sudo docker network prune -f
+	@docker compose -f docker-compose.yml down
+	@docker system prune -a -f
+	@docker volume prune -f
+	@docker network prune -f
 stop:
-	@sudo docker compose -f docker-compose.yml stop
+	@docker compose -f docker-compose.yml stop
 
+env:
+	@touch .env
+	@docker compose -f gen_env/docker-compose-env.yml up --build
+	
 re:
 	@make down
 	@make all
