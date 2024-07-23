@@ -12,4 +12,8 @@ class LoginEncoder(DjangoJSONEncoder):
         if isinstance(obj, Player):
             return str(obj)
         return super().default(obj)
-        
+
+class PlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Player
+        fields = ['id', 'username', 'mail', 'img', 'created_at', 'elo', 'is_online', 'lastConnexion']

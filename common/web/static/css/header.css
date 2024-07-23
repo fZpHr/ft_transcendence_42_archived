@@ -9,11 +9,27 @@ header {
     display: flex;
 }
 
-.navbar {
+#navbar {
     color: var(--text-color);
     padding: 10px 20px;
     width: 80%;
+    height: 8vh ;
     margin: auto;
+    background-color: var(--to-teal-1-rgba);
+}
+
+#navbar button {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+#navbar button span {
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .navbar-brand {
@@ -111,4 +127,26 @@ header {
 
 #navbarDropdownLangue {
     font-size: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    #navbar {
+        width: 100%;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .nav-link {
+        margin: 0 10px;
+    }
+
+    .navbar-nav .nav-item::before {
+        bottom: -5px;
+    }
+
+    .dropdown-item {
+        width: 100%;
+    }
 }

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "newGame" %}{% endblock %}
+
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'new-game/css/new-game.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="warp-new-game">
+    <aside class="lobby_list">
+        <div class="title-lobby-lst">
+            <h1>Lobbys</h1>
+        </div>
+        <div class="lobbys_box" id="all_lobby">
+    
+        </div>
+    </aside>
+
+    <div id="new-game-btn">
+        <span>Create new lobby</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'new-game/js/new-game.js' %}"></script>
+{% endblock %}

@@ -19,11 +19,11 @@ urlpatterns = [
 urlpatterns += [
     path('register-42/', views_users.register_42),
     path('login_player/', views_users.login_player, name='login_player'),
-    path('register/', views_users.register),
+    path('register_player/', views_users.register_player, name='register_player'),
     path('logout/', views_users.logout, name='logout'),
     path('updateImg/', views_users.update_img, name='update_img'),
     path('updateData/', views_users.update_data, name='update_data'),
-    path('updatePass/', views_users.update_pass, name='updatePass'),
+    path('updatePassword/', views_users.updatePassword, name='updatePassword'),
     path('getNumberOfGames/', views_users.getNumberOfGames),
     path('getCurrentElo/', views_users.getCurrentElo),
     path('getMaxElo/', views_users.getMaxElo),
@@ -46,10 +46,25 @@ urlpatterns += [
     path('sendInvite/', views_chat.sendInvite),
     path('isOnline/', views_chat.isOnline),
     path('updateSocialStatus/', views_chat.updateSocialStatus),
+    path('getHashRoom/', views_chat.getHashRoom),
+    path('getGlobalNotif/', views_chat.getGlobalNotif),
+    path('removeChatNotif/', views_chat.removeChatNotif),
+    path('getNbrSocialNotif/', views_chat.getNbrSocialNotif),
+    path('getNbrChatNotif/', views_chat.getNbrChatNotif),
+    path('updateInviteStatus/', views_chat.updateInviteStatus),
+    path('clearNotifSocial/', views_chat.clearNotifSocial),
+    path('clearNotifChatForUser/', views_chat.clearNotifChatForUser),
 ]
 
 # Add URLS for game
-
 urlpatterns += [
     path('getHistoryGame/', views_game.getHistoryGame),
+    path('createLobby/', views_game.createLobby),
+    path('getAllLobby/', views_game.getAllLobby),
+    path('getUserById/', views_game.getUserById),
+    path('addPlayerToLobby/', views_game.addPlayerToLobby),
+    path('getUserAvailableToLobby/', views_game.getUserAvailableToLobby),
+    path('addIaToLobby/', views_game.addIaToLobby),
+    path('lockLobby/', views_game.lockLobby),
+    path('getTournamentInfo/', views_game.getTournamentInfo),
 ]

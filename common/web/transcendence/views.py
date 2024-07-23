@@ -14,6 +14,7 @@ def set_language(request, language_code):
         request.session['django_language'] = language_code
         activate(language_code)
         return redirect(next_page)
+    
 
     return redirect(reverse('some_default_view')) 
 

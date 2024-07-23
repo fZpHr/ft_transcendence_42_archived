@@ -6,3 +6,43 @@
     padding-bottom: 100px;
 }
 
+.error-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+#error-content, #error-content-pass {
+    font-size: 0.8rem;
+    color: gray;
+    text-decoration: underline;
+}
+
+.box-top-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 10px;
+}
+
+.box-top-info i {
+    color: #fff;
+    font-size: 0.9rem;
+    background-color: var(--to-teal-4-rgba);
+    transition: ease-in-out 0.3s;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    line-height: 40px;
+}
+
+.toggle-password {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    
+    color: var(--text-color);
+}

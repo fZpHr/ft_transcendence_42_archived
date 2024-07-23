@@ -4,7 +4,7 @@
 
 {% block box-profil %}
 <div class="box-profil">
-    <div class="avatars">
+    <div class="avatars"> 
         {% if user_data.is42 %}
             <img src="{{ user_data.avatar_url.name }}" alt="{% trans " Avatar" %}" id="profile-avatar">
         {% else %}
@@ -21,7 +21,7 @@
     </div>
     <div class="user-info">
         <div class="username-container">
-            <h1>{{ user_data.username }}</h1>
+            <h1 id="username-profil">{{ user_data.username }}</h1>
             {% if user_data.visited == False and user_data.is42 == False %}
                 <button class="edit-btn" id="edit-btn">
                     <i class="fa-solid fa-pen-to-square"></i>
@@ -39,11 +39,16 @@
 {% if user_data.visited == False and user_data.is42 == False %}
     <div id="edit-panel" class="edit-panel">
         <div class="top-panel">
-            <h2>Edit Profile</h2>
+            <div class="box-top-info">
+                <h2>Edit Profile</h2>
+                <button id="back-btn-edit" class="btn btn-link">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
             <div class="line-edit-profil"></div>
         </div>
         <div class="bot-panel">
-            <form id="edit-form" method="post" action="http://localhost:8000/api/updateData/">{% csrf_token %}
+            <form id="edit-form" method="post">
                 <div class="warp-input">
                     <span class="valid-indicator" id="username-indicator"
                         title="{% trans 'Invalid username format' %}"></span>
@@ -56,9 +61,11 @@
                     <input type="email" name="email" id="email" value="{{ user_data.mail }}" required>
                     <label for="email" class="input-label">{% trans "Email :" %}</label>
                 </div>
-                {% include 'login/error_messages.html' %}
+                <div class="error-box">
+                    <span id="error-content"></span>
+                </div>
                 <div class="form-btn">
-                    <button type="submit">{% trans "Update" %}</button>
+                    <button type="submit" id="submit-edit-data">{% trans "Update" %}</button>
                 </div>
             </form>
         </div>
@@ -69,38 +76,52 @@
 
         <div id="edit-password-panel" class="edit-panel">
             <div class="top-panel">
-                <h2>{% trans "Change Password" %}</h2>
+                <div class="box-top-info">
+                    <h2>{% trans "Change Password" %}</h2>
+                    <button id="back-btn-edit-password" class="btn btn-link">
+                        <i class="fas fa-arrow-left"></i>                        
+                    </button>
+                </div>
                 <div class="line-edit-profil"></div>
             </div>
             <div class="bot-panel">
-                <form id="edit-password-form" method="post" action="http://localhost:8000/api/updatePass/">{% csrf_token %}
+                <form id="edit-password-form" method="post" action="/api/updatePass/">{% csrf_token %}
                     <div class="warp-input">
                         <span class="valid-indicator" id="old-password-indicator"
                             title="{% trans 'Invalid password format' %}"></span>
                         <input type="password" name="old_password" id="old-password" required>
                         <label for="old-password" class="input-label">{% trans "Current Password :" %}</label>
+                        <button type="button" class="toggle-password" id="toggle-old-password">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
                     </div>
-
                     <div class="warp-input">
                         <span class="valid-indicator" id="new-password-indicator"
                             title="{% trans 'Invalid password format' %}"></span>
                         <input type="password" name="new_password" id="new-password" required>
                         <label for="new-password" class="input-label">{% trans "New Password :" %}</label>
+                        <button type="button" class="toggle-password" id="toggle-new-password">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
                     </div>
-
                     <div class="warp-input">
                         <span class="valid-indicator" id="confirm-password-indicator"
                             title="{% trans 'Passwords do not match' %}"></span>
                         <input type="password" name="confirm_password" id="confirm-password" required>
                         <label for="confirm-password" class="input-label">{% trans "Confirm New Password :" %}</label>
+                        <button type="button" class="toggle-password" id="toggle-confirm-password">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
                     </div>
-
+                    <div class="error-box">
+                        <span id="error-content-pass"></span>
+                    </div>
                     <div class="form-btn">
-                        <button type="submit">{% trans "Update" %}</button>
+                        <button type="submit" id="submit-edit-password">{% trans "Update" %}</button>
                     </div>
                 </form>
             </div>
-        </div>
+        </div>        
     </div>
 {% endif %}
 

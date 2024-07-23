@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="warp-login">
+<div class="warp-login"> 
     <div class="container-login">
         <div class="form-title">
             <h1>{% trans "Welcome" %}</h1>
@@ -30,7 +30,6 @@
             {% include 'login/login_form.html' %}
             {% include 'login/register_form.html' %}
         </div>
-
         {% include 'login/other_connexion.html' %}
     </div>
 </div>
@@ -39,6 +38,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{% static 'login/js/login.js' %}"></script>
 <script src="{% static 'login/js/login.js' %}"></script>
 {% endblock %}

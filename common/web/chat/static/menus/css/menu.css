@@ -1,0 +1,143 @@
+/* chat.css */
+
+/* Pré-menu */
+#pre-menu {
+	display: none;
+	position: fixed;
+	bottom: 50px;
+	right: 50px;
+	z-index: 1000;
+}
+
+#pre-menu.active {
+	display: block;
+}
+
+#pre-menu-btn {
+	background-color: var(--to-teal-3-rgba);
+	color: #fff;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 50px;
+	cursor: pointer;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	transition: ease-in-out 0.3s;
+	position: relative;
+	z-index: 1001;
+}
+
+#pre-menu-btn:hover {
+	background-color: var(--text-color);
+	color: var(--to-teal-3-rgba);
+}
+
+
+#radial-menu {
+	display: none;
+	position: absolute;
+	bottom: 50%;
+	right: 50%;
+	width: 150px;
+	height: 150px;
+	text-align: center;
+	z-index: 1000;
+	transform: translate(-50%, -50%);
+}
+
+#radial-menu.active {
+	display: block;
+	animation: openRadialMenu 0.3s forwards;
+}
+
+#global-notif {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	background-color: red;
+	color: #fff;
+	padding: 5px;
+	border-radius: 50%;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 2000;
+	width: 20px;
+	height: 20px;
+}
+
+#global-notif.active {
+	display: flex;
+}
+
+.notif {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 15px;
+	height: 15px;
+}
+
+.notif span {
+	color: #fff;
+	font-size: 0.8rem;
+}
+
+.notif-count {
+	display: none;
+}
+
+.notif-count.active {
+	display: flex;
+}
+
+#notif-chat {
+	justify-content: center;
+	align-items: center;
+	background: red;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: fixed;
+    top: 2%;
+    left: 26%;
+    z-index: 3000;
+}
+
+#notif-social {
+	justify-content: center;
+	align-items: center;
+    background: red;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 27%;
+    right: 5%;
+    z-index: 3000;
+}
+
+@keyframes openRadialMenu {
+	0% {
+		opacity: 0;
+		transform: scale(0) translate(50%, 50%);
+	}
+
+	100% {
+		opacity: 1;
+		transform: scale(1) translate(50%, 50%);
+	}
+}
+
+@keyframes fadeInMenuItems {
+	0% {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

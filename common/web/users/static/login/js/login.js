@@ -1,144 +1,266 @@
 document.addEventListener('DOMContentLoaded', function () {
     const inputs = document.querySelectorAll('.warp-input input');
+    toggleChangeForm();
+    toggleSubmitForm();
+    toogleFiledInputs(inputs);
+    toggle42Login();
+    toggleShowPasswords();
+});
 
-    inputs.forEach(input => {
-        const warpInput = input.parentElement;
-        const validIndicator = warpInput.querySelector('.valid-indicator');
 
-        const checkInput = () => {
-            const label = input.nextElementSibling;
-            if (input.value !== '') {
-                label.classList.add('filled');
-                validIndicator.style.opacity = '1';
-            } else {
-                label.classList.remove('filled');
-                validIndicator.style.opacity = '0';
+// ===================== Toogle ========================
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-            checkIndicators();
-        };
+        }
+    }
+    return cookieValue;
+}
 
-        const checkEmail = () => {
-            if (validateEmail(input.value)) {
-                validIndicator.innerHTML = '<i class="fa-solid fa-check-circle"></i>';
-                validIndicator.classList.remove('invalid');
-                validIndicator.classList.add('valid');
-            } else {
-                validIndicator.innerHTML = '<i class="fa-solid fa-times-circle"></i>';
-                validIndicator.classList.remove('valid');
-                validIndicator.classList.add('invalid');
+
+async function APIlogin(formData) {
+    try {
+        const response = await fetch('/api/login_player/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(formData),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to login:', error);
+        throw error;
+    }
+}
+
+async function APIregister(formData) {
+    try {
+        const response = await fetch('/api/register_player/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(formData),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to register:', error);
+        throw error;
+    }
+}
+
+
+async function toggleSubmitForm() {
+    try {
+        let events = [
+            {
+                btn: document.getElementById('login-submit'),
+                form: document.getElementById('login-form'),
+                action: APIlogin,
+                errorBox: document.getElementById('error-login-value')
+            },
+            {
+                btn: document.getElementById('register-submit'),
+                form: document.getElementById('register-form'),
+                action: APIregister,
+                errorBox: document.getElementById('error-register-value')
             }
-        };
+        ];
 
-        const checkPasswordStrength = () => {
-            if (validatePasswordStrength(input.value)) {
-                validIndicator.innerHTML = '<i class="fa-solid fa-check-circle"></i>';
-                validIndicator.classList.remove('invalid');
-                validIndicator.classList.add('valid');
-            } else {
-                validIndicator.innerHTML = '<i class="fa-solid fa-times-circle"></i>';
-                validIndicator.classList.remove('valid');
-                validIndicator.classList.add('invalid');
-            }
-        };
+        events.forEach(event => {
+            if (event.btn) {
+                event.btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const form = event.form;
+                    const data = new FormData(form);
+                    try {
+                        const result = await event.action(data);
+                        const errorElement = form.querySelector('.error-messages');
+                        if (errorElement) {
+                            errorElement.innerHTML = '';
+                            errorElement.style.display = 'none';
+                        }
+                        if (result.success) {
+                            window.location.href = result.redirect_url || '/';
+                        } else {
+                            event.errorBox.innerHTML = result.error;
+                            event.errorBox.style.display = 'block';
+                        }
+                    } catch (error) {
+                        console.error('Request failed:', error);
+                        event.errorBox.innerHTML = 'An unexpected error occurred. Please try again.';
+                        event.errorBox.style.display = 'block';
+                    }
 
-        input.addEventListener('input', () => {
-            checkInput();
-
-            if (input.type === 'email') {
-                checkEmail();
-            } else if (input.id === 'login-pass' || input.id === 'register-pass') {
-                checkPasswordStrength();
+                    console.log('test');
+                });
             }
         });
-
-        input.addEventListener('focusout', checkInput);
-    });
-
-    function validateEmail(email) {
-        const re = /\S+@\S+\.\S+/;
-        return re.test(email);
+    } catch (error) {
+        console.error('Failed to submit form:', error);
+        throw error;
     }
+}
 
-    function validatePasswordStrength(password) {
-        if (password.length < 8) {
-            return false;
-        }
-        const hasDigit = /[0-9]/.test(password);
-        if (!hasDigit) {
-            return false;
-        }
-        const hasUpperCase = /[A-Z]/.test(password);
-        if (!hasUpperCase) {
-            return false;
-        }
-        return true;
-    }
 
-    const loginBtn = document.getElementById('login-btn');
-    const registerBtn = document.getElementById('register-btn');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
 
-    loginBtn.addEventListener('click', () => {
-        loginBtn.classList.add('active');
-        registerBtn.classList.remove('active');
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
+async function toggleChangeForm() {
+    let events = [
+        {
+            btn: document.getElementById('login-btn'),
+            forms: {
+                show: document.getElementById('login-form'),
+                hide: document.getElementById('register-form')
+            },
+            classAction: {
+                add: 'login-btn',
+                remove: 'register-btn'
+            }
+        },
+        {
+            btn: document.getElementById('register-btn'),
+            forms: {
+                show: document.getElementById('register-form'),
+                hide: document.getElementById('login-form')
+            },
+            classAction: {
+                add: 'register-btn',
+                remove: 'login-btn'
+            }
+        }
+    ];
+
+    events.forEach(event => {
+        if (event.btn) {
+            event.btn.addEventListener('click', () => {
+                event.forms.show.style.display = 'block';
+                event.forms.hide.style.display = 'none';
+
+                document.getElementById(event.classAction.add).classList.add('active');
+                document.getElementById(event.classAction.remove).classList.remove('active');
+            });
+        }
     });
+}
 
-    registerBtn.addEventListener('click', () => {
-        registerBtn.classList.add('active');
-        loginBtn.classList.remove('active');
-        registerForm.style.display = 'block';
-        loginForm.style.display = 'none';
-    });
 
-    function checkIndicators() {
-        const emailIndicator = document.getElementById('email-indicator');
-        const passwordIndicator = document.getElementById('password-indicator');
-        const submitButton = document.querySelector('form button[type="submit"]');
-
-        const isEmailValid = emailIndicator.classList.contains('valid');
-        const isPasswordValid = passwordIndicator.classList.contains('valid');
-
-        if (isEmailValid && isPasswordValid) {
-            submitButton.removeAttribute('disabled');
-        } else {
-            submitButton.setAttribute('disabled', 'disabled');
-        }
-    }
-
+async function toggle42Login() {
     const btn42 = document.getElementById('btn-42');
 
     btn42.addEventListener('click', () => {
-        window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193&redirect_uri=http%3A%2F%2Flocalhost:8000%3A8000%2Fapi%2Fregister-42%2F&response_type=code';
+        window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Fregister-42%2F&response_type=code';
     });
+}
 
-    const togglePasswordLogin = document.getElementById('togglePasswordLogin');
-    const passwordFieldLogin = document.getElementById('login-pass');
+async function toogleFiledInputs(inputs) {
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            checkIfInputIsFiled(input);
+            if (input.type === 'email') {
+                checkEmail(input);
+            } else if (input.type === 'password') {
+                checkPassword(input);
+            }
+        });
+    });
+}
 
-    togglePasswordLogin.addEventListener('click', function () {
-        const type = passwordFieldLogin.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordFieldLogin.setAttribute('type', type);
+async function toggleShowPasswords() {
+    let events = [];
 
-        if (type === 'password') {
-            togglePasswordLogin.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-        } else {
-            togglePasswordLogin.innerHTML = '<i class="fa-solid fa-eye"></i>';
+    events.push({ event: document.getElementById('togglePasswordLogin'), button: document.getElementById('login-pass') }, { event: document.getElementById('togglePasswordRegister'), button: document.getElementById('register-pass') });
+    for (let i = 0; i != events.length; i++) {
+        if (events[i].event && events[i].button) {
+            events[i].event.addEventListener('click', function () {
+                const type = events[i].button.getAttribute('type') === 'password' ? 'text' : 'password';
+                events[i].button.setAttribute('type', type);
+                events[i].event.innerHTML = type == 'password' ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+            });
         }
-    });
+    }
+}
 
-    const togglePasswordRegister = document.getElementById('togglePasswordRegister');
-    const passwordFieldRegister = document.getElementById('register-pass');
 
-    togglePasswordRegister.addEventListener('click', function () {
-        const type = passwordFieldRegister.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordFieldRegister.setAttribute('type', type);
+// ===================== Checker INPUT ========================
 
-        if (type === 'password') {
-            togglePasswordRegister.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-        } else {
-            togglePasswordRegister.innerHTML = '<i class="fa-solid fa-eye"></i>';
-        }
-    });
-});
+// for email
+
+async function checkIfInputIsFiled(input) {
+    let label = input.nextElementSibling;
+    let validIndicator = input.parentElement.querySelector('.valid-indicator');
+    console.log(input.value);
+    if (input.value) {
+        label.classList.add('filled');
+        validIndicator.style.opacity = '1';
+    } else {
+        label.classList.remove('filled');
+        validIndicator.style.opacity = '0';
+    }
+}
+
+async function checkEmail(input) {
+    let validIndicator = input.parentElement.querySelector('.valid-indicator');
+    if (validateEmail(input.value)) {
+        validIndicator.innerHTML = '<i class="fa-solid fa-check-circle"></i>';
+        validIndicator.classList.remove('invalid');
+        validIndicator.classList.add('valid');
+    } else {
+        validIndicator.innerHTML = '<i class="fa-solid fa-times-circle"></i>';
+        validIndicator.classList.remove('valid');
+        validIndicator.classList.add('invalid');
+    }
+};
+
+// for password
+
+async function checkPassword(input) {
+    let validIndicator = input.parentElement.querySelector('.valid-indicator');
+    if (validatePassword(input.value)) {
+        validIndicator.innerHTML = '<i class="fa-solid fa-check-circle"></i>';
+        validIndicator.classList.remove('invalid');
+        validIndicator.classList.add('valid');
+    } else {
+        validIndicator.innerHTML = '<i class="fa-solid fa-times-circle"></i>';
+        validIndicator.classList.remove('valid');
+        validIndicator.classList.add('invalid');
+    }
+}
+
+// ===================== Checker utils ========================
+
+function validateEmail(email) {
+    const re = /^(?![.-])(?!.*[_.-]{2})[a-zA-Z0-9._-]+(?<![.-])@(?![.-])(?!.*[.-]{2})[a-zA-Z0-9.-]+(?<![.-])\.[a-zA-Z]{2,}$/;
+    return re.test(email);
+}
+
+function validatePassword(password) {
+    if (password.length < 8) {
+        return false;
+    }
+    const hasDigit = /[0-9]/.test(password);
+    if (!hasDigit) {
+        return false;
+    }
+    const hasUpperCase = /[A-Z]/.test(password);
+    if (!hasUpperCase) {
+        return false;
+    }
+    return true;
+}

@@ -1,0 +1,47 @@
+#game-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20vh;
+    margin-bottom: 5vh;
+}
+
+#connect-four {
+    height: 540px;
+    width: 630px;
+
+    background-color: blue;
+    border: 10px solid navy;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#current-player {
+    font-size: 2em;
+    color: white;
+    margin: 10px;
+}
+
+.tile {
+    width: 70px;
+    height: 70px;
+    margin: 8px;
+
+    background-color: white;
+    border-radius: 50%;
+    border: 5px solid navy;
+}
+
+.tile:not(.red):not(.yellow):hover {
+    background-color: lightblue;
+}
+
+.red {
+    background-color: red;
+}
+
+.yellow {
+    background-color: yellow;
+}

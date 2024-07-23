@@ -21,11 +21,11 @@
             <article class="podium-card second">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% static 'img/bberkrou.jpg' %}" alt="{% trans leaderboard.1.user.username %}">
+                        <img src="{% trans leaderboard.1.img %}" alt="{% trans leaderboard.1.user.username %}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboard.1.user %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.1.Elo }}</p>
+                        <h2>{% trans leaderboard.1.username %}</h2>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.1.elo }}</p>
                     </div>
                 </div>
             </article>
@@ -36,11 +36,11 @@
             <article class="podium-card first">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% static 'img/bberkrou.jpg' %}" alt="{% trans leaderboard.0.user.username %}">
+                        <img src="{% trans leaderboard.0.img %}" alt="{% trans leaderboard.0.username %}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboard.0.user %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.0.Elo }}</p>
+                        <h2>{% trans leaderboard.0.username %}</h2>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.0.elo }}</p>
                     </div>
                 </div>
             </article>
@@ -51,11 +51,11 @@
             <article class="podium-card">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% static 'img/bberkrou.jpg' %}" alt="{% trans leaderboard.2.user.username %}">
+                        <img src="{% trans leaderboard.2.img %}" alt="{% trans leaderboard.2.user.username %}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboard.2.user %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.2.Elo }}</p>
+                        <h2>{% trans leaderboard.2.username %}</h2>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.2.elo }}</p>
                     </div>
                 </div>
             </article>
@@ -85,11 +85,11 @@
                         <p>{{ forloop.counter }}</p>
                     </div>
                     <div class="username">
-                        <img src="{% static 'img/bberkrou.jpg' %}" alt="{{ user.user }}">
-                        <p>{{ user.user }}</p>
+                        <img src="{% trans user.img %}" alt="{{ user.user }}">
+                        <p>{{ user.username }}</p>
                     </div>
                     <div class="elo">
-                        <p>{{ user.Elo }}</p>
+                        <p>{{ user.elo }}</p>
                     </div>
                 </article>
                 {% endif %}

@@ -1,0 +1,213 @@
+ .warp-new-game {
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    text-align: center;
+    background-color: var(--to-teal-2-rgba);
+    color: var(--text-color);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    overflow: auto;
+    padding-top: 10vh;
+}
+
+.lobby_list {
+    width: 15vw;
+    height: 80vh;
+    background-color: var(--to-teal-3-rgba);
+    position: fixed;
+    left: 2%;
+    top: 15%;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.title-lobby-lst {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--text-color);
+}
+
+.lobbys_box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    max-height: 600px;
+    overflow-x: auto;
+}
+
+.lobby-element {
+    background-color: var(--to-teal-5-rgba);
+    width: 80%;
+    height: 40px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    transition: ease-in-out 0.2s;
+    border-radius: 10px;
+}
+
+.lobby-element:hover {
+    transform: scale(1.05);
+}
+
+#vs-text {
+    order: 2;
+    justify-content: center;
+    display: none;
+    font-size: 3.5rem;
+}
+
+#opps-btn,
+#player-btn {
+    order: 1;
+    display: none;
+    background-color: none;
+    color: var(--text-color);
+    border: 2px solid var(--text-color);
+    height: 30vh;
+    width: 20vw;
+    background-color: var(--to-teal-1-rgba);
+    border-radius: 5px;
+    border-color: white;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.player-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 10px;
+    }
+    
+    #opps-btn, #player-btn {
+        transition: transform 0.3s ease; /* Smooth transition for transform */
+        }
+        
+        #opps-btn:hover, #player-btn:hover {
+            transform: scale(1.1); /* Increase size by 10% on hover */
+            }
+            
+            .opps-btn-hovered {
+                border-bottom: 2px solid #00b6ad; /* Example line at the bottom */
+ }
+  
+ .info-container {
+    display: none;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    }
+    
+.warp-new-game {
+    user-select: none;
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    text-align: center;
+    background: linear-gradient(to bottom right, var(--to-teal-1-rgba), var(--to-teal-4-rgba));
+    color: #fff;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-top: 10vh;
+}
+
+#vs-text {
+    order: 2;
+    justify-content: center;
+    display: none;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.opps-btn,
+.player-btn {
+    order: 1;
+    display: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    height: 30vh;
+    width: 20vw;
+    border-radius: 15px;
+    padding: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.opps-btn {
+    order: 3;
+}
+
+.opps-btn:hover,
+.player-btn:hover {
+    transform: scale(1.1);
+    height: 40vh; /* Augmente la hauteur au survol */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Augmente l'ombre au survol */
+    background: rgba(255, 255, 255, 0.2); /* Change légèrement la couleur de fond au survol */
+}
+
+.player-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.additional-info {
+    display: none;
+    color: #ffffff;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 10px;
+    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.opps-btn:hover .additional-info,
+.player-btn:hover .additional-info {
+    display: block;
+}
+
+#loadingText {
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#oppsRatio,
+#playerRatio,
+#oppsElo,
+#playerElo {
+    color: #349ab9;
+}
+
+#oppsLast {
+    color: red;
+}
+#playerLast {
+    color: #189100;
+}

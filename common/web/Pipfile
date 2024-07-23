@@ -4,14 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "~=3.2"
+django = "*"
 django-environ = "~=0.4"
 djangorestframework = "3.14.0"
 requests = "2.31.0"
 pymysql = "1.0.2"
-Pillow = "9.4.0"
+Pillow = "10.4.0"
 channels = "3.0.4"
 daphne = "3.0.2"
+django-otp = "*"
+django-two-factor-auth = "*"
+django-otp-yubikey = "*"
+phonenumbers = "*"
+pywebauthn = "*"
+django-otp-webauthn = "*"
+werkzeug = "*"
+django-extensions = "*"
 
 [dev-packages]
 

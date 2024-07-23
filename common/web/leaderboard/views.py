@@ -1,28 +1,26 @@
 
-from django.shortcuts import render
-from .models import LeaderboardEntry
+from django.shortcuts import render, redirect
+from django.conf import settings
+from api.models import Player, Game
 from django.utils.translation import activate
 
+# ======================== Decorateur Validator ============================
+
+def login_required(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(settings.LOGIN_URL)
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+# =============================================================================
+
+@login_required
 def leaderboard(request):
-    # Exemple de données simulées pour le leaderboard
     language_code = request.session.get('django_language', 'en')
     activate(language_code)
-    leaderboard_entries = [
-        LeaderboardEntry(user='Utilisateur1', Elo=100),
-        LeaderboardEntry(user='Utilisateur2', Elo=90),
-        LeaderboardEntry(user='Utilisateur3', Elo=80),
-        LeaderboardEntry(user='Utilisateur4', Elo=70),
-        LeaderboardEntry(user='Utilisateur5', Elo=60),
-        LeaderboardEntry(user='Utilisateur6', Elo=50),
-        LeaderboardEntry(user='Utilisateur7', Elo=40),
-        LeaderboardEntry(user='Utilisateur8', Elo=30),
-        LeaderboardEntry(user='Utilisateur9', Elo=20),
-        LeaderboardEntry(user='Utilisateur10', Elo=10),
-        LeaderboardEntry(user='Utilisateur11', Elo=0),
-        LeaderboardEntry(user='Utilisateur12', Elo=-10),
-        LeaderboardEntry(user='Utilsateur13', Elo=-20),
-    ]
+    allPlayer = Player.objects.all().order_by('elo').values().reverse()
     context = {
-        'leaderboard': leaderboard_entries
+        'leaderboard': allPlayer
     }
     return render(request, 'leaderboard/leaderboard.html', context)

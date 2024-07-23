@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             async function fetchAndUpdate(endpoint, elementId) {
 				return new Promise(async(resolve, reject) => {
-					let resp = await fetch(`http://localhost:8000/api${endpoint}`);
+					let resp = await fetch(`/api${endpoint}`);
 					resp = await resp.json()
 					document.getElementById(elementId).textContent = resp.value;
 					resolve();
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 			};
 			
 			async function fetchAndDrawCircle(endpoint) {
-				let resp = await fetch(`http://localhost:8000/api${endpoint}`);
+				let resp = await fetch(`/api${endpoint}`);
 				resp = await resp.json();
 				if ('winrate' in resp) {
 					drawBurgerChart(ctxBurger, canvasBurger.width, canvasBurger.height, resp.winrate, '#2c2538', '#5d547c');

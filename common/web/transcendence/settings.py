@@ -19,15 +19,17 @@ SECRET_KEY = 'django-insecure-9=4fq_@4a#os21wco52wfd8o2=q(m*d$k=fldzwti+__wxu)%z
 DEBUG = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 ASGI_APPLICATION = 'transcendence.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
     },
 }
+
+CSRF_TRUSTED_ORIGINS = ['https://localhost']
 
 # Application definition
 
@@ -50,6 +52,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 'django_extensions',
+
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_email',  # <- if you want email capability.
+    'two_factor',
+    'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
+    'two_factor.plugins.email',  # <- if you want email capability.
+    'two_factor.plugins.yubikey', 
+
+    'otp_yubikey',
+    'two_factor.plugins.webauthn',
+
     'rest_framework',
     'users',
     'leaderboard',
@@ -68,7 +85,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 ]
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/profil/'
+
 
 ROOT_URLCONF = 'transcendence.urls'
 
@@ -81,7 +103,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
+                # 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -103,7 +125,15 @@ DATABASES = {
         'PASSWORD': 'trans_passowrd',
         'HOST': 'clesucre.fr',
         'PORT': '3306',
-    }
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'mydatabase',
+    #     'USER': 'bcarolle',
+    #     'PASSWORD': 'db_password',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
 }
 
 # Password validation
@@ -148,6 +178,12 @@ LANGUAGE_COOKIE_NAME = 'django_language'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    },
+}
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -164,18 +200,7 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# 2FA
 
-# Sécuriser les cookies
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-# Redirection HTTPS
-SECURE_SSL_REDIRECT = True
-
-# HSTS (optionnel, mais recommandé pour améliorer la sécurité)
-SECURE_HSTS_SECONDS = 31536000  # 1 an
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-
-# Indiquer à Django d'utiliser le header 'X-Forwarded-Proto' pour déterminer le schéma de l'URL (http ou https)
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+TWO_FACTOR_WEBAUTHN_RP_NAME = 'transcendence'
+TWO_FACTOR_WEBAUTHN_RP_ID = '127.0.0.1'

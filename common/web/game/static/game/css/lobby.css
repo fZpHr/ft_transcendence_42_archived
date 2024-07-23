@@ -1,0 +1,399 @@
+.warp-lobby {
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    text-align: center;
+    background-color: var(--to-teal-2-rgba);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    padding-top: 10vh;
+}
+
+.chat-lobby {
+    width: 15vw;
+    height: 80vh;
+    background-color: var(--to-teal-3-rgba);
+    position: fixed;
+    left: 2%;
+    top: 15%;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.title-chat-lobby, .title-lobby {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--text-color);
+}
+
+.warp-message-lobby {
+    max-height: 60vh;
+    height: fit-content;
+    overflow: auto;
+    padding: 10px;
+    background-color: blue;
+}
+
+.msg {
+    max-width: 80%;
+    width: fit-content;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: start;
+    margin-bottom: 10px;
+    background-color: transparent;
+    overflow: hidden;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+.msg.my-message {
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+    text-align: right;
+    background-color: var(--to-teal-1-rgba);
+}
+
+.msg span.username-chat-lobby {
+    font-weight: 500;
+    font-size: 0.6rem;
+}
+
+.msg span.msg-chat-lobby {
+    font-size: 0.5rem;
+}
+
+.msg span.separator-chat-lobby {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 0.5rem;
+}
+
+/* LOBBY content */
+
+.lobby-content {
+    width: 60vw;
+    height: 80vh;
+    background-color: var(--to-teal-3-rgba);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* .title-lobby {
+    background-color: red;
+} */
+
+.lobby-body {
+    /* background-color: green; */
+    height: 60%;
+    max-height: 60%;
+    overflow: auto;
+}
+
+.slop-content {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: fit-content;
+    gap: 10px 10%;
+}
+
+.player-slot {
+    width: 45%;
+    height: 60px;
+    background-color: var(--to-teal-5-rgba);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    border-radius: 10px;  
+    padding: 0px 10px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    position: relative;
+}
+
+/* .player-slot:hover {
+    transform: scale(1.05);
+} */
+
+.player-slot .player-data {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;    
+}
+
+.player-slot .search-player {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;    
+}
+
+.player-slot .player-status {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding: 10px;
+}
+
+.player-status-online {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.player-status-online.online {
+    background-color: green;
+}
+
+.player-status-online.offline {
+    background-color: red;
+}
+
+.player-slot img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.player-slot .newplayer-slot i, .player-slot .tmp-pp i {
+    min-width: 50px;
+    min-height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    background-color: var(--to-teal-2-rgba);
+    line-height: 50px;
+    font-size: 20px;
+}
+
+#menus-new-player {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-self: center;
+}
+
+.new-option {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    font-size: 0.8rem;
+    transition: ease-in-out 0.3s;
+}
+
+.new-option:hover {
+    transform: scale(1.05);
+}
+
+.new-option i {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+    line-height: 40px;
+    font-size: 0.8rem;
+
+}
+
+.lobby-footer {
+    background-color: green;
+    height: 20%;
+}
+
+#menus-new-player {
+    display: none;
+}
+
+#menus-new-player.active {
+    display: flex;
+}
+
+#newplayer-btn {
+    display: none;
+}
+
+#newplayer-btn.active {
+    display: flex;
+}
+
+/* find player box */
+
+.player-data i.pp {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    line-height: 50px;
+    font-size: 20px;
+}
+
+.find-player {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 100%;
+}
+
+.find-player input {
+    width: 80%;
+    padding: 5px;
+    border: none;
+    color: #fff;
+    background-color: transparent;
+}
+
+.find-player input::placeholder {
+    color: var(--text-color);
+    opacity: 1;
+    padding-left: 10px;
+}
+
+.player-found {
+    position: absolute;
+    background-color: var(--to-teal-4-rgba);
+    border-radius: 0px 0px 10px 10px;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: fit-content;
+    z-index: 200;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.player-found .player {
+    padding: 5px;
+    border-bottom: white 1px solid;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 80%;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.player-found .player img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.waiting-player {
+    width: 40px;
+    aspect-ratio: 2;
+    --_g: no-repeat radial-gradient(circle closest-side,#ffffff 90%,#c5c2c200);
+    background: 
+      var(--_g) 0%   50%,
+      var(--_g) 50%  50%,
+      var(--_g) 100% 50%;
+    background-size: calc(100%/3) 50%;
+    animation: l3 1s infinite linear;
+}
+
+@keyframes l3 {
+    20%{background-position:0%   0%, 50%  50%,100%  50%}
+    40%{background-position:0% 100%, 50%   0%,100%  50%}
+    60%{background-position:0%  50%, 50% 100%,100%   0%}
+    80%{background-position:0%  50%, 50%  50%,100% 100%}
+}
+
+.pending-player {
+    width: 30px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid;
+    border-color: #ffffff #b8a2a200;
+    animation: l1 1s infinite;
+}
+
+@keyframes l1 {to{transform: rotate(.5turn)}}
+
+
+.loader {
+    color: #ffffff;
+    font-size: 45px;
+    text-indent: -9999em;
+    overflow: hidden;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    position: relative;
+    transform: translateZ(0);
+    animation: mltShdSpin 1.7s infinite ease, round 1.7s infinite ease;
+}
+
+@keyframes mltShdSpin {
+    0% {
+        box-shadow: 0 -0.83em 0 -0.4em,
+        0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+        0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+    5%,
+    95% {
+        box-shadow: 0 -0.83em 0 -0.4em, 
+        0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 
+        0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+    10%,
+    59% {
+        box-shadow: 0 -0.83em 0 -0.4em, 
+        -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, 
+        -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+    }
+    20% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em,
+        -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, 
+        -0.749em -0.34em 0 -0.477em;
+    }
+    38% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em,
+        -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, 
+        -0.82em -0.09em 0 -0.477em;
+    }
+    100% {
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 
+        0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+}
+
+@keyframes round {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg) }
+}
+
+
+#loader-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+}
