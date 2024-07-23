@@ -1931,3 +1931,6 @@
 2024/07/23 23:33:18 [error] 33#33: *2 connect() failed (111: Connection refused) while connecting to upstream, client: 172.18.0.1, server: localhost, request: "GET /fr/login/ HTTP/1.1", upstream: "http://172.18.0.6:8000/fr/login/", host: "localhost"
 2024/07/23 23:33:19 [error] 33#33: *2 connect() failed (111: Connection refused) while connecting to upstream, client: 172.18.0.1, server: localhost, request: "GET /fr/login/ HTTP/1.1", upstream: "http://172.18.0.6:8000/fr/login/", host: "localhost"
 2024/07/23 23:37:57 [notice] 1#1: ModSecurity-nginx v1.0.0 (rules loaded inline/local/remote: 0/799/0)
+2024/07/24 00:23:26 [notice] 1#1: ModSecurity-nginx v1.0.0 (rules loaded inline/local/remote: 0/799/0)
+2024/07/24 00:29:58 [notice] 1#1: ModSecurity-nginx v1.0.0 (rules loaded inline/local/remote: 0/799/0)
+2024/07/24 00:32:10 [notice] 1#1: ModSecurity-nginx v1.0.0 (rules loaded inline/local/remote: 0/799/0)
