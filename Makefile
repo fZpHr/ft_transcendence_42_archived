@@ -9,8 +9,11 @@ stop:
 	@docker compose -f docker-compose.yml stop
 
 env:
+	@chmod -R 667 ./data/*
 	@touch .env
 	@docker compose -f gen_env/docker-compose-env.yml up --build
+	@docker system prune -a -f
+	@docker network prune -f
 	
 re:
 	@make down
