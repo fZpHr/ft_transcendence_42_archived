@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "Home Game" %}{% endblock %}
+
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/home.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<div class="home-game-wrapper">
+    <div class="left-game">
+        <img src="{% static 'home/img/pong-img.png' %}" alt="pong img" class="img">
+        <video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
+        <div class="select-game">
+            <div class="select-option" id="pong-tournament-btn">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="select-option" id="pong-ranked-btn">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="select-option" id="pong-ia-btn">
+                <i class="fas fa-robot"></i>
+            </div>
+        </div>
+    </div>
+    <div class="right-game">
+        <img src="{% static 'home/img/connect4-img.png' %}" alt="connect4 img">
+        <div class="select-game right">
+            <div class="select-option" id="connect4-ranked-btn">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="select-option" id="connect4-ia-btn">
+                <i class="fas fa-robot"></i>
+            </div>
+        </div>
+    </div>
+    <div class="protect-circle"></div>
+    <div class="circle"></div>
+    <div class="circle-select"><div class="circle-part"></div></div>
+    <div class="circle-select-2"><div class="circle-part-2"></div></div>
+    <div class="left-bounth"><div class="left-bounth-part"></div></div>
+    <div class="right-bounth"><div class="right-bounth-part"></div></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'home/js/home.js' %}"></script>
+{% endblock %}
