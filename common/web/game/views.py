@@ -97,3 +97,7 @@ def connect4(request):
 @login_required
 def pong3D(request):
     return render(request, "pong3D/pong3D.html")
+
+@login_required
+def game(request):
+    return render(request, "home/home.html")
