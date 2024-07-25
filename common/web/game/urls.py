@@ -7,7 +7,7 @@ urlpatterns = [
     path('tournament/', views.tournament),
     path('join-game/', views.joinGame),
     # path('start/', views.startGame),
-    path('pong/', views.pong),
     path('ranked/', views.ranked),
-    path('connect4/', views.connect4)
+    path('connect4/', views.connect4),
+    path('pong3D/', views.pong3D)
 ]

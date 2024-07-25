@@ -83,10 +83,6 @@ def joinGame(request):
         return HttpResponse(f"An error occurred: {str(e)}")
 
 @login_required
-def pong(request):
-    return render(request, "game/game.html")
-
-@login_required
 def tournament(request):
     return render(request, "tournament/tournament.html")
 
@@ -97,3 +93,7 @@ def ranked(request):
 @login_required
 def connect4(request):
     return render(request, "ranked/connect4.html")
+
+@login_required
+def pong3D(request):
+    return render(request, "pong3D/pong3D.html")
