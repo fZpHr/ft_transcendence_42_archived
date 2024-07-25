@@ -1,57 +1,85 @@
-@media screen and (min-width: 1024px) and (max-width: 1400px) {
+@media screen and (min-width: 1024px) and (max-width: 1400px)  {
+    #username-profil {
+        font-size: 2rem;
+    }
+
+    .user_data {
+        width: 100%;
+    }
+    
+    .data-element {
+        width: 20%;
+    }
+
+    .box-profil {
+        height: 200px;
+    }
+
     .avatars {
         width: 200px;
         height: 200px;
-    }
-    
-    .match-elo-after {
-        display: none;
     }
 }
 
 @media screen and (max-width: 1023px) {
     .banner-content {
-        height: 50vh;
+        height: 30vh;
+    }
+
+    .user_data {
+        width: 100%;
+    }
+
+    .data-element {
+        width: 20%;
     }
 
     .box-profil {
-        margin-top: -15vh;
-        background-color: red;
+        height: fit-content;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
+    }
+
+    .data-element {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .box-skill {
+        width: 70%;
+        margin-top: -90px;
+    }
+
+    .avatars {
+        margin: 0;
     }
 
     .user-info {
         margin: 0;
+        width: 75%;
         text-align: center;
     }
 
-    .user-info h1  {
-        font-size: 2rem;
-        color: blue;
+    .username-container {
+        justify-content: center;
     }
 
-    .box-skill {
-        background-color: red;
-        width: 80%;
+    #username-profil {
+        font-size: 1.75rem;
     }
 
-    .match-winner,
-    .match-elo-after {
+    .match-winner {
         display: none;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .banner-content {
-        height: 40vh;
-    }
 
     .box-profil {
-        margin-top: 0vh;
-        transform: translateY(15vh);
-        margin-bottom: 25vh;
-        background-color: green;
+        width: 60%;
     }
 
     .avatars {
@@ -59,46 +87,56 @@
         height: 180px;
     }
 
-    .user-info h1  {
-        font-size: 1.8rem;
-        color: blue;
+    .user-info {
+        width: 100%;
     }
 
-    .box-profil {
-        margin-top: -30vh;
+    .box-skill {
+        width: 80%;
+    }
+
+    #username-profil {
+        font-size: 1.60rem;
     }
 
     .match {
         flex-direction: column;
-        width: 50%;
+        width: 80%;
         padding: 10px;
     }
 
+    .box-skill span.title {
+        font-size: 1.5rem;
+    }
+
+    .player-info {
+        width: 80%;
+    }
+
+    .match-elo {
+        width: 80%;
+        justify-content: space-around;
+    }
+
+    .split-match,
     .match-winner,
     .match-info,
-    .match-elo-after {
+    .legend-item {
         display: none;
     }
 }
 
 @media screen and (max-width: 450px) {
-    .banner-content {
-        height: 30vh;
-    }
-
     .box-profil {
-        margin-top: 0vh;
-        transform: translateY(25vh);
-        margin-bottom: 30vh;
-        background-color: yellow;
+        width: 80%;
     }
 
-    .avatars {
-        width: 120px;
-        height: 120px;
+    .box-skill {
+        width: 90%;
     }
 
-    .box-profil {
-        margin-top: -35vh;
+    .box-skill span.title {
+        font-size: 1.2rem;
     }
+
 }

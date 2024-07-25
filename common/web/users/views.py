@@ -45,21 +45,24 @@ def profil_view(request, format=None):
         games = games.order_by('-created_at')
         matches = []
         print("========================================================================================================================================================================================================================")
-        # for game in games:
-        #     total_seconds = game.time
-        #     minutes, seconds = divmod(total_seconds, 60)
-        #     match_data = {
-        #         'player1_username': game.player1.username,
-        #         'player2_username': game.player2.username,
-        #         'time_minutes': minutes,
-        #         'time_seconds': seconds,
-        #         'winner_username': game.winner.username,
-        #         'elo_before_player1': game.elo_before_player1,
-        #         'elo_before_player2': game.elo_before_player2,
-        #         'elo_after_player1': game.elo_after_player1,
-        #         'elo_after_player2': game.elo_after_player2,
-        #     }
-        #     matches.append(match_data)
+        for game in games:
+            game.player1.img.name = '/media/' + game.player1.img.name if game.player1.img.name.startswith("profile_pics/") else game.player1.img.name
+            game.player2.img.name = '/media/' + game.player2.img.name if game.player2.img.name.startswith("profile_pics/") else game.player2.img.name
+
+            total_seconds = game.time
+            minutes, seconds = divmod(total_seconds, 60)
+            match_data = {
+                'player1_username': game.player1.username,
+                'player2_username': game.player2.username,
+                'p1_img': game.player1.img.name,
+                'p2_img': game.player2.img.name,
+                'time_minutes': minutes,
+                'time_seconds': seconds,
+                'winner_username': game.winner.username,
+                'elo_player1': game.elo_before_player1 - game.elo_after_player1,
+                'elo_player2': game.elo_before_player2 - game.elo_after_player2,
+            }
+            matches.append(match_data)
         user_data = {
             'visited': False,
             'username': data.username,

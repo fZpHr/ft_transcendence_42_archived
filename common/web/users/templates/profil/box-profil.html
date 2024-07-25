@@ -21,7 +21,7 @@
     </div>
     <div class="user-info">
         <div class="username-container">
-            <h1 id="username-profil">{{ user_data.username }}</h1>
+            <span id="username-profil">{{ user_data.username }}</span>
             {% if user_data.visited == False and user_data.is42 == False %}
                 <button class="edit-btn" id="edit-btn">
                     <i class="fa-solid fa-pen-to-square"></i>
@@ -29,9 +29,19 @@
             {% endif %}
         </div>
         <div class="user_data">
-            <p>{{ user_data.friends_count }} {% trans "Friend(s)" %}</p>
-            <p>|</p>
-            <p>{{ user_data.elo }} {% trans "ELO" %}</p>
+            
+            <div class="data-element">
+                <span><i class="fas fa-user-friends"></i>{{ user_data.friends_count }}</span>
+            </div>
+            <div class="data-element">
+                <span><i class="fas fa-trophy"></i>{{ user_data.games_count}}12</span>
+            </div>
+            <div class="data-element elo-box">
+                <span><i class="fas fa-chess-board"></i>{{ user_data.elo }}</span>
+            </div>
+            <div class="data-element elo-box">
+                <span><i class="fas fa-table-tennis"></i>{{ user_data.elo }}</span>
+            </div>
         </div>
     </div>
 </div>

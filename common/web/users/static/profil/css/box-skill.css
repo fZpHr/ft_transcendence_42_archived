@@ -13,7 +13,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.box-skill h2 {
+.box-skill span.title {
     width: 100%;
     margin-top: 0;
     font-size: 2rem;
@@ -23,6 +23,35 @@
     border-bottom: 2px solid var(--text-color);
     padding-bottom: 10px;
 }
+
+.select-game-history {
+    width: 70%;
+    margin: auto;
+    height: 60px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.select-game-history-option {
+    background-color: var(--to-teal-3-rgba);
+    padding: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.select-game-history-option:hover {
+    background-color: var(--to-teal-5-rgba);
+}
+
 
 .match-legend {
     display: flex;
@@ -45,6 +74,8 @@
     align-items: center;
     gap: 15px;
     width: 100%;
+    max-height: 40vh;
+    overflow-y: auto;
 }
 
 .match {
@@ -75,13 +106,13 @@
 .match-winner,
 .match-elo {
     font-size: 1rem;
-    color: var(--text-color);
 }
 
 .match-elo {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
     font-size: 0.9rem;
 }
 
@@ -89,6 +120,19 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
+}
+
+.img-box-match {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.img-match {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .progress-button {
