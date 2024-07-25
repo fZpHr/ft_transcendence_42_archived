@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "newGame" %}{% endblock %}
+{% block title %}{% trans "ranked" %}{% endblock %}
 
 {% block custom_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'new-game/css/new-game.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'ranked/css/ranked.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="warp-new-game">
+<div class="warp-tournament">
     <div id="game-type">
     </div>
     <div id="player-btn" class="player-btn">

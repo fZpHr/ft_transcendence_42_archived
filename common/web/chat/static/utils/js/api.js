@@ -67,8 +67,8 @@ async function APIgetNbrSocialNotif(userId) {
 
 async function APIcreateLobby(userId) {
 	return new Promise(async (resolve, reject) => {
-		let newGame = await getFetchAPI(`/api/createLobby?userId=${userId}`);
-		resolve(newGame);
+		let lobbyTournament = await getFetchAPI(`/api/createLobby?userId=${userId}`);
+		resolve(lobbyTournament);
 	});
 }
 

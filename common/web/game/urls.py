@@ -4,7 +4,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('lobby/', views.lobby),
-    path('new-game/', views.newGame),
+    path('tournament/', views.tournament),
     path('join-game/', views.joinGame),
     # path('start/', views.startGame),
     path('pong/', views.pong),

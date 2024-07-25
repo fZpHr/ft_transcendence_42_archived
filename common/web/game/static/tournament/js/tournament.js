@@ -1,7 +1,7 @@
 let AllLobby = new Set();
 
 document.addEventListener('DOMContentLoaded', async function () {
-    let newGameBtn = document.getElementById('new-game-btn');
+    let newTournamentBtn = document.getElementById('tournament-btn');
     let allLobby = await APIgetAllLobby(userId);
     await innerAllLobby(allLobby.data);
     for (let i = 0; i < allLobby.length; i++) {
@@ -9,11 +9,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     handlersJoinLobby();
-    newGameBtn.addEventListener('click', async function () {
+    newTournamentBtn.addEventListener('click', async function () {
         try {
-            let newGame = await APIcreateLobby(userId);
-            console.log(newGame)
-            await innerNewLobby(newGame.lobby);
+            let newTournament = await APIcreateLobby(userId);
+            console.log(newTournament)
+            await innerNewLobby(newTournament.lobby);
             handlersJoinLobby();
         } catch (error) {
             console.error('Failed to createGame', error);
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 
-// ========================= INNER newgame =========================
+// ========================= INNER newTournament =========================
 
 async function innerAllLobby(allLobby) {
     try {
@@ -57,7 +57,7 @@ async function innerNewLobby(newLobby) {
     }
 }
 
-// ========================= handler newgame =========================
+// ========================= handler newTournament =========================
 
 async function handlersJoinLobby() {
     let allLobby = document.getElementsByClassName('lobby-element');

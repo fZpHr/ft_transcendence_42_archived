@@ -96,7 +96,7 @@ def sendInvite(request):
         GameInvitation.objects.create(player1=friend, player2=player, status=1)
         if Notification.objects.filter(sender=player, recipient=friend, type=2).exists():
             Notification.objects.filter(sender=player, recipient=friend, type=2).delete()
-        Notification.objects.create(sender=player, type=2, recipient=friend, content=f"New game invitation from {player.username}")
+        Notification.objects.create(sender=player, type=2, recipient=friend, content=f"tournament invitation from {player.username}")
         return Response({"message": "Message sent successfully"}, status=200)
     except Player.DoesNotExist:
         return Response({"message": "One of the players does not exist."}, status=404)

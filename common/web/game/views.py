@@ -38,20 +38,20 @@ def lobby(request):
         for player in players:
             print('bebug = ', player.img)
             if hasattr(player, 'img') and player.img:
-                img_path = str(player.img)  # Convert to string if necessary
+                img_path = str(player.img)
                 print('img_path = ', img_path)
                 if img_path.startswith('profile_pics/'):
                     player.img = '/media/' + img_path
                     print('player.img = ', player.img)
 
         ia_players = lobby.ai_players.all()
-        return render(request, "game/lobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
+        return render(request, "tournament/lobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
     except Lobby.DoesNotExist:
         print("Lobby not found")
-        return render(request, "game/new-game.html", {"error": "Lobby not found"})
+        return render(request, "tournament/tournament.html", {"error": "Lobby not found"})
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-        return render(request, "game/new-game.html", {"error": "An unexpected error occurred"})
+        return render(request, "tournament/tournament.html", {"error": "An unexpected error occurred"})
 
 @login_required
 def joinGame(request):
@@ -87,13 +87,13 @@ def pong(request):
     return render(request, "game/game.html")
 
 @login_required
-def newGame(request):
-    return render(request, "game/new-game.html")
+def tournament(request):
+    return render(request, "tournament/tournament.html")
 
 @login_required
 def ranked(request):
-    return render(request, "game/ranked.html")
+    return render(request, "ranked/ranked.html")
 
 @login_required
 def connect4(request):
-    return render(request, "game/connect4.html")
+    return render(request, "ranked/connect4.html")
