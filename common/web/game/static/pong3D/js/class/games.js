@@ -37,7 +37,6 @@ class Game {
 
     async setScene() {
         const container = document.getElementById('container-pong3D');
-        console.log('debog', container);
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);

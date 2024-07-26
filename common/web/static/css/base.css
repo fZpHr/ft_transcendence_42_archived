@@ -11,9 +11,9 @@ body {
     background-color: var(--to-teal-1-rgba);
     width: 100vw;
     min-height: 100vh;
-    overflow-x: hidden;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 :root {

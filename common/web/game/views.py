@@ -101,3 +101,11 @@ def pong3D(request):
 @login_required
 def game(request):
     return render(request, "home/home.html")
+
+@login_required
+def pongManda(request):
+    return render(request, "pongManda/pongManda.html")
+
+@login_required
+def pongCustom(request):
+    return render(request, "pongCustom/pongCustom.html")

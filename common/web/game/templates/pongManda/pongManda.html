@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "pongManda" %}{% endblock %}
+
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'pongManda/css/pongManda.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<div class="pongManda-wrapper">
+    <aside class="custom_list">
+        <div class="title-custom-lst">
+            <h1>customs</h1>
+            
+        </div>
+        <div class="customs_box">
+            <div id="all_custom">
+                <div class="custom-element" data-type="ball"><span>ball</span><i class="fas fa-arrow-right"></i></div>
+                <div class="custom-element" data-type="plateau"><span>plateau</span><i class="fas fa-arrow-right"></i></div>
+                <div class="custom-element" data-type="paddle"><span>paddle</span><i class="fas fa-arrow-right"></i></div>
+                <div class="custom-element" data-type="map"><span>map</span><i class="fas fa-arrow-right"></i></div>
+                <div class="custom-element" data-type="score"><span>score</span><i class="fas fa-arrow-right"></i></div>
+                <div class="custom-element" data-type="animation"><span>animation</span><i class="fas fa-arrow-right"></i></div>
+            </div>
+            <div class="custom-ball" id="custom-box"></div>
+        </div>
+    </aside>
+
+    <div id="render"></div>
+    <div class="box-btn" id="start" style="z-index: 1000; background-color: white; color: black; border-radius: 15px; width: 100px; height: 50px; position: absolute; bottom: 100px; right: 100px; display: flex; justify-content: center; align-items: center;">
+        <button style="border: none; background-color: none;" >GO LAG</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+            "renderpass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/RenderPass.js",
+            "effectcomposer": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/EffectComposer.js",
+            "unrealbloompass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+            "fontloader": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/FontLoader.js",
+            "linematerial": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineMaterial.js",
+            "linegeometry": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineGeometry.js",
+            "orbitcontrols": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js"
+        }
+    }
+</script>
+    <script type="module" src="{% static 'pongManda/js/pongManda.js' %}"></script>
+{% endblock %}

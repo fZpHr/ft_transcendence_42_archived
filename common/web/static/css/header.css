@@ -1,6 +1,6 @@
 header {
     background-color: var(--to-teal-1-rgba);
-    z-index: 100;
+    z-index: 20000;
     position: fixed;
     top: 0;
     left: 0;

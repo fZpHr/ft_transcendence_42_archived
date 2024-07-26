@@ -11,4 +11,6 @@ urlpatterns = [
     path('connect4/', views.connect4),
     path('pong3D/', views.pong3D),
     path('game/', views.game),
+    path('pongManda/', views.pongManda),
+    path('pongCustom/', views.pongCustom),
 ]
