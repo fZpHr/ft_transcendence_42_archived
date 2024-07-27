@@ -10,57 +10,63 @@
 
 {% block content %}
 <div class="pongManda-wrapper">
-    <div class="video-background">
-        <video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
-    </div>
-    <section class="container-player">
-        <aside class="profil-box-player" id="leftPlayer">
-            <div class="head-player">
-                <img src="" alt="pp" id="leftPlayer-img">
-            </div>
-            <div class="body">
-                <h2 id="leftPlayer-name"></h2>
-                <p>Elo: <span id="leftPlayer-elo">1500</span></p>
-            </div>
-        </aside>
-        <aside class="custom-game">
-            <div class="custom-btn">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-            </div>
-        </aside>
-        <aside class="profil-box-player" id="rightPlayer">
-            <div class="head-player">
-                <img src="/media/profile_pics/default.png" alt="pp" id="rightPlayer-img">
-            </div>
-            <div class="body" id="body-right">
-                <form id="chose-player-form" class="warp-form" method="POST">
-                    {% csrf_token %}
-                    <div class="warp-input">
-                        <span class="valid-indicator" id="email-indicator" title="{% trans 'Invalid email format' %}"></span>
-                        <input type="email" name="email" id="login-email" required autocomplete="email">
-                        <label for="login-email" class="input-label">{% trans "Email" %}</label>
+	<div class="video-background">
+		<video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
+	</div>
+	<section class="play-box">
+		<div class="play-box__header">
+            <span>PONG Local</span>
+		</div>
+		<div class="play-box__content">
+            <div class="left-player player-box">
+                <div class="player-box__username">
+                    <input type="text" placeholder="Player_1" id="player1_username" value="Player_1" maxlength="15">
+                </div>
+                <div class="player-box__controller">
+                    <div class="controls_title">
+                        <span>Player Controls</span>
                     </div>
-                    <div class="warp-input">
-                        <span class="valid-indicator" id="password-indicator"></span>
-                        <input class="password-input" type="password" name="pass" id="login-pass" required autocomplete="current-password">
-                        <label for="pass" class="input-label">{% trans "Password" %}</label>
-                        <button type="button" class="toggle-password" id="togglePasswordLogin">
-                            <i class="fa-solid fa-eye-slash"></i>
-                        </button>
+                    <div class="controls_player">
+                        <div class="control">
+                            <span>UP</span>
+                            <button class="btn-change-controls" data-ctrl="W" id="player1-ctrl-up">W</button>
+                        </div>
+                        <div class="control">
+                            <span>DOWN</span>
+                            <button class="btn-change-controls" data-ctrl="S" id="player1-ctrl-down">S</button>
+                        </div>
                     </div>
-                        <div class="warp-error">
-                            <p id="error-login-value"></p>
-                        </div>
-                        <div class="form-btn">
-                            <button type="submit" id="login-submit">{% trans "Login" %}</button>
-                        </div>
-                </form>
+                </div>
             </div>
-        </aside>
-    </section>
+            <div class="right-player player-box">
+                <div class="player-box__username">
+                    <input type="text" placeholder="Player_2" id="player2_username" value="Player_2" maxlength="15">
+                </div>
+                <div class="player-box__controller">
+                    <div class="controls_title">
+                        <span>Player Controls</span>
+                    </div>
+                    <div class="controls_player">
+                        <div class="control">
+                            <span>UP</span>
+                            <button class="btn-change-controls" data-ctrl="ARROWUP" id="player2-ctrl-up">↑</button>
+                        </div>
+                        <div class="control">
+                            <span>DOWN</span>
+                            <button class="btn-change-controls" data-ctrl="ARROWDOWN" id="player2-ctrl-down">↓</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="play-box__footer">
+            <button class="btn-custom-game" id="curstom-game"><i class="fa-solid fa-screwdriver-wrench"></i></button>
+            <button class="btn-start-game" id="start-game">{% trans "Start Game" %}</button>
+        </div>
+	</section>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
-    <script src="{% static 'pongManda/js/pongManda.js' %}"></script>
+<script src="{% static 'pongManda/js/pongManda.js' %}"></script>
 {% endblock %}
