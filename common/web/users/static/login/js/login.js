@@ -108,8 +108,6 @@ async function toggleSubmitForm() {
                         event.errorBox.innerHTML = 'An unexpected error occurred. Please try again.';
                         event.errorBox.style.display = 'block';
                     }
-
-                    console.log('test');
                 });
             }
         });

@@ -309,3 +309,28 @@ def getTournamentInfo(request):
         return Response({"error": f"Tournament does not exist for lobby with id {UUID_TOURNAMENT}"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+    
+
+
+# ===============================================================================================
+# ============================================ GAME MANDA ============================================
+# ===============================================================================================
+
+
+@api_view(['POST'])
+@login_required
+def logUserForPlay(request):
+    try:
+        user = request.user
+        mail = request.POST.get("email")
+        if user.email == mail:
+            return JsonResponse({'success': False, 'error': 'Its your email'})
+        password = request.POST.get("pass")
+        player = Player.objects.get(mail=mail)
+        user = authenticate(request, username=player.username, password=password)
+        if user is not None:
+            return JsonResponse({'success': True, 'username': player.username, 'img': str(player.img), 'id': player.id, 'elo': player.elo})
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid email or password'})
+    except Player.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Invalid email or password'})

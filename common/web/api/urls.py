@@ -67,4 +67,5 @@ urlpatterns += [
     path('addIaToLobby/', views_game.addIaToLobby),
     path('lockLobby/', views_game.lockLobby),
     path('getTournamentInfo/', views_game.getTournamentInfo),
+    path('logUserForPlay/', views_game.logUserForPlay),
 ]
