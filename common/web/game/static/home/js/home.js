@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         let btns = [pongTournamentBtn, pongRankedBtn, pongIABtn, pongMandaBtn, pongCustomBtn,connect4RankedBtn, connect4IABtn];
         let links = [
-            '/game/lobby/',
-            '/game/ranked/',
+            '/game/pong/tournament/',
+            '/game/pong/ranked/',
             '/game/pong3D/',
-            '/game/pongManda/',
-            '/game/pongCustom/',
+            '/game/pong/local/',
+            '/game/pong/custom/',
             '/game/ranked/',
             '/game/connect4/ia/'
         ];

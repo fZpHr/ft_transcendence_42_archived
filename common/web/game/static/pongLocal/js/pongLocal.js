@@ -1,4 +1,4 @@
-
+import { startGame } from '/static/pong3D/js/pong3D.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     toggleChangeControls();
@@ -27,25 +27,27 @@ function addKeydownListener(btn) {
     document.addEventListener('keydown', function(event) {
         event.preventDefault();
         let key = event.key;
+        let key_code = event.keyCode;
         key = key.toLocaleUpperCase();
-        updateButtonContent(btn, key);
+        updateButtonContent(btn, key, key_code);
     }, { once: true });
 }
 
-function checkIfControllerIsInUse(key) {
+function checkIfControllerIsInUse(key_code) {
+    key_code = key_code.toString();
     let getKeys = document.querySelectorAll('.btn-change-controls');
     let keys = [];
     getKeys.forEach(btn => {
         keys.push(btn.getAttribute('data-ctrl'));
     });
-    if (keys.includes(key)) {
+    if (keys.includes(key_code)) {
         return true;
     }
     return false;
 }
 
-function updateButtonContent(btn, key) {
-    if (checkIfControllerIsInUse(key)) {
+function updateButtonContent(btn, key, key_code) {
+    if (checkIfControllerIsInUse(key_code)) {
         console.log('Controller already in use');
         return;
     }
@@ -70,24 +72,46 @@ function updateButtonContent(btn, key) {
         }
         btn.innerHTML = arrow;
     }
-    btn.setAttribute('data-ctrl', key);
+    btn.setAttribute('data-ctrl', key_code);
 }
 
 // =================== USER INFO =================== //
 
+const invisibleChar = '  '; // Non-breaking space
+const visibleChar = '  '; // Non-breaking space
+
 function getGameUserInfo() {
     try {
+
+        let name1 = document.getElementById('player1_username').value;
+        let name2 = document.getElementById('player2_username').value;
+
+        if (name1.length > name2.length) {
+            name2 += visibleChar.repeat(name1.length - name2.length) + '.';
+        } else if (name1.length < name2.length) {
+            name1 = '.' + visibleChar.repeat(name2.length - name1.length) + name1;
+        }
+
+        console.log('name1 => ', name1);
+        console.log('name2 => ', name2);
+
+        let awef = name1 + invisibleChar.repeat(14) + name2;
+        console.log('debog try =>[', awef, ']size => ', awef.length);
+
         let userInfo = {
             player1: {
-                name: document.getElementById('player1_username').value,
+                name: name1,
                 ctrl_up: document.getElementById('player1-ctrl-up').getAttribute('data-ctrl'),
-                ctrl_down: document.getElementById('player1-ctrl-down').getAttribute('data-ctrl')
+                ctrl_down: document.getElementById('player1-ctrl-down').getAttribute('data-ctrl'),
+                img: null
             },
             player2: {
-                name: document.getElementById('player2_username').value,
+                name: name2,
                 ctrl_up: document.getElementById('player2-ctrl-up').getAttribute('data-ctrl'),
-                ctrl_down: document.getElementById('player2-ctrl-down').getAttribute('data-ctrl')
-            }
+                ctrl_down: document.getElementById('player2-ctrl-down').getAttribute('data-ctrl'),
+                img: null
+            },
+            nameBord: awef
         };
         return userInfo;
     } catch (error) {
@@ -112,12 +136,18 @@ async function toggleCustomGame() {
 
 async function toggleStartGame() {
     try {
-        let startGame = document.getElementById('start-game');
+        let startGameBox = document.getElementById('start-game');
 
-        startGame.addEventListener('click', function() {
+        startGameBox.addEventListener('click', function() {
             let gameInfo = getGameUserInfo();
             console.log('game user info => ', gameInfo);
-            console.log('click start game');
+            let player1 = gameInfo.player1;
+            let player2 = gameInfo.player2;
+            let box = document.getElementById('container-pong3D');
+            let footer = document.getElementById('footer');
+            footer.style.display = 'none';
+            box.innerHTML = '';
+            startGame(player1, player2, gameInfo.nameBord);
         });
     } catch (error) {
         console.error(error);

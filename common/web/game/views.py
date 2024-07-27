@@ -30,30 +30,6 @@ def login_required(view_func):
 # =============================================================================
 
 @login_required
-def lobby(request):
-    try:
-        lobby_id = request.GET.get('lobby_id', 'default_value')
-        lobby = Lobby.objects.get(UUID=lobby_id)
-        players = lobby.players.all()
-        for player in players:
-            print('bebug = ', player.img)
-            if hasattr(player, 'img') and player.img:
-                img_path = str(player.img)
-                print('img_path = ', img_path)
-                if img_path.startswith('profile_pics/'):
-                    player.img = '/media/' + img_path
-                    print('player.img = ', player.img)
-
-        ia_players = lobby.ai_players.all()
-        return render(request, "tournament/lobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
-    except Lobby.DoesNotExist:
-        print("Lobby not found")
-        return render(request, "tournament/tournament.html", {"error": "Lobby not found"})
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        return render(request, "tournament/tournament.html", {"error": "An unexpected error occurred"})
-
-@login_required
 def joinGame(request):
     try:
         currentPlayer = request.user.player
@@ -83,10 +59,6 @@ def joinGame(request):
         return HttpResponse(f"An error occurred: {str(e)}")
 
 @login_required
-def tournament(request):
-    return render(request, "tournament/tournament.html")
-
-@login_required
 def ranked(request):
     return render(request, "ranked/ranked.html")
 
@@ -102,10 +74,34 @@ def pong3D(request):
 def game(request):
     return render(request, "home/home.html")
 
+# view valide
+
 @login_required
-def pongManda(request):
-    return render(request, "pongManda/pongManda.html")
+def pongLocal(request):
+    return render(request, "pongLocal/pongLocal.html")
 
 @login_required
 def pongCustom(request):
     return render(request, "pongCustom/pongCustom.html")
+
+@login_required
+def pongTournament(request):
+    return render(request, "pongTournament/pongTournament.html")
+
+@login_required
+def pongTournamentLobby(request):
+    try:
+        lobby_id = request.GET.get('lobby_id', 'default_value')
+        lobby = Lobby.objects.get(UUID=lobby_id)
+        players = lobby.players.all()
+        for player in players:
+            if hasattr(player, 'img') and player.img:
+                img_path = str(player.img)
+                if img_path.startswith('profile_pics/'):
+                    player.img = '/media/' + img_path
+        ia_players = lobby.ai_players.all()
+        return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
+    except Lobby.DoesNotExist:
+        return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
+    except Exception as e:
+        return render(request, "pongTournament/pongTournament.html", {"error": "An unexpected error occurred"})

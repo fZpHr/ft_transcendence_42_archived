@@ -1,12 +1,12 @@
 let AllLobby = new Set();
 
 document.addEventListener('DOMContentLoaded', async function () {
-    let newTournamentBtn = document.getElementById('tournament-btn');
+    let newTournamentBtn = document.getElementById('pongTournament-btn');
     let allLobby = await APIgetAllLobby(userId);
     await innerAllLobby(allLobby.data);
-    for (let i = 0; i < allLobby.length; i++) {
-        console.log(allLobby[i]);
-    }
+    // for (let i = 0; i < allLobby.length; i++) {
+    //     console.log(allLobby[i]);
+    // }
 
     handlersJoinLobby();
     newTournamentBtn.addEventListener('click', async function () {
@@ -67,7 +67,7 @@ async function handlersJoinLobby() {
         allLobby[i].addEventListener('click', async function () {
             let lobbyId = allLobby[i].children[0].id;
             console.log(lobbyId);
-            window.location.href = `/game/lobby?lobby_id=${lobbyId}`;
+            window.location.href = `/game/pong/tournament/lobby?lobby_id=${lobbyId}`;
         });
         AllLobby.add(allLobby[i].children[0].id);
     }

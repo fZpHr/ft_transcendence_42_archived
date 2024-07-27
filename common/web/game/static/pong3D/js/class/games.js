@@ -12,6 +12,7 @@ class Game {
         this.renderer;
         this.scene;
         this.floor = new THREE.Group();
+        this.render = false;
 
         this.camera = new Cam({ x: 0, y: 50, z: 100 });
         this.cameraControls;
@@ -54,6 +55,41 @@ class Game {
         window.addEventListener('keyup', this.handleKeyUp);
     }
 
+    async setName(str) {
+        return new Promise(async (resolve, reject) => {
+            let load = (async function (font) {
+                return new Promise(async(resolve, reject)=>{
+                    this.nameGeo = new TextGeometry(`${str}`, {
+                        font: font,
+                        size: 5,
+                        depth: 0.4,
+                        curveSegments: 24,
+                        bevelEnabled: true,
+                        bevelThickness: 0.05,
+                        bevelSize: 0.05,
+                        bevelSegments: 3
+                    });
+                    this.nameMaterial = new THREE.MeshPhysicalMaterial({
+                        color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 200, clearcoat: 1.0,
+                        clearcoatRoughness: 0.0,
+                        roughness: 0.7,
+                        metalness: 0.7
+                    });
+                    this.nameMesh = new THREE.Mesh(this.nameGeo, this.nameMaterial);
+                    this.nameGeo.computeBoundingBox();
+                    if (this.nameGeo.boundingBox) {
+                            this.nameGeo.translate(-this.nameGeo.boundingBox.max.x / 2, this.camera.camera3D.position.y / 4, -40);
+                    }
+                    this.font = font;
+                    resolve(true);
+                });
+            }).bind(this);
+            let font = await this.loader.loadAsync('/static/pong3D/font/font.json')
+            await load(font);
+            resolve(true);
+        });
+    }
+
     async setScore() {
         return new Promise(async (resolve, reject) => {
             let load = (async function (font) {
@@ -81,52 +117,57 @@ class Game {
                 this.font = font;
                 this.floor.add(this.scoreMesh);
             }).bind(this);
-            this.loader.load('/pong3D/js/font.json', (font) => load(font));
+            this.loader.load('/static/pong3D/font/font.json', (font) => load(font));
             resolve(true);
         });
     }
 
     handleKeyUp = (async (event) => {
         switch (event.keyCode) {
-            case 38:
+            case this.players[1].controls.up:
                 this.players[1].paddle.move_right = false;
                 break;
-            case 40:
+            case this.players[1].controls.down:
                 this.players[1].paddle.move_left = false;
                 break;
-            case 87:
+            case this.players[0].controls.up:
                 this.players[0].paddle.move_right = false;
                 break;
-            case 83:
+            case this.players[0].controls.down:
                 this.players[0].paddle.move_left = false;
                 break;
-            case 32:
+            case 9:
                 this.updateScore();
+                break;
+            case 32:
                 break;
         }
     }).bind(this);
 
     handleKeyDown = (async (event) => {
+        console.log(event.keyCode)
         switch (event.keyCode) {
-            case 38:
+            case this.players[1].controls.up:
                 this.players[1].paddle.move_right = true;
                 break;
-            case 40:
+            case this.players[1].controls.down:
                 this.players[1].paddle.move_left = true;
                 break;
-            case 87:
+            case this.players[0].controls.up:
                 this.players[0].paddle.move_right = true;
                 break;
-            case 83:
+            case this.players[0].controls.down:
                 this.players[0].paddle.move_left = true;
                 break;
-            case 32:
+            case 9:
                 this.camera.focus_ball = this.camera.focus_ball == false ? true : false;
                 if (this.camera.focus_ball == false) {
                     this.camera.camera3D.position.set(this.camera.start_pos.x, this.camera.start_pos.y, this.camera.start_pos.z);
                     this.camera.camera3D.rotation.set(0, 0, 0);
                     this.camera.camera3D.lookAt(this.scene.position);
                 }
+                break;
+            case 32:
                 break;
         }
     }).bind(this);

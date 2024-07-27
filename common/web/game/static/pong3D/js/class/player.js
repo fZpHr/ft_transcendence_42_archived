@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { Paddle } from './paddle.js'
+import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/geometries/TextGeometry.js'
 
 class Player {
     constructor(
@@ -36,6 +38,11 @@ class Player {
                     x, y, z, radius
                 }
             }
+        },
+        control = {up, down},
+        user = {
+            name,
+            img
         }
     ) {
         this.score = 0;
@@ -48,7 +55,17 @@ class Player {
             { paddleGeo: this.paddleGeo, paddleMaterial: this.paddleMaterial },
             limits
         );
+
+        this.loader = new FontLoader();
+        this.font;
+
         this.group;
+        this.controls = {
+            up: control.up,
+            down: control.down
+        }
+        this.name = user.name;
+        this.img = user.img;
         this.init(paddleInit)
     }
 

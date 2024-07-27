@@ -4,12 +4,12 @@
 {% block title %}{% trans "lobby" %}{% endblock %}
 
 {% block custom_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'game/css/lobby.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'pongTournament/css/pongTournamentLobby.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="warp-lobby">
-    <aside class="chat-lobby" style="display: none;">
+    <!-- <aside class="chat-lobby" style="display: none;">
         <div class="title-chat-lobby">
             <h1>chat</h1>
         </div>
@@ -30,7 +30,7 @@
                 <span class="msg-chat-lobby">message</span>
             </div>
         </div>
-    </aside>
+    </aside> -->
 
     <span class="loader" id="loader-container"></span>
 
@@ -100,11 +100,11 @@
 {% endblock %}
 
 {% block extra_scripts %}
-    <script src="{% static 'game/js/lobby_socket.js' %}"></script>
-    <script src="{% static 'game/js/drawTournament.js' %}"></script>
+    <script src="{% static 'pongTournament/js/lobby_socket.js' %}"></script>
+    <script src="{% static 'pongTournament/js/drawTournament.js' %}"></script>
     {% if lobby.owner.id == user.id %}
-        <script src="{% static 'game/js/lobby_owner.js' %}"></script>
+        <script src="{% static 'pongTournament/js/lobby_owner.js' %}"></script>
     {% else %}
-        <script src="{% static 'game/js/lobby.js' %}"></script>
+        <script src="{% static 'pongTournament/js/lobby.js' %}"></script>
     {% endif %}
 {% endblock %}
