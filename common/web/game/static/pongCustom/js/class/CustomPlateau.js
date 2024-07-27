@@ -24,7 +24,7 @@ class CustomPlateau {
 
 		this.floor = new THREE.Group();
 		this.plateau = {
-			color: 
+			color: 0xffffff
 		}
         this.radius = 0.5
 		// this.init();
