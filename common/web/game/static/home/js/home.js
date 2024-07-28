@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         let links = [
             '/game/pong/tournament/',
             '/game/pong/ranked/',
-            '/game/pong3D/',
+            '/game/pong/privGame/',
             '/game/pong/local/',
             '/game/pong/custom/',
             '/game/ranked/',

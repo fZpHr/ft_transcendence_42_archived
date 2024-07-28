@@ -155,7 +155,7 @@ class CustomGame {
 			this.groundMirror.position.y = 0;
 			this.plateau.rotateX(- Math.PI / 2);
 			this.groundMirror.rotateX(- Math.PI / 2);
-			// this.floor.add(this.groundMirror);
+			this.floor.add(this.groundMirror);
 			this.floor.add(this.plateau);
 			resolve(true);
 		})

@@ -1,0 +1,211 @@
+.pongPrivGame-wrapper {
+	width: 100vw;
+	height: 100vh;
+	min-height: 100vh;
+	text-align: center;
+	background-color: var(--to-teal-2-rgba);
+	color: var(--text-color);
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	overflow: hidden;
+	position: relative;
+}
+
+.video-background {
+	z-index: 100;
+}
+
+.video-background video {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	min-width: 100%;
+	min-height: 100%;
+	width: auto;
+	height: auto;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+}
+
+.play-box {
+    background-color: rgba(18, 15, 23, 0.8);
+    border-radius: 10px;
+	padding: 20px;
+	width: 25vw;
+	height: 70vh;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	box-shadow: 0 0 10px 5 rgba(0, 0, 0, 0.4);
+	z-index: 200;
+}
+
+/* header of box */
+
+.play-box__header {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.play-box__header span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--text-color);
+    width: 100%;
+}
+
+/* content of box */
+
+.play-box__content {
+    width: 100%;
+    height: 65%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.player-box {
+    background-color: var(--to-teal-2-rgba);
+    width: 45%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.player-box__username {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: blue;
+}
+
+.player-box__username span {
+    all: unset;
+    color: var(--text-color);
+    padding: 5px;
+    width: 80%;
+    text-align: center;
+    border-bottom: 1px solid var(--text-color);
+}
+
+.player-box__username img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.left-player {
+}
+
+.player-box__controller {
+    width: 100%;
+    height: 50%;
+    background-color: red;
+}
+
+.controls_title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-color);
+    width: 100%;
+    height: 20%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.controls_player {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.controls_player .control {
+    width: 40%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 10px;
+    background-color: var(--to-teal-5-rgba);
+    padding: 10px;
+}
+
+.control span {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.control button {
+    all: unset;
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    transition: ease-in-out 0.3s;
+}
+
+.control button:hover, .control button:focus {
+    background-color: var(--text-color);
+    color: var(--to-teal-4-rgba);
+}
+
+/* footer of box */
+
+.play-box__footer {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.btn-custom-game {
+    all: unset;
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+}
+
+.btn-custom-game:hover, .btn-custom-game:focus, .btn-start-game:hover, .btn-start-game:focus {
+    background-color: var(--text-color);
+    color: var(--to-teal-4-rgba);
+}
+
+.btn-custom-game:active, .btn-start-game:active {
+    transform: scale(0.9);
+}
+
+.btn-start-game {
+    all: unset;
+    background-color: var(--to-teal-4-rgba);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+}

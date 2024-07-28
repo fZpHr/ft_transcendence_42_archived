@@ -7,18 +7,13 @@ from django.utils.translation import gettext_lazy as _
 import json
 from django.utils.translation import gettext as _
 from django.shortcuts import render
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import requests
 from django.utils.translation import activate
-from django.views.decorators.cache import cache_page
 from django.contrib.auth.models import User
 from api.models import Player, Game
 from django.core import serializers
-from django.utils.timezone import localtime
-
-from django.contrib.auth.decorators import user_passes_test
-from api.login_required import *
+from api.login_required import login_required, not_login_required
 
 
 @not_login_required
@@ -41,14 +36,14 @@ def profil_view(request, format=None):
         print("================== DEBOG IMG", data.img)
         if (data.img.name.startswith("profile_pics/")):
             is42 = False
-        games = Game.objects.filter(player1=data) | Game.objects.filter(player2=data)
+        games = (Game.objects.filter(player1=data, finish=True) | Game.objects.filter(player2=data, finish=True))
         games = games.order_by('-created_at')
+        print('games', games)
         matches = []
-        print("========================================================================================================================================================================================================================")
+        print("=============================================================================================")
         for game in games:
             game.player1.img.name = '/media/' + game.player1.img.name if game.player1.img.name.startswith("profile_pics/") else game.player1.img.name
             game.player2.img.name = '/media/' + game.player2.img.name if game.player2.img.name.startswith("profile_pics/") else game.player2.img.name
-
             total_seconds = game.time
             minutes, seconds = divmod(total_seconds, 60)
             match_data = {

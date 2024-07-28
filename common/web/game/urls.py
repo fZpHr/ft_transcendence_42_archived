@@ -12,6 +12,7 @@ urlpatterns = [
     # view valide
     path('pong/local/', views.pongLocal),
     path('pong/custom/', views.pongCustom),
+	path('pong/privGame/', views.pongPrivGame),
     path('pong/tournament/', views.pongTournament),
     path('pong/tournament/lobby/', views.pongTournamentLobby),
 ]

@@ -46,10 +46,12 @@ class Game(models.Model):
     elo_after_player1 = models.IntegerField(null=True)
     elo_after_player2 = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    finish = models.BooleanField(default=False)
     type = models.CharField(max_length=10, default='connect4')
 
 class GameInvitation(models.Model):
     id = models.AutoField(primary_key=True)
+    game_id = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='game', default=-1)
     player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player1_invitations')
     player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player2_invitations')
     status = models.IntegerField(default=0)

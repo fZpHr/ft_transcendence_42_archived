@@ -85,6 +85,37 @@ def pongCustom(request):
     return render(request, "pongCustom/pongCustom.html")
 
 @login_required
+def pongPrivGame(request):
+    user = request.user
+    player = Player.objects.get(username=user.username)
+    opponentId = request.GET.get('opponent', 'default_value')
+    opponent = Player.objects.get(id=opponentId)
+
+    privGame = Game.objects.filter(players__in=[player, opponent], type='private')
+    print('================ opp ',opponent)
+    print('================ play ',player)
+    user = {
+        'player' : {
+            'id': player.id,
+            'username': player.username,
+            'img': player.img,
+        },
+        'opponent' : {
+            'id': opponent.id,
+            'username': opponent.username,
+            'img': opponent.img,
+        },
+        'game': {
+            'id': newGamePriv.id,
+            'type': newGamePriv.type,
+            'status': newGamePriv.status,
+            'finish': newGamePriv.finish,
+        }
+    }
+
+    return render(request, "pongPrivGame/pongPrivGame.html")
+
+@login_required
 def pongTournament(request):
     return render(request, "pongTournament/pongTournament.html")
 

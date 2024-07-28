@@ -24,8 +24,6 @@ function handlersInviteResp(contactId) {
         let chatMessages = document.getElementById('chat-messages');
         chatMessages.addEventListener('click', async (event) => {
             console.log('event.target:', event.target);
-            console.log('event.target.classList:', event.target.classList);
-            console.log('DEBUG:', event.target.classList.contains('btn-update'));            
             if (event.target.classList.contains('btn-update')) {
                 
                 let status = event.target.getAttribute('data-tooltip');
@@ -45,6 +43,8 @@ function handlersInviteResp(contactId) {
                 updateInviteStatusUI(status);
                 let msg = status === 2 ? 'Game accepted' : 'Game declined';
                 sendWebSocketMessage(msg, userId, contactId, wsChat);
+            } else if (event.target.classList.contains('btn-join')) {
+                window.location.href = '/game/pong/privGame/?opponent=' + contactId;
             }
         });
     } catch (error) {

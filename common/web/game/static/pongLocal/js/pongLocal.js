@@ -1,4 +1,4 @@
-import { startGame } from '/static/pong3D/js/pong3D.js';
+import { startGame } from '/static/pong3D/js/local/pong3D.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     toggleChangeControls();

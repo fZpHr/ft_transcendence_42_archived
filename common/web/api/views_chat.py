@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from .models import Player, Friends, Messages, User, GameInvitation, Notification
+from .models import Player, Friends, Messages, User, GameInvitation, Notification, Game
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import FormParser
 from .serializer import LoginEncoder
@@ -89,11 +89,29 @@ def sendInvite(request):
         player = Player.objects.get(username=user)
         friend = Player.objects.get(id=id)
         if GameInvitation.objects.filter(player1=player, player2=friend).exists():
+            gameid = GameInvitation.objects.get(player1=player, player2=friend).game_id.id
+            print(f"gameid: {gameid}")
+            if Game.objects.filter(id=gameid).exists():
+                Game.objects.filter(id=gameid).delete()
             GameInvitation.objects.filter(player1=player, player2=friend).delete()
         if GameInvitation.objects.filter(player1=friend, player2=player).exists():
+            gameid = GameInvitation.objects.get(player1=friend, player2=player).game_id.id
+            if Game.objects.filter(id=gameid).exists():
+                Game.objects.filter(id=gameid).delete()
             GameInvitation.objects.filter(player1=friend, player2=player).delete()
-        GameInvitation.objects.create(player1=player, player2=friend, status=0)
-        GameInvitation.objects.create(player1=friend, player2=player, status=1)
+        newGamePriv = Game.objects.create(
+            player1=player,
+            player2=friend,
+            elo_before_player1=player.elo,
+            elo_before_player2=friend.elo,
+            elo_after_player1=None,
+            elo_after_player2=None,
+            finish=False,
+            type='pongPv',
+        )
+        newGamePriv.save()
+        GameInvitation.objects.create(player1=player, player2=friend, status=0, game_id=newGamePriv)
+        GameInvitation.objects.create(player1=friend, player2=player, status=1, game_id=newGamePriv)
         if Notification.objects.filter(sender=player, recipient=friend, type=2).exists():
             Notification.objects.filter(sender=player, recipient=friend, type=2).delete()
         Notification.objects.create(sender=player, type=2, recipient=friend, content=f"tournament invitation from {player.username}")
