@@ -15,55 +15,30 @@
 	</div>
 	<section class="play-box">
 		<div class="play-box__header"> 
-            <span>PONG Priv Game</span>
+            <span class="title">PONG Priv Game</span>
 		</div>
 		<div class="play-box__content">
-            <div class="left-player player-box">
+            <div class="left-player box-player" id="first-player" data-id="{{ player.id }}">
                 <div class="player-box__username">
-                    <img src="https://cdn.intra.42.fr/users/27082b5f4fe8df2f838153a15ea9e679/bberkrou.jpg" alt="pp">
-                    <span id="player1_username">test</span>
-                </div>
-                <div class="player-box__controller">
-                    <div class="controls_title">
-                        <span>Player Controls</span>
-                    </div>
-                    <div class="controls_player">
-                        <div class="control">
-                            <span>UP</span>
-                            <button class="btn-change-controls" data-ctrl="87" id="player1-ctrl-up">W</button>
-                        </div>
-                        <div class="control">
-                            <span>DOWN</span>
-                            <button class="btn-change-controls" data-ctrl="83" id="player1-ctrl-down">S</button>
-                        </div>
-                    </div>
+                    <span class="username" id="player1_username">{{ player.username }}</span>
+                    <img src="{{ player.img }}" alt="pp">
+                    <span id="p1_status">Not ready</span>
                 </div>
             </div>
-            <div class="right-player player-box">
-                <div class="player-box__username">
-                    <img src="https://cdn.intra.42.fr/users/27082b5f4fe8df2f838153a15ea9e679/bberkrou.jpg" alt="pp">
-                    <span id="player1_username">test</span>
+            <div class="right-player box-player" id="second-player" data-id="{{ opponent.id }}">
+                <div class="player-box__username notLog">
+                    <span class="username" id="player1_username">{{ opponent.username }}</span>
+                    <img src="{{ opponent.img }}" alt="pp">
+                    <span id="p2_status">Not ready</span>
                 </div>
-                <div class="player-box__controller">
-                    <div class="controls_title">
-                        <span>Player Controls</span>
-                    </div>
-                    <div class="controls_player">
-                        <div class="control">
-                            <span>UP</span>
-                            <button class="btn-change-controls" data-ctrl="38" id="player2-ctrl-up">↑</button>
-                        </div>
-                        <div class="control">
-                            <span>DOWN</span>
-                            <button class="btn-change-controls" data-ctrl="40" id="player2-ctrl-down">↓</button>
-                        </div>
-                    </div>
+                <div id="loader-container">
+                    <div class="loader"></div>
                 </div>
             </div>
         </div>
-        <div class="play-box__footer">
+        <div class="play-box__footer" id="box-btn">
             <button class="btn-custom-game" id="curstom-game"><i class="fa-solid fa-screwdriver-wrench"></i></button>
-            <button class="btn-start-game" id="start-game">{% trans "Start Game" %}</button>
+            <button class="btn-ready-game" id="ready-game">{% trans "Make Ready" %}</button>
         </div>
 	</section>
 </div>
@@ -88,5 +63,6 @@
     }
 </script>
 <script type="module" src="{% static 'pongPrivGame/js/pongPrivGame.js' %}"></script>
-<script src="{% static 'pongPrivGame/js/pongPrivGame-WebSocket.js' %}"></script>
+<!-- <script src="{% static 'pongPrivGame/js/pongPrivGame-WebSocket.js' %}"></script>
+<script src="{% static 'pongPrivGame/js/pongPrivGame-WS-action.js' %}"></script> -->
 {% endblock %}

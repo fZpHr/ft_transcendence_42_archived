@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     let Notifitems = boxNotif.getElementsByClassName('notif-items');
     let user = await APIgetCurrentUser();
     let roomName = await APIgetHashRoom('notif_'+ user.id);
-    connectWSNotif(roomName.roomName);
+    // connectWSNotif(roomName.roomName);
     handlerHideNotif(Notifitems);
     handlerRedirectOnClick(Notifitems);
 });
@@ -49,10 +49,10 @@ async function handlerHideNotif(Notifitems) {
 
 async function connectWSNotif(roomName) {
     try {
-        console.log('TRY connectWSNotif =>', roomName);
+        // console.log('TRY connectWSNotif =>', roomName);
         const wsNotif = new WebSocket(`wss://${window.location.host}/ws/notif/${roomName}/`);
         wsNotif.onopen = function() {
-            console.log('wss Notif notif connected to ', roomName);
+            // console.log('wss Notif notif connected to ', roomName);
         };
         wsNotif.onmessage = function(e) {
             let data = JSON.parse(e.data);
@@ -64,7 +64,7 @@ async function connectWSNotif(roomName) {
         };
 
         wsNotif.onclose = function(e) {
-            console.log('wssNotif notif closed');
+            // console.log('wssNotif notif closed');
         };
 
     } catch (error) {

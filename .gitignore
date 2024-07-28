@@ -14,6 +14,7 @@ __pycache__/
 /data/portainer
 /data/postgres
 /data/prometheus
+/data/
 
 # Django specific
 *.log

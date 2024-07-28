@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "Home" %}{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="warp-homePage"> 
+    <div class="back-video">
+        <video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
+    </div>
+    <div class="home__header">
+        <div class="info-box">
+            <div class="info">
+                <div class="site-info">
+                    <span id="title-info">Transtembre</span>
+                    <span class="desc-info">Transcendence est un projet de l'école 42. L'objectif est de développer un jeu PONG et d autre surprise</span>
+                    <button id="play-btn">Play</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breaker"><div class="content-breaker"></div></div>
+    <div class="home__containt">
+        <div class="row-content">
+            <div class="left-content">
+                <img src="{% static 'img/pong.png' %}" alt="{% trans 'pong png' %}">
+            </div>
+            <div class="right-content">
+                <div class="list_gamemode">
+                    <div class="game-mode-element">
+                        <div class="title-mode">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="desct-mode">
+                            <span>Tournament</span>
+                        </div>  
+                    </div>
+
+                    <div class="game-mode-element">
+                        <div class="title-mode">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="desct-mode">
+                            <span>Ranked</span>
+                        </div>  
+                    </div>
+
+                    <div class="game-mode-element">
+                        <div class="title-mode">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="desct-mode">
+                            <span>IA</span>
+                        </div>  
+                    </div>
+
+                    <div class="game-mode-element">
+                        <div class="title-mode">
+                            <i class="fas fa-house "></i>
+                        </div>
+                        <div class="desct-mode">
+                            <span>Local Play</span>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="home__containt">
+
+    </div>
+    <div class="home__containt">
+        <p>a</p>
+    </div>  
+</div>
+{% endblock %}
+
+
+{% block extra_scripts %}
+{% endblock %}

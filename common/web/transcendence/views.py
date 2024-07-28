@@ -21,3 +21,7 @@ def set_language(request, language_code):
 def custom_404_view(request, exception):
     return render(request, 'global_templates/404.html', {}, status=404)
 
+
+def index(request):
+    print('index')
+    return render(request, 'homePage.html', {})

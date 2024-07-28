@@ -1,0 +1,223 @@
+.warp-homePage {
+    width: 100vw;
+    height: auto;
+}
+
+.back-video {
+    position: fixed;
+    top: -30vh;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.home__header {
+    z-index: 10;
+    width: 100%;
+    height: 65vh;
+    margin-top: 8vh;
+    /* background-color: blue; */
+}
+
+
+.home__header .info-box {
+    width: 100%;
+    height: 100%;
+    /* background-color: red; */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.home__header .info {
+    /* background-color: green; */
+    width: 50%;
+    height: 100%;
+    color: var(--text-color);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.info .site-info {
+    /* background-color: red; */
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 1s ease-out;
+}
+
+#title-info {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    animation: fadeIn 1s ease-out;
+}
+
+.desc-info {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    width: 60%;
+}
+
+#play-btn {
+    all: unset;
+    background-color: var(--to-teal-1-rgba);
+    color: var(--text-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 10px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 4px var(--to-teal-1-rgba);
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+}
+
+#play-btn:hover {
+    background-color: var(--text-color);
+    color: var(--to-teal-1-rgba);
+    box-shadow: none;
+}
+
+#play-btn:active {
+    transform: scale(1.1);
+}
+
+.breaker {
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    left: 0;
+    top: 73vh;
+}
+
+.content-breaker {
+    background: radial-gradient(50% 100% at 50% 100%,
+                #6929ff 0,
+                var(--to-teal-2-rgba) 100%);
+    height: 100%;
+    transform: matrix(1, 0, 0, -1, 0, 0);
+    width: 100%;
+}
+
+/* Content of page */
+
+.home__containt {
+    width: 100vw;
+    height: 60vh;
+    background-color: var(--to-teal-2-rgba);
+    border-bottom: 1px solid var(--to-teal-1-rgba);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home__containt .row-content {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home__containt .left-content {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home__containt .left-content img {
+    width: 400px;
+    height: 400px;
+}
+
+.home__containt .right-content {
+    width: 65%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    /* background-color: red; */
+}
+
+.home__containt .right-content .row-contain {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: yellow;
+}
+
+.list_gamemode {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    /* background-color: green; */
+    border-left: 1px solid var(--text-color);
+    color: var(--text-color);
+}
+
+.game-mode-element {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    box-shadow: 0 10px 10px -5px var(--to-teal-1-rgba); /* Ombre projetée uniquement en dessous */
+    transition: ease-in-out 0.3s;
+    gap: 20px;
+}
+
+.game-mode-element:hover {
+    background-color: var(--to-teal-3-rgba);
+    color: var(--text-color);
+    transform: scale(1.001);
+}
+
+.title-mode {
+    /* background-color: pink; */
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-mode i {
+    background-color: var(--to-teal-3-rgba);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 50%;
+}
+
+.desct-mode {
+    width: 80%;
+}
+
+/* Animation */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

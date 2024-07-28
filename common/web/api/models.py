@@ -37,17 +37,17 @@ class Messages(models.Model):
 
 class Game(models.Model):
     id = models.AutoField(primary_key=True)
-    player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player1')
-    player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player2')
+    type = models.CharField(max_length=10, default='connect4')
+    finish = models.BooleanField(default=False)
     time = models.IntegerField(default=0)
     winner = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='winner', null=True)
+    player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player1')
+    player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player2')
     elo_before_player1 = models.IntegerField()
     elo_before_player2 = models.IntegerField()
     elo_after_player1 = models.IntegerField(null=True)
     elo_after_player2 = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    finish = models.BooleanField(default=False)
-    type = models.CharField(max_length=10, default='connect4')
 
 class GameInvitation(models.Model):
     id = models.AutoField(primary_key=True)

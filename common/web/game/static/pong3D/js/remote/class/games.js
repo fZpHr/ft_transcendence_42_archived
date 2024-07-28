@@ -124,18 +124,18 @@ class Game {
 
     handleKeyUp = (async (event) => {
         switch (event.keyCode) {
-            case this.players[1].controls.up:
-                this.players[1].paddle.move_right = false;
-                break;
-            case this.players[1].controls.down:
-                this.players[1].paddle.move_left = false;
-                break;
-            case this.players[0].controls.up:
-                this.players[0].paddle.move_right = false;
-                break;
-            case this.players[0].controls.down:
-                this.players[0].paddle.move_left = false;
-                break;
+            // case this.players[1].controls.up:
+            //     this.players[1].paddle.move_right = false;
+            //     break;
+            // case this.players[1].controls.down:
+            //     this.players[1].paddle.move_left = false;
+            //     break;
+            // case this.players[0].controls.up:
+            //     this.players[0].paddle.move_right = false;
+            //     break;
+            // case this.players[0].controls.down:
+            //     this.players[0].paddle.move_left = false;
+            //     break;
             case 9:
                 this.updateScore();
                 break;
@@ -147,18 +147,18 @@ class Game {
     handleKeyDown = (async (event) => {
         console.log(event.keyCode)
         switch (event.keyCode) {
-            case this.players[1].controls.up:
-                this.players[1].paddle.move_right = true;
-                break;
-            case this.players[1].controls.down:
-                this.players[1].paddle.move_left = true;
-                break;
-            case this.players[0].controls.up:
-                this.players[0].paddle.move_right = true;
-                break;
-            case this.players[0].controls.down:
-                this.players[0].paddle.move_left = true;
-                break;
+            // case this.players[1].controls.up:
+            //     this.players[1].paddle.move_right = true;
+            //     break;
+            // case this.players[1].controls.down:
+            //     this.players[1].paddle.move_left = true;
+            //     break;
+            // case this.players[0].controls.up:
+            //     this.players[0].paddle.move_right = true;
+            //     break;
+            // case this.players[0].controls.down:
+            //     this.players[0].paddle.move_left = true;
+            //     break;
             case 9:
                 this.camera.focus_ball = this.camera.focus_ball == false ? true : false;
                 if (this.camera.focus_ball == false) {
@@ -228,16 +228,15 @@ class Game {
     }
 
     async movePaddles() {
-        if (this.players[0].paddle.move_right && (this.players[0].group.rotation.y - Math.PI / 12 > -Math.PI / 4))
-            this.players[0].group.rotateY(-0.01);
-        if (this.players[0].paddle.move_left && (this.players[0].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
-            this.players[0].group.rotateY(0.01);
+        // if (this.players[0].paddle.move_right && (this.players[0].group.rotation.y - Math.PI / 12 > -Math.PI / 4))
+        //     this.players[0].group.rotateY(-0.01);
+        // if (this.players[0].paddle.move_left && (this.players[0].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
+        //     this.players[0].group.rotateY(0.01);
 
-        if (this.players[1].paddle.move_right && (this.players[1].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
-            this.players[1].group.rotateY(0.01);
-        if (this.players[1].paddle.move_left && this.players[1].group.rotation.y - Math.PI / 12 > -Math.PI / 4)
-            this.players[1].group.rotateY(-0.01);
-
+        // if (this.players[1].paddle.move_right && (this.players[1].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
+        //     this.players[1].group.rotateY(0.01);
+        // if (this.players[1].paddle.move_left && this.players[1].group.rotation.y - Math.PI / 12 > -Math.PI / 4)
+        //     this.players[1].group.rotateY(-0.01);
     }
 }
 

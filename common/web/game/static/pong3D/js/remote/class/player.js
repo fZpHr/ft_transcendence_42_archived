@@ -39,11 +39,11 @@ class Player {
                 }
             }
         },
-        control = {up, down},
-        user = {
-            name,
-            img
-        }
+        // control = {up, down},
+        // user = {
+        //     name,
+        //     img
+        // }
     ) {
         this.score = 0;
         this.paddleGeo = new THREE.TorusGeometry(paddleGeometry.radius, paddleGeometry.tube, paddleGeometry.radialSegments, paddleGeometry.tubularSegments, paddleGeometry.arc);
@@ -60,12 +60,12 @@ class Player {
         this.font;
 
         this.group;
-        this.controls = {
-            up: control.up,
-            down: control.down
-        }
-        this.name = user.name;
-        this.img = user.img;
+        // this.controls = {
+        //     up: control.up,
+        //     down: control.down
+        // }
+        // this.name = user.name;
+        // this.img = user.img;
         this.init(paddleInit)
     }
 

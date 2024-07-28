@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from api.models import Game, Lobby, Player, Game_Tournament, Tournament
+from api.models import Game, Lobby, Player, Game_Tournament, Tournament, GameInvitation
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -71,7 +71,7 @@ def pong3D(request):
     return render(request, "pong3D/pong3D.html")
 
 @login_required
-def game(request):
+def gameHome(request):
     return render(request, "home/home.html")
 
 # view valide
@@ -91,10 +91,15 @@ def pongPrivGame(request):
     opponentId = request.GET.get('opponent', 'default_value')
     opponent = Player.objects.get(id=opponentId)
 
-    privGame = Game.objects.filter(players__in=[player, opponent], type='private')
-    print('================ opp ',opponent)
-    print('================ play ',player)
-    user = {
+    invitGame = GameInvitation.objects.filter(player1=player, player2=opponent)
+    if not invitGame:
+        invitGame = GameInvitation.objects.filter(player1=opponent, player2=player)
+    if not invitGame:
+        return render(request, "pongPrivGame/pongPrivGame.html", {"error": "Game not found"})
+    player.img = player.img.name.startswith('profile_pics/') and '/media/' + player.img.name or player.img
+    opponent.img = opponent.img.name.startswith('profile_pics/') and '/media/' + opponent.img.name or opponent.img
+    privGame = Game.objects.get(id=invitGame[0].game_id.id)
+    data = {
         'player' : {
             'id': player.id,
             'username': player.username,
@@ -106,14 +111,13 @@ def pongPrivGame(request):
             'img': opponent.img,
         },
         'game': {
-            'id': newGamePriv.id,
-            'type': newGamePriv.type,
-            'status': newGamePriv.status,
-            'finish': newGamePriv.finish,
+            'id': privGame.id,
+            'type': privGame.type,
+            'finish': privGame.finish,
         }
     }
-
-    return render(request, "pongPrivGame/pongPrivGame.html")
+    print(data)
+    return render(request, "pongPrivGame/pongPrivGame.html", data)
 
 @login_required
 def pongTournament(request):

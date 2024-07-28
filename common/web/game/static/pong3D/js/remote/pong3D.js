@@ -5,7 +5,7 @@ import { Game } from './class/games.js'
 import { Player } from './class/player.js'
 
 
-async function startGame(player1, player2, nameBord)
+async function startGame(player1, player2)
 {
     let game = new Game();
     
@@ -51,9 +51,9 @@ async function startGame(player1, player2, nameBord)
                 }
             }
         },
-        { up: parseInt(player1.ctrl_up), down: parseInt(player1.ctrl_down) },
-        { name: player1.name, img: player1.img }
     )
+    // { up: parseInt(player1.ctrl_up), down: parseInt(player1.ctrl_down) },
+    //     { name: player1.name, img: player1.img }
     let player_2 = new Player(
         { radius: 41, tube: 1.1, radialSegments: 32, tubularSegments: 200, arc: Math.PI / 6 },
         { color: 0xffffff, opacity: 0.8, roughness: 0.1, metalness: 0, emissive: 0xffffff, emissiveIntensity: 100 },
@@ -88,10 +88,9 @@ async function startGame(player1, player2, nameBord)
                 }
             }
         },
-        { up: parseInt(player2.ctrl_up), down: parseInt(player2.ctrl_down) },
-        { name: player2.name, img: player2.img }
     )
-    
+    // { up: parseInt(player2.ctrl_up), down: parseInt(player2.ctrl_down) },
+    // { name: player2.name, img: player2.img }
     const sphere = new Ball(
         {
             radius: 0.5, widthSegments: 32, heightSegments: 32, color: 0x00ffff, emissive: 0x00ffff,
@@ -111,7 +110,7 @@ async function startGame(player1, player2, nameBord)
     
     game.players.push(player_1);
     game.players.push(player_2);
-    await game.setName(nameBord);
+    // await game.setName(nameBord);
 
     let sphereGroup = new THREE.Group();
     let limits = new THREE.Group();
@@ -125,8 +124,8 @@ async function startGame(player1, player2, nameBord)
     game.floor.add(paddle_1_grp);
     game.floor.add(paddle_2_grp);
     game.floor.add(sphere.collisionLight);
+    // game.floor.add(game.nameMesh);
     game.scene.add(sphereGroup);
-    game.floor.add(game.nameMesh);
 
     
     for (const data of sphere.torus)

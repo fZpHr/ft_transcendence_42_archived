@@ -118,15 +118,15 @@ async function startGame(player1, player2, nameBord)
     let paddle_1_grp = new THREE.Group();
     let paddle_2_grp = new THREE.Group();
     
-    // game.floor.add(ground.groundMirror);
+    game.floor.add(ground.groundMirror);
     game.floor.add(ground.plateau);
     game.floor.add(ground.circle3D);
     game.floor.add(limits);
     game.floor.add(paddle_1_grp);
     game.floor.add(paddle_2_grp);
     game.floor.add(sphere.collisionLight);
-    game.scene.add(sphereGroup);
     game.floor.add(game.nameMesh);
+    game.scene.add(sphereGroup);
 
     
     for (const data of sphere.torus)

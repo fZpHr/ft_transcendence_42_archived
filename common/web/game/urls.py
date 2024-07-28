@@ -7,7 +7,7 @@ urlpatterns = [
     path('ranked/', views.ranked),
     path('connect4/', views.connect4),
     path('pong3D/', views.pong3D),
-    path('game/', views.game),
+    path('game/', views.gameHome),
 	
     # view valide
     path('pong/local/', views.pongLocal),

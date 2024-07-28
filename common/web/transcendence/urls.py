@@ -12,7 +12,7 @@ from two_factor.urls import urlpatterns as tf_urls
 
 
 urlpatterns = [
-    path('', include(tf_urls)),
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('game/', include('game.urls')),
