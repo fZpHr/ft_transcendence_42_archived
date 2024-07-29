@@ -128,3 +128,5 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'reset'
         }))
+
+    # async def ballMove(self, event):

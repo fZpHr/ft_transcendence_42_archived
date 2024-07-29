@@ -39,6 +39,9 @@ class Player {
                 }
             }
         },
+        user = {
+            id
+        }
         // control = {up, down},
         // user = {
         //     name,
@@ -60,6 +63,7 @@ class Player {
         this.font;
 
         this.group;
+        this.id = user.id;
         // this.controls = {
         //     up: control.up,
         //     down: control.down

@@ -99,6 +99,8 @@ def pongPrivGame(request):
     player.img = player.img.name.startswith('profile_pics/') and '/media/' + player.img.name or player.img
     opponent.img = opponent.img.name.startswith('profile_pics/') and '/media/' + opponent.img.name or opponent.img
     privGame = Game.objects.get(id=invitGame[0].game_id.id)
+    print('===========================', privGame.player1)
+    print('===========================', privGame.player2)
     data = {
         'player' : {
             'id': player.id,
@@ -114,6 +116,8 @@ def pongPrivGame(request):
             'id': privGame.id,
             'type': privGame.type,
             'finish': privGame.finish,
+            'p1Id': privGame.player1.id,
+            'p2Id' : privGame.player2.id,
         }
     }
     print(data)

@@ -102,10 +102,10 @@ async function startGame(player1, player2, nameBord)
         { color: 0x00ffff, intensity: 150 },
         { nbrTorus: 3 },
         {
-            coefficientOfRestitution: 1.001, randomnessFactor: 0.4,
+            coefficientOfRestitution: 1.05, randomnessFactor: 0.4,
             lights: { color: 0xff0000, intensity: 200, x: 0, y: -1, z: 0 }
         },
-        { max: 0.5, min: -0.5, speed: 0.5 }
+        { max: 0.5, min: -0.5, speed: 0.1 }
     );
     
     

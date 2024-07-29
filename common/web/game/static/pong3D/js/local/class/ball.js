@@ -92,9 +92,9 @@ class Ball {
         return new Promise(async (resolve, reject) => {
             const normal = this.group.position.clone().normalize();
             const dotProduct = this.ballDirection.dot(normal);
-            const newVelocity = this.ballDirection.clone().sub(normal.clone().multiplyScalar(dotProduct * (1 + this.coefficientOfRestitution)));
-            newVelocity.x += Math.random() * this.randomnessFactor - this.randomnessFactor / 2;
-            newVelocity.z += Math.random() * this.randomnessFactor - this.randomnessFactor / 2;
+            const newVelocity = this.ballDirection.clone().sub(normal.clone().multiplyScalar(Math.abs(dotProduct * (1 + this.coefficientOfRestitution))));
+            newVelocity.x += Math.abs(Math.random() * this.randomnessFactor - this.randomnessFactor / 2);
+            newVelocity.z += Math.abs(Math.random() * this.randomnessFactor - this.randomnessFactor / 2);
             this.ballDirection.copy(newVelocity);
             this.group.position.copy(normal.multiplyScalar(ground.groundRadius - this.radius));
             this.collisionLight.position.set(this.group.position.x, 1, this.group.position.z);
@@ -104,7 +104,7 @@ class Ball {
 
     async resetCenter(speed) {
         await this.genRandomsAngle();
-        this.ballDirection.x = Math.cos(this.bouncing.angle) * speed;
+        this.ballDirection.x = 0.5;
         this.ballDirection.z = Math.sin(this.bouncing.angle) * speed;
         this.group.position.set(0, 0, 0);
     }

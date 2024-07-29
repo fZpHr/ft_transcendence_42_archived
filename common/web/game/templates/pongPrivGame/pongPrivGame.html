@@ -13,9 +13,9 @@
 	<div class="video-background">
 		<video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
 	</div>
-	<section class="play-box">
+	<section class="play-box" id="lst-players" data-players="{{ game.p1Id}},{{ game.p2Id}}">
 		<div class="play-box__header"> 
-            <span class="title">PONG Priv Game</span>
+            <span class="title">PONG Priv Game </span>
 		</div>
 		<div class="play-box__content">
             <div class="left-player box-player" id="first-player" data-id="{{ player.id }}">

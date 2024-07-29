@@ -1,15 +1,19 @@
-import { startGame } from '/static/pong3D/js/remote/pong3D.js';
+import { startGame, movePaddles } from '/static/pong3D/js/remote/pong3D.js';
+import { Game } from '/static/pong3D/js/remote/class/games.js'
 
 let p1Ready = false;
 let p2Ready = false;
 let gameStart = false;
+let p1Id;
+let p2Id;
+let game;
 
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     toggleCustomGame();
     toggleMakeReady();
 
-    let p1Id = document.getElementById('first-player').getAttribute('data-id');
-    let p2Id = document.getElementById('second-player').getAttribute('data-id');
+    p1Id = document.getElementById('first-player').getAttribute('data-id');
+    p2Id = document.getElementById('second-player').getAttribute('data-id');
     let roomName = p1Id < p2Id ? p1Id + p2Id : p2Id + p1Id;
     roomName = await APIgetHashRoom('game_' + roomName);
     await connectWsGame(roomName.roomName);
@@ -33,7 +37,7 @@ async function setUserToLog() {
         let secondPlayerBox = document.getElementById('second-player');
         secondPlayerBox.querySelector('.player-box__username').classList.remove('notLog');
         let loaderContainer = document.getElementById('loader-container').style.display = 'none';
-        let readyBtn = document.getElementById('ready-game'); 
+        let readyBtn = document.getElementById('ready-game');
         readyBtn.classList.add('active');
     } catch (error) {
         console.error(error);
@@ -45,7 +49,7 @@ async function setUserToLogout() {
         let secondPlayerBox = document.getElementById('second-player');
         secondPlayerBox.querySelector('.player-box__username').classList.add('notLog');
         let loaderContainer = document.getElementById('loader-container').style.display = 'flex';
-        let readyBtn = document.getElementById('ready-game'); 
+        let readyBtn = document.getElementById('ready-game');
         readyBtn.classList.remove('active');
         p1Ready = false;
         p2Ready = false;
@@ -68,7 +72,7 @@ async function handleWsGameMessage(data) {
         if (data.userId === userId) {
             return;
         }
-        let eventTypes = { 
+        let eventTypes = {
             'ping': ping,
             'pong': pong,
             'leave': leave,
@@ -76,7 +80,8 @@ async function handleWsGameMessage(data) {
             'move': move, // envoie deplacement {up, down} a laute
             'start': start, // commencer le jeu (pas utiliser ni utils pour le moment)
             'moveBall': moveBall, // deplacement de la balle pas encore fait 
-            'end': end }; // pas impelementer
+            'end': end
+        }; // pas impelementer
         eventTypes[data.eventType](data);
     } catch (error) {
         console.error(error);
@@ -85,7 +90,7 @@ async function handleWsGameMessage(data) {
 
 async function connectWsGame(roomName) {
     try {
-        wssGame = new WebSocket(`wss://${window.location.host}/ws/game/${roomName}/`);        
+        wssGame = new WebSocket(`wss://${window.location.host}/ws/game/${roomName}/`);
 
         wssGame.onopen = function (event) {
             let msg = userId + ' | ping';
@@ -141,12 +146,12 @@ async function pong(data) {
 
 async function ready(data) {
     try {
-        console.log('[WS-G]=>('+ data.message + ')');
+        console.log('[WS-G]=>(' + data.message + ')');
         let boxP2Status = document.getElementById('p2_status');
         boxP2Status.innerHTML = 'Ready';
         p2Ready = true;
         if (p1Ready && p2Ready) {
-            startGame();
+            startInstance();
         }
     } catch (error) {
         console.error(error);
@@ -189,6 +194,7 @@ async function end(data) {
 async function move(data) {
     try {
         console.log('[WS-G]=>(' + data.message + ')');
+        movePaddles(game, data.message.split(' | ')[0], data.message.split(' | ')[1]);
     } catch (error) {
         console.error(error);
     }
@@ -208,7 +214,7 @@ async function toggleCustomGame() {
     try {
         let customGame = document.getElementById('curstom-game');
 
-        customGame.addEventListener('click', function() {
+        customGame.addEventListener('click', function () {
             console.log('click custom game');
         });
     } catch (error) {
@@ -220,7 +226,7 @@ async function toggleMakeReady() {
     try {
         let startGameBox = document.getElementById('ready-game');
 
-        startGameBox.addEventListener('click', function() {
+        startGameBox.addEventListener('click', function () {
             let boxP1Status = document.getElementById('p1_status');
             boxP1Status.innerHTML = 'Ready';
             let readyGame = document.getElementById('ready-game');
@@ -240,35 +246,26 @@ async function toggleMakeReady() {
 
 // ================== GAME ================== //
 
-async function toggleMovePlayer() {
+
+async function startInstance() {
     try {
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'w' || event.key === 'W') {
-                console.log('You move up');
-                let msg = userId + ' | up';
-                sendToWsGame('move', msg);
-            } else if (event.key === 's' || event.key === 'S') {
-                let msg = userId + ' | down';
-                sendToWsGame('move', msg);
-                console.log('You move down');
-            }
-        });
+        console.log('toggleGame');
+
+        let box = document.getElementById('container-pong3D');
+        let footer = document.getElementById('footer');
+		let players = document.getElementById('lst-players').getAttribute('data-players').split(',');
+        footer.style.display = 'none';
+        box.innerHTML = '';
+        gameStart = true;
+        game = new Game();
+        console.log(p1Id, p2Id, userId)
+        startGame([{ id: parseInt(players[0]) }, { id: parseInt(players[1]) }], game, {userId});
+        // toggleMovePlayer(userId);
     } catch (error) {
         console.error(error);
     }
 }
 
-async function startInstance() {
-    try {
-        console.log('toggleGame');
-        let box = document.getElementById('container-pong3D');
-        let footer = document.getElementById('footer');
-        footer.style.display = 'none';
-        box.innerHTML = '';
-        gameStart = true;
-        startGame();
-        toggleMovePlayer();
-    } catch (error) {
-        console.error(error);
-    }
+export {
+    sendToWsGame
 }

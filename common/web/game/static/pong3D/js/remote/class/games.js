@@ -4,8 +4,6 @@ import { Cam } from "./cam.js"
 import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/geometries/TextGeometry.js'
 
-
-
 class Game {
     constructor() {
 
@@ -33,7 +31,7 @@ class Game {
     async init() {
         this.setScene();
         this.handleEvent();
-        this.setScore(0, 0);
+        // this.setScore(0, 0);
     }
 
     async setScene() {
@@ -123,6 +121,7 @@ class Game {
     }
 
     handleKeyUp = (async (event) => {
+        console.log(this.players[0].id)
         switch (event.keyCode) {
             // case this.players[1].controls.up:
             //     this.players[1].paddle.move_right = false;
@@ -145,7 +144,6 @@ class Game {
     }).bind(this);
 
     handleKeyDown = (async (event) => {
-        console.log(event.keyCode)
         switch (event.keyCode) {
             // case this.players[1].controls.up:
             //     this.players[1].paddle.move_right = true;
@@ -227,17 +225,17 @@ class Game {
         }
     }
 
-    async movePaddles() {
-        // if (this.players[0].paddle.move_right && (this.players[0].group.rotation.y - Math.PI / 12 > -Math.PI / 4))
-        //     this.players[0].group.rotateY(-0.01);
-        // if (this.players[0].paddle.move_left && (this.players[0].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
-        //     this.players[0].group.rotateY(0.01);
+    // async movePaddles() {
+    //     // if (this.players[0].paddle.move_right && (this.players[0].group.rotation.y - Math.PI / 12 > -Math.PI / 4))
+    //     //     this.players[0].group.rotateY(-0.01);
+    //     // if (this.players[0].paddle.move_left && (this.players[0].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
+    //     //     this.players[0].group.rotateY(0.01);
 
-        // if (this.players[1].paddle.move_right && (this.players[1].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
-        //     this.players[1].group.rotateY(0.01);
-        // if (this.players[1].paddle.move_left && this.players[1].group.rotation.y - Math.PI / 12 > -Math.PI / 4)
-        //     this.players[1].group.rotateY(-0.01);
-    }
+    //     // if (this.players[1].paddle.move_right && (this.players[1].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
+    //     //     this.players[1].group.rotateY(0.01);
+    //     // if (this.players[1].paddle.move_left && this.players[1].group.rotation.y - Math.PI / 12 > -Math.PI / 4)
+    //     //     this.players[1].group.rotateY(-0.01);
+    // }
 }
 
 export {

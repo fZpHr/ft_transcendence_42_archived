@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Home" %}{% endblock %}
+{% block title %}{% trans "Home" %}{%  endblock %}
 
 {% block custom_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-{% endblock %}
+{%  endblock %}
 
 {% block content %}
 <div class="warp-homePage"> 
     <div class="back-video">
         <video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
     </div>
-    <div class="home__header">
+    <div class="home__header"> 
         <div class="info-box">
             <div class="info">
                 <div class="site-info">
@@ -23,62 +23,231 @@
             </div>
         </div>
     </div>
-    <div class="breaker"><div class="content-breaker"></div></div>
     <div class="home__containt">
         <div class="row-content">
-            <div class="left-content">
+            <div class="left-content fade-in">
                 <img src="{% static 'img/pong.png' %}" alt="{% trans 'pong png' %}">
             </div>
             <div class="right-content">
                 <div class="list_gamemode">
-                    <div class="game-mode-element">
+                    <div class="game-mode-element fade-in">
                         <div class="title-mode">
                             <i class="fas fa-trophy"></i>
                         </div>
                         <div class="desct-mode">
                             <span>Tournament</span>
-                        </div>  
+                        </div> 
+                        <div class="desc-mode chalenge">
+                            <span>Take up the challenge and become number one!</span>
+                        </div>
                     </div>
 
-                    <div class="game-mode-element">
+                    <div class="game-mode-element fade-in center">
                         <div class="title-mode">
                             <i class="fas fa-chart-line"></i>
                         </div>
                         <div class="desct-mode">
                             <span>Ranked</span>
-                        </div>  
+                        </div>
+                        <div class="desc-mode chalenge">
+                            <span>Be among the best by playing in a ranked game!</span>
+                        </div>
                     </div>
 
-                    <div class="game-mode-element">
+                    <div class="game-mode-element fade-in center">
                         <div class="title-mode">
                             <i class="fas fa-robot"></i>
                         </div>
                         <div class="desct-mode">
                             <span>IA</span>
-                        </div>  
+                        </div>
+                        <div class="desc-mode chalenge">
+                            <span>Take on the AI and prove your supremacy!</span>
+                        </div>
                     </div>
 
-                    <div class="game-mode-element">
+                    <div class="game-mode-element fade-in">
                         <div class="title-mode">
                             <i class="fas fa-house "></i>
                         </div>
                         <div class="desct-mode">
                             <span>Local Play</span>
-                        </div>  
+                        </div>
+                        <div class="desc-mode chalenge">
+                            <span>Challenge your local friend and win!</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="home__containt">
+    <div class="home__containt bot">
+        <div class="row-content">
+            <div class="left-content">
+                <div class="list_gamemode">
 
+                    <div class="game-mode-element fade-in">
+                        <div class="desct-mode">
+                            <span>Ranked</span>
+                        </div>
+                        <div class="desc-mode chalenge">
+                            <span>Be among the best by playing in a ranked game!</span>
+                        </div>
+                        <div class="title-mode">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+
+                    <div class="game-mode-element fade-in center">
+                        <div class="desct-mode">
+                            <span>IA</span>
+                        </div>
+                        <div class="desc-mode chalenge">
+                            <span>Take on the AI and prove your supremacy!</span>
+                        </div>
+                        <div class="title-mode">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                    </div>
+
+                    <div class="game-mode-element fade-in">
+                        <div class="desct-mode">
+                            <span>Local Play</span>
+                        </div>
+                        <div class="desc-mode chalenge">
+                            <span>Challenge your local friend and win!</span>
+                        </div>
+                        <div class="title-mode">
+                            <i class="fas fa-house "></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="right-content fade-in">
+                <span class="WAITING">WAIT IMG CONNECT4</span>
+                <!-- <img src="{% static 'ranked/img/connect4.png' %}" alt="{% trans 'ranked png' %}"> -->
+            </div>
+        </div>
     </div>
-    <div class="home__containt">
-        <p>a</p>
+    <div class="home__containt custom_game" style="justify-content: center;">
+        <h1 style="color: white;">DEMO CUSTOM GAME</h1>
+    </div>
+    <div class="home__containt card-presentation">
+        <div class="card-presentation-title fade-in">
+            <h1>AUTHORS</h1>
+        </div>
+        <div class="card-container fade-in">
+            <div class="card">
+                <div class="card__header">
+                    <img class="pp-owner" src="https://cdn.intra.42.fr/users/27082b5f4fe8df2f838153a15ea9e679/bberkrou.jpg" alt="pp_owner">
+                </div>
+                <div class="card__body">
+                    <div class="user-name">
+                        <span>bberkrou</span>
+                    </div>
+                    <div class="spe-box">
+                        <span class="spe db">db</span>
+                        <span class="spe front">front</span>
+                        <span class="spe back">back</span>
+                        <span class="spe algo">algo</span>
+                        <span class="spe blockchain">blockchain</span>
+                    </div>
+                </div>
+                <div class="card__footer">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card__header hidden">
+                    <img class="pp-owner" src="https://cdn.intra.42.fr/users/2c43b0243f48d421704bc6bdc86e315b/cpeterea.jpg" alt="pp_owner">
+                </div>
+                <div class="card__body hidden">
+                    <div class="user-name">
+                        <span>cpeterea</span>
+                    </div>
+                    <div class="spe-box">
+                        <span class="spe db">db</span>
+                        <span class="spe front">front</span>
+                        <span class="spe back">back</span>
+                        <span class="spe algo">algo</span>
+                        <span class="spe 3D">3D</span>
+                    </div>
+                </div>
+                <div class="card__footer hidden">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card__header hidden">
+                    <img class="pp-owner" src="https://cdn.intra.42.fr/users/55a660712aea8550796f5bca9f1643bc/hbelle.jpg" alt="pp_owner">
+                </div>
+                <div class="card__body hidden">
+                    <div class="user-name">
+                        <span>hbelle</span>
+                    </div>
+                    <div class="spe-box">
+                        <span class="spe devops">devops</span>
+                        <span class="spe back">back</span>
+                        <span class="spe algo">algo</span>
+                    </div>
+                </div>
+                <div class="card__footer hidden">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card__header hidden">
+                    <img class="pp-owner" src="https://cdn.intra.42.fr/users/ac3b1ddc6563f74ac19cd3f786dc3a93/bcarolle.JPG" alt="pp_owner">
+                </div>
+                <div class="card__body hidden">
+                    <div class="user-name">
+                        <span>bcarolle</span>
+                    </div>
+                    <div class="spe-box">
+                        <span class="spe front">front</span>
+                        <span class="spe back">back</span>
+                        <span class="spe db">db</span>
+                    </div>
+                </div>
+                <div class="card__footer hidden">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card__header hidden">
+                    <img class="pp-owner" src="https://cdn.intra.42.fr/users/4b5eb1312dccd8f236e11f44d3d49cd4/ehalliez.jpg" alt="pp_owner">
+                </div>
+                <div class="card__body hidden">
+                    <div class="user-name">
+                        <span>ehalliez</span>
+                    </div>
+                    <div class="spe-box">
+                        <span class="spe front">front</span>
+                        <span class="spe back">back</span>
+                        <span class="spe db">db</span>
+                    </div>
+                </div>
+                <div class="card__footer hidden">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
     </div>  
 </div>
-{% endblock %}
+{%  endblock %}
 
 
 {% block extra_scripts %}
-{% endblock %}
+    <script src="{% static 'js/home.js' %}"></script>
+{%  endblock %}
