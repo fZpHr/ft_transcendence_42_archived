@@ -107,7 +107,9 @@ def visited_profil_view(request, username):
                 'elo_after_player': game.elo_after_player2
             }
             user_data['matches'].append(match_data)
-        return render(request, 'profil/profil_view.html', {'user_data': user_data})
+        if request.htmx:
+            return render(request, 'profil/profil_view.html', {'user_data': user_data})
+        return render(request, 'profil/profil_view_full.html', {'user_data': user_data})
     except Player.DoesNotExist:
         return Response({"error": "Player not found"}, status=404)
     except Exception as e:
@@ -115,8 +117,12 @@ def visited_profil_view(request, username):
 
 @login_required
 def progress_view(request):
-    return render(request, 'progress/progress.html')
+    if request.htmx:
+        return render(request, 'progress/progress.html')
+    return render(request, 'progress/progress_full.html')
 
 @login_required
 def visited_progress_view(request, username):
-    return render(request, 'progress/progress.html', {'username': username})
+    if request.htmx:
+        return render(request, 'progress/progress.html', {'username': username})
+    return render(request, 'progress/progress_full.html', {'username': username})

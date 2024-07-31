@@ -3,6 +3,7 @@
 @import "/static/home/css/home.css";
 @import "/static/css/home.css";
 @import "/static/profil/css/profil.css";
+@import "/static/progress/css/progress.css";
 
 * {
     padding: 0;

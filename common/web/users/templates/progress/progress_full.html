@@ -1,7 +1,10 @@
+{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
 
 {% block title %}{% trans "Progress" %}{% endblock %}
+
+{% block content %}
 <section id="progress-content" class="warp-progress">
 	<aside class="aside-stats">
 		<h2 class="underline">{% trans "Stats Panels" %}</h2>
@@ -91,4 +94,9 @@
 		</div>
 	</aside>
 </section>
-<script src="{% static 'progress/js/progress.js' %}"></script>
+
+{% endblock %}
+
+{% block extra_scripts %}
+	<script src="{% static 'progress/js/progress.js' %}"></script>
+{% endblock %}
