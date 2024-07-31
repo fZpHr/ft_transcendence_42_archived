@@ -1,3 +1,4 @@
+console.log('home.js loaded');
 document.querySelectorAll('.desct-mode').forEach(function(element) {
     element.addEventListener('animationend', function(event) {
         if (event.animationName === 'hideElement') {
@@ -10,23 +11,23 @@ document.querySelectorAll('.desct-mode').forEach(function(element) {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+function carousel () {
     const carousel = document.querySelector('.card-container');
     const cards = Array.from(carousel.children);
     let currentIndex = 0;
-
+    
     setInterval(() => {
         rotateCarousel();
     }, 3000);
-
+    
     function rotateCarousel() {
         currentIndex = (currentIndex + 1) % cards.length;
-
+    
         cards.forEach((card, index) => {
             const newIndex = (index - currentIndex + cards.length) % cards.length;
             card.style.transform = `rotateY(${newIndex * 72}deg) translateZ(400px)`;
             card.style.opacity = 1;
-
+    
             if (newIndex === 0) {
                 card.style.zIndex = 3;
                 card.querySelector('.card__header').classList.remove('hidden');
@@ -40,11 +41,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-});
+}
+// document.addEventListener("DOMContentLoaded", function () {
+// });
 
-document.addEventListener("DOMContentLoaded", function () {
+function fadeElem ()
+{
     const fadeElements = document.querySelectorAll('.fade-in');
-
+    
     function checkVisibility() {
         fadeElements.forEach(element => {
             const rect = element.getBoundingClientRect();
@@ -53,8 +57,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
+    
     window.addEventListener('scroll', checkVisibility);
     window.addEventListener('resize', checkVisibility);
     checkVisibility();
-});
+}
+// document.addEventListener("DOMContentLoaded", function () {
+// });
+
+fadeElem();
+carousel();
