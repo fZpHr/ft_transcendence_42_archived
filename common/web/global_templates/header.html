@@ -2,7 +2,7 @@
 {% load i18n %}
 
 <nav class="navbar navbar-expand-lg" id="navbar">
-	<a class="navbar-brand" href="#">Transctembre</a>
+	<a class="navbar-brand" href="/">Transtembre</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
 		aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
@@ -14,7 +14,7 @@
 			</li>
 			{% if user.is_authenticated %}
 			<li class="nav-item">
-				<a class="nav-link" href="/leaderboard/">{% trans "leaderboard" %}</a>
+				<a class="nav-link" href="/leaderboard/">{% trans "Leaderboard" %}</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="/game/game/">{% trans "Play" %}</a>
@@ -23,7 +23,7 @@
 				<a class="nav-link" href="/profil/">{% trans "Profil" %}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+				<a class="nav-link" href="{% url 'logout' %}">{% trans "Log out" %}</a>
 			</li>
 			{% else %}
 			<li class="nav-item">
