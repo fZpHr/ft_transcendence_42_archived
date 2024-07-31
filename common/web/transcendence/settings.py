@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     # 'django_extensions',
 
     'django_otp',
+    'django_htmx',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_email',  # <- if you want email capability.
@@ -86,6 +87,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_otp.middleware.OTPMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 LOGIN_URL = '/login/'

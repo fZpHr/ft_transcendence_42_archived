@@ -7,6 +7,7 @@
 .body-leaderboard .user:nth-child(odd) {
     background-color: rgba(93, 84, 124, 0.6);
 }
+
 .leaderboard-page {
     min-height: 80vh;
     padding-top: 20vh;

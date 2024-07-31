@@ -9,8 +9,6 @@ from api import consumers as consumers
 from game import consumers as game_consumers
 from two_factor.urls import urlpatterns as tf_urls
 
-
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
