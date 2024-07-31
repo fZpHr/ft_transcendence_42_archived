@@ -21,7 +21,7 @@
             <article class="podium-card second">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans leaderboard.1.img %}" alt="{% trans leaderboard.1.user.username %}">
+                        <img src="{% trans media_url %}{% trans leaderboard.1.img %}" alt="{% trans leaderboard.1.user.username %}">
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.1.username %}</h2>
@@ -36,7 +36,7 @@
             <article class="podium-card first">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans leaderboard.0.img %}" alt="{% trans leaderboard.0.username %}">
+                        <img src="{% trans media_url %}{% trans leaderboard.0.img %}" alt="{% trans leaderboard.0.username %}">
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.0.username %}</h2>
@@ -51,7 +51,7 @@
             <article class="podium-card">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans leaderboard.2.img %}" alt="{% trans leaderboard.2.user.username %}">
+                        <img src="{% trans media_url %}{% trans leaderboard.2.img %}" alt="{% trans leaderboard.2.user.username %}">
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.2.username %}</h2>
@@ -85,7 +85,7 @@
                         <p>{{ forloop.counter }}</p>
                     </div>
                     <div class="username">
-                        <img src="{% trans user.img %}" alt="{{ user.user }}">
+                        <img src="{% trans media_url %}{% trans user.img %}" alt="{{ user.user }}">
                         <p>{{ user.username }}</p>
                     </div>
                     <div class="elo">

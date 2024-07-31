@@ -20,7 +20,10 @@ def leaderboard(request):
     language_code = request.session.get('django_language', 'en')
     activate(language_code)
     allPlayer = Player.objects.all().order_by('elo').values().reverse()
+    for player in allPlayer:
+        if not 'http' in player['img']:
+            player['img'] = settings.MEDIA_URL + player['img']
     context = {
-        'leaderboard': allPlayer
+        'leaderboard': allPlayer,
     }
     return render(request, 'leaderboard/leaderboard.html', context)
