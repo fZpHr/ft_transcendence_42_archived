@@ -235,6 +235,8 @@ async function toggleMakeReady() {
             if (p1Ready && p2Ready) {
                 console.log("cdc")
                 startInstance();
+                let msg = userId + ' | start';
+                sendToWsGame('start', msg);
             }
             let msg = userId + ' | ready';
             sendToWsGame('ready', msg);
