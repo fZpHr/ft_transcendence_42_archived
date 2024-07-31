@@ -1,4 +1,4 @@
-.box-profil {
+#profil-content .box-profil {
     width: 50vw;
     height: 250px;
     transform: translateY(-45%);
@@ -8,14 +8,14 @@
     box-sizing: border-box;
 }
 
-.avatars {
+#profil-content .avatars {
     width: 250px;
     height: 250px;
     position: relative;
     margin-right: 20px;
 }
 
-.avatars img {
+#profil-content .avatars img {
     border-radius: 50%;
     overflow: hidden;
     position: absolute;
@@ -26,7 +26,7 @@
     object-fit: cover;
 }
 
-.box-profil .avatars .overlay {
+#profil-content .box-profil .avatars .overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -40,17 +40,17 @@
     transition: opacity 0.3s;
 }
 
-.box-profil .avatars:hover .overlay {
+#profil-content .box-profil .avatars:hover .overlay {
     opacity: 1;
 }
 
-.box-profil .overlay label {
+#profil-content .box-profil .overlay label {
     color: white;
     cursor: pointer;
     font-size: 50px;
 }
 
-.user-info {
+#profil-content .user-info {
     flex: 1;
     color: var(--text-color);
     box-sizing: border-box;
@@ -58,7 +58,7 @@
     height: 50%;
 }
 
-.username-container {
+#profil-content .username-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -71,7 +71,7 @@
     font-weight: 700;
 }
 
-.user_data {
+#profil-content .user_data {
     display: flex;
     width: 80%;
     height: 50%;
@@ -79,7 +79,7 @@
     align-items: center;
 }
 
-.data-element {
+#profil-content .data-element {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,19 +89,19 @@
     border-bottom: 1px solid var(--text-color);
 }
 
-.elo-box {
+#profil-content .elo-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.data-element i{
+#profil-content .data-element i{
     color: var(--text-color);
     margin-right: 10px;
 }
 
-.edit-btn {
+#profil-content .edit-btn {
     background: none;
     border: none;
     color: var(--text-color);
@@ -113,7 +113,7 @@
 
 /* EDIT PANEL */
 
-.edit-panel {
+#profil-content .edit-panel {
     position: fixed;
     left: -100%;
     top: 0%;
@@ -127,11 +127,11 @@
     color: var(--text-color);
 }
 
-.edit-panel.active {
+#profil-content .edit-panel.active {
     left: 0;
 }
 
-.top-panel {
+#profil-content .top-panel {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
@@ -139,7 +139,7 @@
     align-items: start;
 }
 
-.bot-panel {
+#profil-content .bot-panel {
     margin-top: 50px;
     display: flex;
     flex-direction: column;
@@ -147,14 +147,14 @@
     align-items: start;
 }
 
-.line-edit-profil {
+#profil-content .line-edit-profil {
     width: 100%;
     height: 2px;
     background-color: white;
     margin-bottom: 20px;
 }
 
-.valid-indicator {
+#profil-content .valid-indicator {
     position: absolute;
     left: 0;
     top: 50%;
@@ -169,13 +169,13 @@
     transition: opacity 0.3s ease-in-out;
 }
 
-.warp-input {
+#profil-content .warp-input {
     position: relative;
     width: 100%;
     margin-bottom: 40px;
 }
 
-.warp-input input {
+#profil-content .warp-input input {
     width: calc(100% - 40px);
     padding: 10px;
     font-size: 14px;
@@ -187,7 +187,7 @@
     color: var(--text-color);
 }
 
-.input-label {
+#profil-content .input-label {
     position: absolute;
     top: -15px;
     left: 0px;
@@ -199,14 +199,14 @@
     pointer-events: none;
 }
 
-.form-btn {
+#profil-content .form-btn {
     width: 100%;
     margin-top: 20px;
     display: flex;
     justify-content: center;
 }
 
-.form-btn button {
+#profil-content .form-btn button {
     width: 50%;
     padding: 10px;
     border: none;
@@ -218,13 +218,13 @@
     transition: ease-in-out 0.3s;
 }
 
-.form-btn button:hover {
+#profil-content .form-btn button:hover {
     background-color: var(--text-color);
     color: var(--to-teal-4-rgba);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.valid-indicator {
+#profil-content .valid-indicator {
     position: absolute;
     left: 0px;
     top: 50%;
@@ -239,20 +239,20 @@
     transition: opacity 0.3s ease-in-out;
 }
 
-.warp-input input:focus+.input-label+.valid-indicator,
-.warp-input input.filled+.input-label+.valid-indicator {
+#profil-content .warp-input input:focus+.input-label+.valid-indicator,
+#profil-content .warp-input input.filled+.input-label+.valid-indicator {
     opacity: 1;
 }
 
-.valid-indicator i {
+#profil-content .valid-indicator i {
     font-size: 16px;
 }
 
-.valid {
+#profil-content .valid {
     color: #00cc00;
 }
 
-.invalid {
+#profil-content .invalid {
     color: #cc0000;
 }
 

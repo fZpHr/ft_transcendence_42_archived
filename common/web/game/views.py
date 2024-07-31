@@ -60,7 +60,9 @@ def joinGame(request):
 
 @login_required
 def ranked(request):
-    return render(request, "ranked/ranked.html")
+    if (request.htmx):
+        return render(request, "ranked/ranked.html")
+    return render(request, "ranked/ranked_full.html")
 
 @login_required
 def connect4(request):
@@ -72,7 +74,9 @@ def pong3D(request):
 
 @login_required
 def gameHome(request):
-    return render(request, "home/home.html")
+    if (request.htmx):
+        return render(request, "home/home.html")
+    return render(request, "home/home_full.html")
 
 # view valide
 

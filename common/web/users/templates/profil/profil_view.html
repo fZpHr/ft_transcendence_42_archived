@@ -1,20 +1,8 @@
-<!-- users/templates/profil/profil_view.html -->
-{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-
-{% block custom_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'profil/css/profil.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'profil/css/banner.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'profil/css/box-profil.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'profil/css/box-skill.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'profil/css/responsive.css' %}">
-{% endblock %}
-
 {% block title %}{% trans "Profil" %}{% endblock %}
 
-{% block content %}
-<div class="warp-profil">
+<div id="profil-content" class="warp-profil">
 	<div class="banner-content">
 		<img src="{% static 'profil/img/banner-demo.jpg' %}" alt="{% trans " banner" %}">
 	</div>
@@ -22,11 +10,8 @@
 	{% include 'profil/box-skill.html' %}
 </div>
 
-{% endblock %}
-
 {% block extra_scripts %}
-
 {% if user_data.visited == False and user_data.is42 == False %}
-<script src="{% static 'profil/js/profil.js' %}"></script>\
+	<script src="{% static 'profil/js/profil.js' %}"></script>\
 {% endif %}
 {% endblock %}

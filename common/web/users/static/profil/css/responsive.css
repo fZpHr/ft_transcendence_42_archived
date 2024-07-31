@@ -3,67 +3,67 @@
         font-size: 2rem;
     }
 
-    .user_data {
+    #profil-content .user_data {
         width: 100%;
     }
     
-    .data-element {
+    #profil-content .data-element {
         width: 20%;
     }
 
-    .box-profil {
+    #profil-content .box-profil {
         height: 200px;
     }
 
-    .avatars {
+    #profil-content .avatars {
         width: 200px;
         height: 200px;
     }
 }
 
 @media screen and (max-width: 1023px) {
-    .banner-content {
+    #profil-content .banner-content {
         height: 30vh;
     }
 
-    .user_data {
+    #profil-content .user_data {
         width: 100%;
     }
 
-    .data-element {
+    #profil-content .data-element {
         width: 20%;
     }
 
-    .box-profil {
+    #profil-content .box-profil {
         height: fit-content;
         flex-direction: column;
         justify-content: center;
         align-items: center;
     }
 
-    .data-element {
+    #profil-content .data-element {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
     }
 
-    .box-skill {
+    #profil-content .box-skill {
         width: 70%;
         margin-top: -90px;
     }
 
-    .avatars {
+    #profil-content .avatars {
         margin: 0;
     }
 
-    .user-info {
+    #profil-content .user-info {
         margin: 0;
         width: 75%;
         text-align: center;
     }
 
-    .username-container {
+    #profil-content .username-container {
         justify-content: center;
     }
 
@@ -71,27 +71,27 @@
         font-size: 1.75rem;
     }
 
-    .match-winner {
+    #profil-content .match-winner {
         display: none;
     }
 }
 
 @media screen and (max-width: 768px) {
 
-    .box-profil {
+    #profil-content .box-profil {
         width: 60%;
     }
 
-    .avatars {
+    #profil-content .avatars {
         width: 180px;
         height: 180px;
     }
 
-    .user-info {
+    #profil-content .user-info {
         width: 100%;
     }
 
-    .box-skill {
+    #profil-content .box-skill {
         width: 80%;
     }
 
@@ -99,43 +99,43 @@
         font-size: 1.60rem;
     }
 
-    .match {
+    #profil-content .match {
         flex-direction: column;
         width: 80%;
         padding: 10px;
     }
 
-    .box-skill span.title {
+    #profil-content .box-skill span.title {
         font-size: 1.5rem;
     }
 
-    .player-info {
+    #profil-content .player-info {
         width: 80%;
     }
 
-    .match-elo {
+    #profil-content .match-elo {
         width: 80%;
         justify-content: space-around;
     }
 
-    .split-match,
-    .match-winner,
-    .match-info,
-    .legend-item {
+    #profil-content .split-match,
+    #profil-content .match-winner,
+    #profil-content .match-info,
+    #profil-content .legend-item {
         display: none;
     }
 }
 
 @media screen and (max-width: 450px) {
-    .box-profil {
+    #profil-content .box-profil {
         width: 80%;
     }
 
-    .box-skill {
+    #profil-content .box-skill {
         width: 90%;
     }
 
-    .box-skill span.title {
+    #profil-content .box-skill span.title {
         font-size: 1.2rem;
     }
 

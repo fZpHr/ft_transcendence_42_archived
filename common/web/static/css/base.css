@@ -2,6 +2,7 @@
 @import "/static/leaderboard/css/leaderboard.css";
 @import "/static/home/css/home.css";
 @import "/static/css/home.css";
+@import "/static/profil/css/profil.css";
 
 * {
     padding: 0;

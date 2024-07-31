@@ -68,7 +68,9 @@ def profil_view(request, format=None):
             'is42': is42,
             'matches': matches
         }
-        return render(request, 'profil/profil_view.html', {'user_data': user_data})
+        if request.htmx:
+            return render(request, 'profil/profil_view.html', {'user_data': user_data})
+        return render(request, 'profil/profil_view_full.html', {'user_data': user_data})
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 

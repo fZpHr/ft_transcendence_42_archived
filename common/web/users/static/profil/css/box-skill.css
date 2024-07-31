@@ -1,4 +1,4 @@
-.box-skill {
+#profil-content .box-skill {
     width: 50vw;
     padding: 20px;
     margin-top: -60px;
@@ -13,7 +13,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.box-skill span.title {
+#profil-content .box-skill span.title {
     width: 100%;
     margin-top: 0;
     font-size: 2rem;
@@ -24,7 +24,7 @@
     padding-bottom: 10px;
 }
 
-.select-game-history {
+#profil-content .select-game-history {
     width: 70%;
     margin: auto;
     height: 60px;
@@ -34,7 +34,7 @@
     align-items: center;
 }
 
-.select-game-history-option {
+#profil-content .select-game-history-option {
     background-color: var(--to-teal-3-rgba);
     padding: 20px;
     border-radius: 50%;
@@ -48,12 +48,12 @@
     font-size: 1.2rem;
 }
 
-.select-game-history-option:hover {
+#profil-content .select-game-history-option:hover {
     background-color: var(--to-teal-5-rgba);
 }
 
 
-.match-legend {
+#profil-content .match-legend {
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -64,11 +64,11 @@
     text-align: center;
 }
 
-.match-legend .legend-item {
+#profil-content .match-legend .legend-item {
     flex: 1;
 }
 
-.match-history {
+#profil-content .match-history {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -78,7 +78,7 @@
     overflow-y: auto;
 }
 
-.match {
+#profil-content .match {
     width: 100%;
     padding: 15px;
     background-color: var(--to-teal-3-rgba);
@@ -90,25 +90,25 @@
     flex-wrap: wrap;
 }
 
-.match:hover {
+#profil-content .match:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.match>div {
+#profil-content .match>div {
     flex: 1;
     text-align: center;
     padding: 5px;
 }
 
-.player-info,
-.match-info,
-.match-winner,
-.match-elo {
+#profil-content .player-info,
+#profil-content .match-info,
+#profil-content .match-winner,
+#profil-content .match-elo {
     font-size: 1rem;
 }
 
-.match-elo {
+#profil-content .match-elo {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -116,26 +116,26 @@
     font-size: 0.9rem;
 }
 
-.match-elo div {
+#profil-content .match-elo div {
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
 }
 
-.img-box-match {
+#profil-content .img-box-match {
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
-.img-match {
+#profil-content .img-match {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.progress-button {
+#profil-content .progress-button {
     background-color: var(--to-teal-1-rgba);
     color: white;
     border: none;
@@ -146,23 +146,23 @@
     transition: ease-in-out 0.3s;
 }
 
-.progress-button:hover {
+#profil-content .progress-button:hover {
     padding: 15px 25px;
 }
 
-.progress-button a {
+#profil-content .progress-button a {
     text-decoration: none;
     color: white;
     width: 100%;
     height: 100%;
 }
 
-.progress-button a:hover {
+#profil-content .progress-button a:hover {
     text-decoration: none;
     color: white;
 }
 
-.no-match {
+#profil-content .no-match {
     display: flex;
     flex-direction: column;
     align-items: center;
