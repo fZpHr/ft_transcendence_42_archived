@@ -20,6 +20,7 @@ pywebauthn = "*"
 django-otp-webauthn = "*"
 werkzeug = "*"
 django-extensions = "*"
+django-htmx = "*"
 
 [dev-packages]
 

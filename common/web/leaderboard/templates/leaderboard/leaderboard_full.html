@@ -1,5 +1,15 @@
+{% extends 'base.html' %}
+
 {% load i18n %}
-<div id="leaderboard-content" class="leaderboard-page">
+{% load static %}
+
+{% block title %}
+{% trans 'Leaderboard' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="leaderboard-page">
     <main>
         <div class="podium-leaderboard">
             <!-- Deuxième place -->
@@ -84,3 +94,4 @@
         </section>
     </main>
 </div>
+{% endblock %}

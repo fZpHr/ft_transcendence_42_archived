@@ -7,7 +7,6 @@
 .body-leaderboard .user:nth-child(odd) {
     background-color: rgba(93, 84, 124, 0.6);
 }
-
 .leaderboard-page {
     min-height: 80vh;
     padding-top: 20vh;
@@ -18,7 +17,7 @@
     background-attachment: fixed;
 }
 
-.podium-leaderboard {
+#leaderboard-content .podium-leaderboard {
     width: 50%;
     height: fit-content;
     margin: auto;
@@ -27,7 +26,7 @@
     align-items: flex-end;
 }
 
-.podium-card {
+#leaderboard-content .podium-card {
     background-color: var(--to-teal-3-rgba);
     width: 20%;
     height: 110px;
@@ -42,7 +41,7 @@
     border-radius: 10px 10px 0px 0px;
 }
 
-.podium-body {
+#leaderboard-content .podium-body {
     width: 100%;
     display: flex;
     justify-content: flex-start;
@@ -50,7 +49,7 @@
     flex-direction: column;
 }
 
-.podium-card .img-podium {
+#leaderboard-content .podium-card .img-podium {
     transform: translateY(-50px);
     width: 100px;
     height: 100px;
@@ -60,7 +59,7 @@
     align-items: center;
 }
 
-.podium-card .data-podium {
+#leaderboard-content .podium-card .data-podium {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -69,36 +68,36 @@
     transform: translateY(-40px);
 }
 
-.podium-card .img-podium img {
+#leaderboard-content .podium-card .img-podium img {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.podium-card .data-podium h3 {
+#leaderboard-content .podium-card .data-podium h3 {
     font-size: 1.2rem;
     margin: 0;
 }
 
-.podium-card .data-podium p {
+#leaderboard-content .podium-card .data-podium p {
     font-size: 0.7rem;
     margin: 0;
 }
 
-.first {
+#leaderboard-content .first {
     background-color: var(--to-teal-5-rgba);
     height: 200px;
     box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.9);
 }
 
-.second {
+#leaderboard-content .second {
     background-color: var(--to-teal-4-rgba);
     height: 140px;
     box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.7);
 }
 
-.leaderboard {
+#leaderboard-content .leaderboard {
     width: 50%;
     height: fit-content;
     margin: auto;
@@ -110,7 +109,7 @@
     z-index: 10;
 }
 
-.header-leaderboard {
+#leaderboard-content .header-leaderboard {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -118,7 +117,7 @@
     flex-direction: column;
 }
 
-.header-leaderboard div {
+#leaderboard-content .header-leaderboard div {
     width: 100%;
     height: 100%;
     display: flex;
@@ -126,7 +125,7 @@
     align-items: center;
 }
 
-.body-leaderboard {
+#leaderboard-content .body-leaderboard {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -134,7 +133,7 @@
     flex-direction: column;
 }
 
-.body-leaderboard .user {
+#leaderboard-content .body-leaderboard .user {
     width: 100%;
     display: flex;
     justify-content: left;
@@ -142,35 +141,35 @@
     padding: 10px;
 }
 
-.head {
+#leaderboard-content .head {
     background-color: var(--to-teal-2-rgba);
 }
 
-.rank {
+#leaderboard-content .rank {
     width: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.rank p {
+#leaderboard-content .rank p {
     font-size: 1rem;
     margin: 0;
 }
 
-.username {
+#leaderboard-content .username {
     width: 50%;
     display: flex;
     justify-content: left;
     align-items: center;
 }
 
-.username p {
+#leaderboard-content .username p {
     font-size: 1rem;
     margin: 0;
 }
 
-.username img {
+#leaderboard-content .username img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -178,18 +177,18 @@
     margin-right: 15px;
 }
 
-.elo {
+#leaderboard-content .elo {
     width: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.elo p {
+#leaderboard-content .elo p {
     margin: 0;
 }
 
-.podium-card:hover {
+#leaderboard-content .podium-card:hover {
     transform: scale(1.05) translateY(-20px);
     z-index: 1;
 }
@@ -209,46 +208,46 @@
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1400px) {
-    .podium-leaderboard {
+    #leaderboard-content .podium-leaderboard {
         width: 70%;
     }
 
-    .podium-card {
+    #leaderboard-content .podium-card {
         width: 20%;
         margin: 0 5px;
     }
 
-    .leaderboard {
+    #leaderboard-content .leaderboard {
         width: 70%;
     }
 }
 
 @media screen and (max-width: 1023px) {
 
-    .podium-leaderboard {
+    #leaderboard-content .podium-leaderboard {
         width: 80%;
     }
 
-    .podium-card {
+    #leaderboard-content .podium-card {
         width: 20%;
         margin: 0 5px;
     }
 
-    .leaderboard {
+    #leaderboard-content .leaderboard {
         width: 80%;
     }
 }
 
 @media screen and (max-width: 768px) {
 
-    .podium-leaderboard {
+    #leaderboard-content .podium-leaderboard {
         width: 100%;
         flex-direction: column;
         align-items: center;
         justify-content: center;
     }
 
-    .podium-card {
+    #leaderboard-content .podium-card {
         width: 60%;
         height: 20%;
         margin: 0 5px;
@@ -258,7 +257,7 @@
         margin-bottom: 10px;
     }
 
-    .podium-body {
+    #leaderboard-content .podium-body {
         width: 100%;
         display: flex;
         justify-content: center;
@@ -269,18 +268,18 @@
         padding: 10px;
     }
 
-    .podium-body .img-podium {
+    #leaderboard-content .podium-body .img-podium {
         width: 30%;
         height: 100%;
         transform: translateY(0);
     }
 
-    .podium-card .img-podium img {
+    #leaderboard-content .podium-card .img-podium img {
         width: 50px;
         height: 50px;
     }
 
-    .podium-card .data-podium {
+    #leaderboard-content .podium-card .data-podium {
         width: 70%;
         display: flex;
         transform: translateY(0);
@@ -289,47 +288,47 @@
         flex-direction: column;
     }
 
-    .podium-card .data-podium h3 {
+    #leaderboard-content .podium-card .data-podium h3 {
         font-size: 1rem;
     }
 
 }
 
 @media screen and (max-width: 450px) {
-    .podium-card {
+    #leaderboard-content .podium-card {
         width: 80%;
     }
 
-    .podium-card .data-podium h3 {
+    #leaderboard-content .podium-card .data-podium h3 {
         font-size: 0.8rem;
     }
 
-    .podium-card .data-podium p {
+    #leaderboard-content .podium-card .data-podium p {
         font-size: 0.5rem;
     }
 
-    .leaderboard {
+    #leaderboard-content .leaderboard {
         font-size: 1rem;
     }
 
-    .rank p {
+    #leaderboard-content .rank p {
         font-size: 0.8rem;
     }
 
-    .username p {
+    #leaderboard-content .username p {
         font-size: 0.8rem;
     }
 
-    .user {
+    #leaderboard-content .user {
         justify-content: space-around;
     }
 
-    .username img {
+    #leaderboard-content .username img {
         width: 30px;
         height: 30px;
     }
 
-    .elo {
+    #leaderboard-content .elo {
         display: none;
     }
 }

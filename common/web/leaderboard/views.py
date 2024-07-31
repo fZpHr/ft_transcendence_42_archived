@@ -1,4 +1,5 @@
 
+import time
 from django.shortcuts import render, redirect
 from django.conf import settings
 from api.models import Player, Game
@@ -18,6 +19,7 @@ def login_required(view_func):
 @login_required
 def leaderboard(request):
     language_code = request.session.get('django_language', 'en')
+    time.sleep(0.5)
     activate(language_code)
     allPlayer = Player.objects.all().order_by('elo').values().reverse()
     for player in allPlayer:
@@ -26,4 +28,8 @@ def leaderboard(request):
     context = {
         'leaderboard': allPlayer,
     }
-    return render(request, 'leaderboard/leaderboard.html', context)
+    if (request.htmx):
+        print('htmx')
+        return render(request, 'leaderboard/leaderboard.html', context)
+    print('no htmx')
+    return render(request, 'leaderboard/leaderboard_full.html', context)
