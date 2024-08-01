@@ -1,4 +1,4 @@
-input[type="color"] {
+#pongCustom-content input[type="color"] {
     appearance: none;
     background: none;
     border: none;
@@ -20,7 +20,7 @@ input[type="color"] {
     position: relative;
 }
 
-.custom_list {
+#pongCustom-content .custom_list {
     width: 18vw;
     /* height: 80vh; */
     height: fit-content;
@@ -34,14 +34,14 @@ input[type="color"] {
     z-index: 1000;
 }
 
-.title-custom-lst {
+#pongCustom-content .title-custom-lst {
     font-size: 20px;
     font-weight: 800;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--text-color);
 }
 
-.customs_box {
+#pongCustom-content .customs_box {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -51,7 +51,7 @@ input[type="color"] {
     overflow-x: auto;
 }
 
-.custom-element {
+#pongCustom-content .custom-element {
     background-color: var(--to-teal-5-rgba);
     width: 80%;
     height: 40px;
@@ -69,13 +69,13 @@ input[type="color"] {
 
 /* MENUS */
 
-.custom-ball {
+#pongCustom-content .custom-ball {
     height: fit-content;
     width: 100%;
     text-align: left;
 }
 
-.title-custom {
+#pongCustom-content .title-custom {
     width: 80%;
     height: 20%;
     margin: auto;
@@ -88,7 +88,7 @@ input[type="color"] {
     margin-bottom: 15px;
 }
 
-.title-custom i {
+#pongCustom-content .title-custom i {
     width: 35px;
     height: 35px;
     font-size: 1rem;
@@ -101,7 +101,7 @@ input[type="color"] {
     cursor: pointer;
 }
 
-.custom-option {
+#pongCustom-content .custom-option {
     width: 100%;
     max-height: 60vh;
     overflow-y: auto;
@@ -112,7 +112,7 @@ input[type="color"] {
     padding: 10px;
 }
 
-.custom-option-element {
+#pongCustom-content .custom-option-element {
     background-color: var(--to-teal-5-rgba);
     border-radius: 10px;
     margin-bottom: 20px;
@@ -125,14 +125,14 @@ input[type="color"] {
     padding: 10px;
 }
 
-.custom-option-element label {
+#pongCustom-content .custom-option-element label {
     font-weight: 600;
     font-size: 0.9rem;
     width: 100%;
     height: 50%;
 }
 
-.custom-option-element input, .custom-option-element select {
+#pongCustom-content .custom-option-element input, #pongCustom-content .custom-option-element select {
     width: 100%;
     height: 50%;
     color: var(--text-color);
@@ -140,16 +140,16 @@ input[type="color"] {
     border-radius: 10px;
 }
 
-.custom-option-element select {
+#pongCustom-content .custom-option-element select {
     background-color: var(--to-teal-3-rgba);
     padding: 5px;
 }
 
-.custom-option-element select:focus {
+#pongCustom-content .custom-option-element select:focus {
     border: none;
 }
 
-.custom-element:hover {
+#pongCustom-content .custom-element:hover {
     transform: scale(1.05);
 }
 
@@ -163,7 +163,7 @@ input[type="color"] {
     overflow-x: auto;
 }
 
-.size-input {
+#pongCustom-content .size-input {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
@@ -174,7 +174,7 @@ input[type="color"] {
     transition: opacity .2s;
 }
 
-.size-input::-webkit-slider-thumb {
+#pongCustom-content .size-input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 15px;
@@ -184,7 +184,7 @@ input[type="color"] {
     border-radius: 50%;
 }
 
-.change-cam {
+#pongCustom-content .change-cam {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -194,7 +194,7 @@ input[type="color"] {
     border-radius: 10px;
 }
 
-.change-cam button {
+#pongCustom-content .change-cam button {
     all: unset;
     width: 30px;
     font-size: 1rem;
@@ -209,7 +209,7 @@ input[type="color"] {
 
 /* change style input color */
 
-.custom-option-element.color{
+#pongCustom-content .custom-option-element.color{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -217,7 +217,7 @@ input[type="color"] {
     height: 50px;
 }
 
-input[type="color"] {
+#pongCustom-content input[type="color"] {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -231,17 +231,17 @@ input[type="color"] {
     overflow: hidden;
 }
 
-input[type="color"]::-webkit-color-swatch-wrapper {
+#pongCustom-content input[type="color"]::-webkit-color-swatch-wrapper {
     padding: 0;
     border-radius: 5px;
 }
 
-input[type="color"]::-webkit-color-swatch {
+#pongCustom-content input[type="color"]::-webkit-color-swatch {
     border: none;
     border-radius: 5px;
 }
 
-input[type="color"]::-moz-color-swatch {
+#pongCustom-content input[type="color"]::-moz-color-swatch {
     border: none;
     border-radius: 5px;
 }
@@ -265,39 +265,39 @@ input[type="color"]::-moz-color-swatch {
 /* start responsive for window 1024 */
 
 @media screen and (max-width: 1240px) {
-    .custom_list {
+    #pongCustom-content .custom_list {
         width: 25vw;
         background-color: blue;
     }
 }
 
 @media screen and (max-width: 1024px) {
-    .custom_list {
+    #pongCustom-content .custom_list {
         width: 30vw;
         background-color: yellow;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .custom_list {
+    #pongCustom-content .custom_list {
         background-color: green;
     }
 }
 
 @media screen and (max-width: 600px) {
-    .custom_list {
+    #pongCustom-content .custom_list {
         background-color: red;
     }
 }
 
 @media screen and (max-width: 480px) {
-    .custom_list {
+    #pongCustom-content .custom_list {
         background-color: purple;
     }
 }
 
 @media screen and (max-width: 320px) {
-    .custom_list {
+    #pongCustom-content .custom_list {
         background-color: orange;
     }
 }

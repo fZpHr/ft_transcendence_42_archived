@@ -1,7 +1,13 @@
+{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
 {% block title %}{% trans "lobby" %}{% endblock %}
 
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'pongTournament/css/pongTournamentLobby.css' %}">
+{% endblock %}
+
+{% block content %}
 <div id="pongTournamentLobby-content" class="warp-lobby">
     <!-- <aside class="chat-lobby" style="display: none;">
         <div class="title-chat-lobby">
@@ -90,6 +96,10 @@
             <div id="lobby_uuid" data-value="{{ lobby.UUID }}"></div>
         </div>
     </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
     <script src="{% static 'pongTournament/js/lobby_socket.js' %}"></script>
     <script src="{% static 'pongTournament/js/drawTournament.js' %}"></script>
     {% if lobby.owner.id == user.id %}
@@ -97,4 +107,4 @@
     {% else %}
         <script src="{% static 'pongTournament/js/lobby.js' %}"></script>
     {% endif %}
-</div>
+{% endblock %}

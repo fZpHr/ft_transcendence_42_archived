@@ -1,7 +1,9 @@
+{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
 {% block title %}{% trans "pongTournament" %}{% endblock %}
 
+{% block content %}
 <div id="pongTournament-content" class="warp-pongTournament">
     <aside class="lobby_list">
         <div class="title-lobby-lst">
@@ -15,5 +17,9 @@
     <div id="pongTournament-btn">
         <span>Create new lobby</span>
     </div>
-    <script src="{% static 'pongTournament/js/pongTournament.js' %}"></script>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'pongTournament/js/pongTournament.js' %}"></script>
+{% endblock %}

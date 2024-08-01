@@ -5,6 +5,10 @@
 @import "/static/profil/css/profil.css";
 @import "/static/progress/css/progress.css";
 @import "/static/login/css/login.css";
+@import "/static/pongTournament/css/pongTournament.css";
+@import "/static/pongTournament/css/pongTournamentLobby.css";
+@import "/static/pongCustom/css/pongCustom.css";
+@import "/static/pongLocal/css/pongLocal.css";
 
 * {
     padding: 0;

@@ -12,11 +12,11 @@
 	position: relative;
 }
 
-.video-background {
+#container-pong3D .video-background {
 	z-index: 100;
 }
 
-.video-background video {
+#container-pong3D .video-background video {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -28,7 +28,7 @@
 	z-index: -1;
 }
 
-.play-box {
+#container-pong3D .play-box {
     background-color: rgba(18, 15, 23, 0.8);
     border-radius: 10px;
 	padding: 20px;
@@ -45,7 +45,7 @@
 
 /* header of box */
 
-.play-box__header {
+#container-pong3D .play-box__header {
     width: 100%;
     height: 15%;
     display: flex;
@@ -54,7 +54,7 @@
     align-items: center;
 }
 
-.play-box__header span {
+#container-pong3D .play-box__header span {
     font-size: 2rem;
     font-weight: 700;
     color: var(--text-color);
@@ -64,7 +64,7 @@
 
 /* content of box */
 
-.play-box__content {
+#container-pong3D .play-box__content {
     width: 100%;
     height: 50%;
     display: flex;
@@ -72,14 +72,14 @@
     align-items: center;
 }
 
-.player-box {
+#container-pong3D .player-box {
     background-color: var(--to-teal-2-rgba);
     width: 45%;
     height: 100%;
     border-radius: 10px;
 }
 
-.player-box__username {
+#container-pong3D .player-box__username {
     width: 100%;
     height: 30%;
     display: flex;
@@ -87,7 +87,7 @@
     align-items: center;
 }
 
-.player-box__username input {
+#container-pong3D .player-box__username input {
     all: unset;
     color: var(--text-color);
     padding: 5px;
@@ -96,23 +96,23 @@
     border-bottom: 1px solid var(--text-color);
 }
 
-.player-box__username input::placeholder {
+#container-pong3D .player-box__username input::placeholder {
     color: rgb(197, 197, 197);
 }
 
-.player-box__username input:focus {
+#container-pong3D .player-box__username input:focus {
     border-bottom: 1px solid var(--text-color);
 }
 
-.left-player {
+#container-pong3D .left-player {
 }
 
-.player-box__controller {
+#container-pong3D .player-box__controller {
     width: 100%;
     height: 70%;
 }
 
-.controls_title {
+#container-pong3D .controls_title {
     font-size: 1rem;
     font-weight: 700;
     color: var(--text-color);
@@ -124,7 +124,7 @@
     align-items: center;
 }
 
-.controls_player {
+#container-pong3D .controls_player {
     width: 100%;
     height: 50%;
     display: flex;
@@ -132,7 +132,7 @@
     align-items: center;
 }
 
-.controls_player .control {
+#container-pong3D .controls_player .control {
     width: 40%;
     height: 80%;
     display: flex;
@@ -144,13 +144,13 @@
     padding: 10px;
 }
 
-.control span {
+#container-pong3D .control span {
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-color);
 }
 
-.control button {
+#container-pong3D .control button {
     all: unset;
     background-color: var(--to-teal-4-rgba);
     color: var(--text-color);
@@ -162,14 +162,14 @@
     transition: ease-in-out 0.3s;
 }
 
-.control button:hover, .control button:focus {
+#container-pong3D .control button:hover, #container-pong3D .control button:focus {
     background-color: var(--text-color);
     color: var(--to-teal-4-rgba);
 }
 
 /* footer of box */
 
-.play-box__footer {
+#container-pong3D .play-box__footer {
     width: 100%;
     height: 20%;
     display: flex;
@@ -178,7 +178,7 @@
     align-items: center;
 }
 
-.btn-custom-game {
+#container-pong3D .btn-custom-game {
     all: unset;
     background-color: var(--to-teal-4-rgba);
     color: var(--text-color);
@@ -189,16 +189,17 @@
     transition: ease-in-out 0.3s;
 }
 
-.btn-custom-game:hover, .btn-custom-game:focus, .btn-start-game:hover, .btn-start-game:focus {
+#container-pong3D .btn-custom-game:hover, #container-pong3D .btn-custom-game:focus,
+#container-pong3D .btn-start-game:hover, #container-pong3D .btn-start-game:focus {
     background-color: var(--text-color);
     color: var(--to-teal-4-rgba);
 }
 
-.btn-custom-game:active, .btn-start-game:active {
+#container-pong3D .btn-custom-game:active, #container-pong3D .btn-start-game:active {
     transform: scale(0.9);
 }
 
-.btn-start-game {
+#container-pong3D .btn-start-game {
     all: unset;
     background-color: var(--to-teal-4-rgba);
     color: var(--text-color);

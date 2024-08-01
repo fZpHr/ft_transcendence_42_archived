@@ -12,7 +12,7 @@
     padding-top: 10vh;
 }
 
-.lobby_list {
+#pongTournament-content .lobby_list {
     width: 15vw;
     height: 80vh;
     background-color: var(--to-teal-3-rgba);
@@ -23,14 +23,14 @@
     border-radius: 10px;
 }
 
-.title-lobby-lst {
+#pongTournament-content .title-lobby-lst {
     font-size: 20px;
     font-weight: 800;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--text-color);
 }
 
-.lobbys_box {
+#pongTournament-content .lobbys_box {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -39,7 +39,7 @@
     overflow-x: auto;
 }
 
-.lobby-element {
+#pongTournament-content .lobby-element {
     background-color: var(--to-teal-5-rgba);
     width: 80%;
     height: 40px;
@@ -49,6 +49,6 @@
     border-radius: 10px;
 }
 
-.lobby-element:hover {
+#pongTournament-content .lobby-element:hover {
     transform: scale(1.05);
 }

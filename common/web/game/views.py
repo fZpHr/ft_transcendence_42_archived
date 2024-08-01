@@ -82,11 +82,15 @@ def gameHome(request):
 
 @login_required
 def pongLocal(request):
-    return render(request, "pongLocal/pongLocal.html")
+    if request.htmx:
+        return render(request, "pongLocal/pongLocal.html")
+    return render(request, "pongLocal/pongLocal_full.html")
 
 @login_required
 def pongCustom(request):
-    return render(request, "pongCustom/pongCustom.html")
+    if request.htmx:
+        return render(request, "pongCustom/pongCustom.html")
+    return render(request, "pongCustom/pongCustom_full.html")
 
 @login_required
 def pongPrivGame(request):
@@ -143,8 +147,20 @@ def pongTournamentLobby(request):
                 if img_path.startswith('profile_pics/'):
                     player.img = '/media/' + img_path
         ia_players = lobby.ai_players.all()
-        return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
+        if request.htmx:
+            print("htmx")
+            return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
+        print("no htmx")
+        return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
     except Lobby.DoesNotExist:
-        return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
+        if request.htmx:
+            print("htmx")
+            return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
+        print("no htmx")
+        return render(request, "pongTournament/pongTournament_full.html", {"error": "Lobby not found"})
     except Exception as e:
-        return render(request, "pongTournament/pongTournament.html", {"error": "An unexpected error occurred"})
+        if request.htmx:
+            print("htmx")
+            return render(request, "pongTournament/pongTournament.html", {"error": "An unexpected error occurred"})
+        print("no htmx")
+        return render(request, "pongTournament/pongTournament_full.html", {"error": "An unexpected error occurred"})

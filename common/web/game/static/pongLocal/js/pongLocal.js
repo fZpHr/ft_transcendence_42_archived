@@ -1,11 +1,10 @@
 import { startGame } from '/static/pong3D/js/local/pong3D.js';
-
-document.addEventListener('DOMContentLoaded', function() {
+console.log("test")
+function toggleMenu() {
     toggleChangeControls();
     toggleCustomGame();
     toggleStartGame();
-});
-
+};
 
 // ================== UPDATE CONTROLS ================== //
 
@@ -153,3 +152,5 @@ async function toggleStartGame() {
         console.error(error);
     }
 }
+
+toggleMenu();

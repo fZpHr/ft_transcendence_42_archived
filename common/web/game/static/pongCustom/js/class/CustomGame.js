@@ -81,6 +81,7 @@ class CustomGame {
 			this.width = container.clientWidth;
 			this.height = container.clientHeight;
 
+			console.log(THREE.WebGLRenderer)
 			this.renderer = new THREE.WebGLRenderer({ antialias: true });
 			this.renderer.outputEncoding = THREE.sRGBEncoding;
 			this.grid = new InfiniteGridHelper(5, 10);

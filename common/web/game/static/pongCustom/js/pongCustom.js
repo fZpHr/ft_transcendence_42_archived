@@ -3,13 +3,15 @@ import * as THREE from 'three';
 
 let game = new CustomGame();
 document.addEventListener('DOMContentLoaded', function () {
-
+// function customInit() {
 	toggleCustomManager();
-
+	
 	let startBtn = document.getElementById('start');
+	console.log('startBtn', startBtn);
 	startBtn.addEventListener('click', async function () {
 		game.init()
 	});
+// }
 });
 
 // ==================== TOGGLE UPDATE CUSTOM ELEMENTS ====================
@@ -575,3 +577,5 @@ async function toggleCustomManager() {
 		console.log(e)
 	}
 }
+
+// customInit();

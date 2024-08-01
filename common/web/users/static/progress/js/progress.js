@@ -242,3 +242,5 @@ function drawData(ctxGraph, width, height, config, data, maxElo) {
 		ctxGraph.fill();
 	}
 }
+
+toggleMenu();
