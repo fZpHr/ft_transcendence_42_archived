@@ -1,5 +1,5 @@
-/* indicator_styles.css */
-.valid-indicator {
+/* indicator_styles#login-content .css */
+#login-content .valid-indicator {
     position: absolute;
     left: 0px;
     top: 50%;
@@ -14,24 +14,24 @@
     transition: opacity 0.3s ease-in-out;
 }
 
-.warp-input input:focus+.input-label+.valid-indicator,
-.warp-input input.filled+.input-label+.valid-indicator {
+#login-content .warp-input input:focus+.input-label+.valid-indicator,
+#login-content .warp-input input.filled+.input-label+.valid-indicator {
     opacity: 1;
 }
 
-.valid-indicator i {
+#login-content .valid-indicator i {
     font-size: 16px;
 }
 
-.valid {
+#login-content .valid {
     color: #00cc00;
 }
 
-.invalid {
+#login-content .invalid {
     color: #cc0000;
 }
 
-.warp-error {
+#login-content .warp-error {
     font-size: 12px;
 }
 

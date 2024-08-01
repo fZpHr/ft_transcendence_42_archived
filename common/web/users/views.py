@@ -24,7 +24,9 @@ def login_view(request):
         'no_footer': True,
         'LANGUAGE_CODE': language_code,
     }
-    return render(request, 'login/login_view.html', context)
+    if request.htmx:
+        return render(request, 'login/login_view.html', context)
+    return render(request, 'login/login_view_full.html', context)
 
 @login_required
 def profil_view(request, format=None):

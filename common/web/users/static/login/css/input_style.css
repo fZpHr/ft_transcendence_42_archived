@@ -1,12 +1,12 @@
-/* input_styles.css */
-.warp-input {
+/* input_styles#login-content .css */
+#login-content .warp-input {
     position: relative;
     width: 80%;
     margin: 0 auto;
     margin-bottom: 40px;
 }
 
-.warp-input input {
+#login-content .warp-input input {
     width: calc(100% - 40px);
     padding: 10px;
     font-size: 14px;
@@ -18,7 +18,7 @@
     color: var(--text-color);
 }
 
-.input-label {
+#login-content .input-label {
     position: absolute;
     font-family: 'Poppins';
     top: 50%;
@@ -31,8 +31,8 @@
     pointer-events: none;
 }
 
-.warp-input input:focus + .input-label,
-.warp-input input.filled + .input-label {
+#login-content .warp-input input:focus + .input-label,
+#login-content .warp-input input.filled + .input-label {
     top: -10px;
     left: 20px;
     font-size: 12px;
@@ -41,7 +41,7 @@
     transition: all 0.3s;
 }
 
-.input-label.filled {
+#login-content .input-label.filled {
     top: -10px;
     left: 20px;
     font-size: 12px;
@@ -49,7 +49,7 @@
     padding: 0 5px;
 }
 
-.toggle-password {
+#login-content .toggle-password {
     position: absolute;
     left: 90%;
     top: 50%;
@@ -59,11 +59,11 @@
     cursor: pointer;
 }
 
-.toggle-password:focus {
+#login-content .toggle-password:focus {
     outline: none;
 }
 
-.toggle-password i {
+#login-content .toggle-password i {
     color: var(--text-color);
     font-size: 18px;
 }

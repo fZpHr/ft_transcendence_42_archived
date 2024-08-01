@@ -4,6 +4,7 @@
 @import "/static/css/home.css";
 @import "/static/profil/css/profil.css";
 @import "/static/progress/css/progress.css";
+@import "/static/login/css/login.css";
 
 * {
     padding: 0;

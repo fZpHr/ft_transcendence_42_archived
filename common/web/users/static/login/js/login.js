@@ -1,11 +1,11 @@
-document.addEventListener('DOMContentLoaded', function () {
+function toggleJS() {
     const inputs = document.querySelectorAll('.warp-input input');
     toggleChangeForm();
     toggleSubmitForm();
     toogleFiledInputs(inputs);
     toggle42Login();
     toggleShowPasswords();
-});
+}
 
 
 // ===================== Toogle ========================
@@ -262,3 +262,5 @@ function validatePassword(password) {
     }
     return true;
 }
+
+toggleJS();

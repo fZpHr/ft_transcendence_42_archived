@@ -1,11 +1,11 @@
-/* form_styles.css */
-.chose-form {
+/* form_styles#login-content .css */
+#login-content .chose-form {
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
 }
 
-.chose-form button {
+#login-content .chose-form button {
     background: none;
     border: none;
     color: var(--text-color);
@@ -15,11 +15,11 @@
     transition: color 0.3s, border-bottom 0.3s;
 }
 
-.chose-form button.active {
+#login-content .chose-form button.active {
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
 }
 
-.warp-form {
+#login-content .warp-form {
     width: 70%;
 }

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "Login" %}{% endblock %}
+
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'login/css/login.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'login/css/input_style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'login/css/form_style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'login/css/button_style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'login/css/indicator_style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'login/css/other_connexion.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'login/css/responsive_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="login-content" class="warp-login"> 
+    <div class="container-login">
+        <div class="form-title">
+            <h1>{% trans "Welcome" %}</h1>
+            <p>{% trans "Sign in to play Pong" %}</p>
+        </div>
+
+        <div class="chose-form">
+            <button id="login-btn" class="active">{% trans "Login" %}</button>
+            <button id="register-btn">{% trans "Register" %}</button>
+        </div>
+
+        <div class="warp-form">
+            {% include 'login/login_form.html' %}
+            {% include 'login/register_form.html' %}
+        </div>
+        {% include 'login/other_connexion.html' %}
+    </div>
+</div>
+
+{% include 'login/demo_section.html' %}
+<script src="{% static 'login/js/login.js' %}"></script>
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %}
