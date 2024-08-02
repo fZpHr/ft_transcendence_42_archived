@@ -133,7 +133,9 @@ def pongPrivGame(request):
 
 @login_required
 def pongTournament(request):
-    return render(request, "pongTournament/pongTournament.html")
+    if request.htmx:
+        return render(request, "pongTournament/pongTournament.html")
+    return render(request, "pongTournament/pongTournament_full.html")
 
 @login_required
 def pongTournamentLobby(request):

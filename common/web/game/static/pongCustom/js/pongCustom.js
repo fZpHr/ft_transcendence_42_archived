@@ -1,6 +1,7 @@
 import { CustomGame } from './class/CustomGame.js';
 import * as THREE from 'three';
 
+console.log('pongCustom.js');
 let game = new CustomGame();
 document.addEventListener('DOMContentLoaded', function () {
 // function customInit() {

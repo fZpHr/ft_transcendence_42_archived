@@ -1,11 +1,10 @@
 import { startGame } from '/static/pong3D/js/local/pong3D.js';
-console.log("test")
-function toggleMenu() {
+console.log('pongLocal.js loaded');
+async function toggleMenu() {
     toggleChangeControls();
     toggleCustomGame();
     toggleStartGame();
 };
-
 // ================== UPDATE CONTROLS ================== //
 
 async function toggleChangeControls() {
