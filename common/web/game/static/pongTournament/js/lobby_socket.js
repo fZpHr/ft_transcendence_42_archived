@@ -1,78 +1,100 @@
 // =============================== LOBBY up UX ================================
 
-async function makePlayerLog(userId) {
+let wsLobby = null;
+
+async function setUserToLog(userId) {
     try {
-        console.log('user join =>', userId);
-        let a= 'player-'+ userId
-        let userBox = document.getElementById(a);
-        let playerStatus = userBox.children[1];
-        playerStatus.innerHTML = `
-            <div class="waiting-player"></div>
-        `;
+        let playerStatus = document.getElementById('player-'+ userId).children[1];
+        playerStatus.innerHTML = `<div class="waiting-player"></div>`;
     } catch (error) {
         console.error('Failed to makePlayerLog', error);
     }
 }
 
-async function makePlayerLogout(userId) {
+async function setUserToLogout(userId) {
     try {
         console.log('user logout =>', userId);
         let a= 'player-'+ userId
         let userBox = document.getElementById(a);
         let playerStatus = userBox.children[1];
-        playerStatus.innerHTML = `
-            <div class="pending-player"></div>
-        `;
+        playerStatus.innerHTML = `<div class="pending-player"></div>`;
     } catch (error) {
         console.error('Failed to makePlayerLogout', error);
     }
 }
 
+// =============================== LOBBY WS utils ================================
+
+async function handleWsLobbyMessage(data) {
+    try {
+        console.log('data', data);
+        if (data.userId && data.userId === userId) {
+            console.log('ignorted')
+            return;
+        }
+        let eventTypes = { 
+            'ping': ping,
+            'pong': pong,
+            'leave': leave,
+            'addPlayer': addPlayer,
+            'addIa': addIa
+        };
+        eventTypes[data.eventType](data);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+async function sendToWsLobby(eventType, msg) {
+    try {
+        let data = {
+            userId: userId,
+            eventType: eventType,
+            message: msg
+        };
+        wsLobby.send(JSON.stringify(data));
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function managerSendToWsLobby(eventType, msg, contactId) {
+    try {
+        let data = {
+            userId: contactId,
+            eventType: eventType,
+            message: msg
+        };
+        wsLobby.send(JSON.stringify(data));
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 // =============================== LOBBY WEBSOCKET ================================
 
 async function connectLobbySocket(roomName) {
     try {
-        ws = new WebSocket(`wss://${window.location.host}/ws/lobby/${roomName}/`);
+        wsLobby = new WebSocket(`wss://${window.location.host}/ws/lobby/${roomName}/`);
         
-        ws.onopen = function () {
+        wsLobby.onopen = function () {
             console.log('[WebSocket Lobby] => Connection established to room =>', roomName);
+            let msg = userId + ' | ping';
+            sendToWsLobby('ping', msg);
         };
         
-        ws.onmessage = async function (e) {
+        wsLobby.onmessage = async function (e) {
             let data = await JSON.parse(e.data);
-            let message = data.message;
-            let userId = data.userid;
-            if (message === 'join') {
-                makePlayerLog(userId);
-                sendYourStatusLobby();
-            } else if (message === 'up-status') {
-                userId = data.senderId;
-                makePlayerLog(userId);
-                console.log('up-status =>', userId);   
-            } else if (message === 'disconnect') {
-                userId = data.senderId;
-                console.log('up-logout =>', userId);   
-                makePlayerLogout(userId);
-            } else if (message === 'adding') {
-                userId = data.senderId;
-                if (userId == -1) {
-                    console.log('IA added');
-                    innerNewIA();
-                } else {
-                    let user = await APIgetUserById(userId);
-                    innerNewPlayer(user);
-                }
-            } else {
-                console.log('Message received:', e.data);
-            }
+            if (data.senderId === userId) return;
+            handleWsLobbyMessage(data);
         };
         
-        ws.onclose = function (e) {
+        wsLobby.onclose = function (e) {
             console.log('[WebSocket] => Connection closed:', e);
         };
 
-        ws.onerror = function (error) {
+        wsLobby.onerror = function (error) {
             console.error('[WebSocket] => Error:', error);
         };
     } catch (error) {
@@ -84,7 +106,7 @@ function disconnectLobbySocket() {
     try {
         console.log('[WebSocket] => Disconnecting...');
         console.log(userId);
-        ws.send(JSON.stringify({
+        wsLobby.send(JSON.stringify({
             'message': 'disconnect',
             'senderId': userId
         }));
@@ -94,85 +116,61 @@ function disconnectLobbySocket() {
 }
 
 
-// =============================== LOBBY msg socket ================================
+// =============================== LOBBY socketAction ================================
 
-async function sendNewPlayerLobby(playerId) {
+async function ping(data) {
     try {
-        let senderId = parseInt(playerId);
-        ws.send(JSON.stringify({
-            'message': 'adding',
-            'senderId': senderId
-        }));
+        console.log('[WS-G]=> (' + data.message + ')');
+        let msg = userId + ' | pong';
+        sendToWsLobby('pong', msg);
+        setUserToLog(data.userId);
     } catch (error) {
-        console.error('Error in sendNewPlayerLobby:', error);
+        console.error(error);
     }
 }
 
-async function sendNewIaLobby() {
+async function pong(data) {
     try {
-        ws.send(JSON.stringify({
-            'message': 'adding',
-            'senderId': -1
-        }));
-    }
-    catch (error) {
-        console.error('Error in sendNewIaLobby:', error);
+        console.log('[WS-G]=> (' + data.message + ')');
+        setUserToLog(data.userId);
+    } catch (error) {
+        console.error(error);
     }
 }
 
-async function sendYourStatusLobby() { 
+async function leave(data) {
     try {
-        let user = await APIgetCurrentUser();
-        if (user) {
-            let senderId = user.id;
-            ws.send(JSON.stringify({
-                'message': 'up-status',
-                'senderId': senderId
-            }));
+        console.log('[WS-G]=> (' + data.message + ')');
+        if (!gameStart) {
+            setUserToLogout();
         } else {
-            console.error('No user found');
+            console.log('You win');
         }
     } catch (error) {
-        console.error('Error in sendYourStatusLobby:', error);
+        console.error(error);
     }
 }
 
-
-async function sendMakeReadyLobby() { 
+async function addPlayer(data) {
     try {
-        let user = await APIgetCurrentUser();
-        if (user) {
-            let senderId = user.id;
-            ws.send(JSON.stringify({
-                'message': 'ready',
-                'userid': senderId
-            }));
-        } else {
-            console.error('No user found');
-        }
+        console.log('[WS-G]=> (' + data.message + ')');
+        let newUser = await APIgetUserById(data.userId);
+        innerNewPlayer(newUser);
     } catch (error) {
-        console.error('Error in sendMakeReadyLobby:', error);
+        console.error(error);
     }
 }
 
-async function sendWebSocketLobby(message, contactId) {
+async function addIa(data) {
     try {
-        let user = await APIgetCurrentUser();
-        if (user) {
-            let senderId = user.id;
-            ws.send(JSON.stringify({
-                'message': message,
-                'senderId': senderId
-            }));
-        } else {
-            console.error('No user found');
-        }
+        console.log('[WS-G]=> (' + data.message + ')');
+        innerNewIA();
     } catch (error) {
-        console.error('Error in sendWebSocketLobby:', error);
+        console.error(error);
     }
 }
 
-// =============================== LOBBY utils ================================
+// =============================== LOBBY WS INNER ================================
 
 async function innerNewPlayer(user) {
     try {

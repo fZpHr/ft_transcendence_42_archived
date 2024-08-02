@@ -3,10 +3,19 @@ from django.contrib.auth import authenticate, login, logout as auth_logout
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.conf import settings
+from django.utils.translation import activate
 
 # ======================== Decorateur Validator ============================
 
+def translate(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        language_code = request.session.get('django_language', 'en')
+        activate(language_code)
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
 def login_required(view_func):
+    @translate
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(settings.LOGIN_URL)
@@ -14,6 +23,7 @@ def login_required(view_func):
     return _wrapped_view
 
 def not_login_required(view_func):
+    @translate
     def _wrapped_view(request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('/profil/')

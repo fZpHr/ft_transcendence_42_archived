@@ -72,6 +72,10 @@ class Lobby(models.Model):
     ai_players = models.ManyToManyField('AIPlayer', related_name='lobbies', blank=True)
     locked = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def lock(self):
+        self.locked = True
+        self.save()
 
 class Game_Tournament(models.Model):
     id = models.AutoField(primary_key=True)

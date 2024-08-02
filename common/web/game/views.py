@@ -99,8 +99,6 @@ def pongPrivGame(request):
     player.img = player.img.name.startswith('profile_pics/') and '/media/' + player.img.name or player.img
     opponent.img = opponent.img.name.startswith('profile_pics/') and '/media/' + opponent.img.name or opponent.img
     privGame = Game.objects.get(id=invitGame[0].game_id.id)
-    print('===========================', privGame.player1)
-    print('===========================', privGame.player2)
     data = {
         'player' : {
             'id': player.id,
@@ -130,6 +128,8 @@ def pongTournament(request):
 @login_required
 def pongTournamentLobby(request):
     try:
+        playerId = request.user.username
+        playerId = Player.objects.get(username=playerId).id
         lobby_id = request.GET.get('lobby_id', 'default_value')
         lobby = Lobby.objects.get(UUID=lobby_id)
         players = lobby.players.all()
@@ -139,7 +139,11 @@ def pongTournamentLobby(request):
                 if img_path.startswith('profile_pics/'):
                     player.img = '/media/' + img_path
         ia_players = lobby.ai_players.all()
-        return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
+        print("==============> ", ia_players)
+        print("==============> ", players)
+        print("==============> ", lobby)
+        print("==============> ", playerId)
+        return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
     except Lobby.DoesNotExist:
         return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
     except Exception as e:

@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 from api import consumers as consumers
 from game import consumers as game_consumers
 from two_factor.urls import urlpatterns as tf_urls
-
+from django.views.i18n import JavaScriptCatalog
 
 
 urlpatterns = [
@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('game/', include('game.urls')),
     path('set-language/<str:language_code>/', views.set_language, name='set_language'),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 ]
 
 urlpatterns += i18n_patterns(

@@ -100,7 +100,11 @@ async function toggleSubmitForm() {
                         if (result.success) {
                             window.location.href = result.redirect_url || '/';
                         } else {
-                            event.errorBox.innerHTML = result.error;
+                            console.log(event.errorBox);
+                            // error = `{% trans "${result.error}" %}`
+                            const error = gettext(result.error);
+                            console.log(error);
+                            event.errorBox.innerHTML = error;
                             event.errorBox.style.display = 'block';
                         }
                     } catch (error) {
@@ -163,7 +167,7 @@ async function toggle42Login() {
     const btn42 = document.getElementById('btn-42');
 
     btn42.addEventListener('click', () => {
-        window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193&redirect_uri=https%3A%2F%2Flocalhost%2Fapi%2Fregister-42%2F&response_type=code';
+        window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193&redirect_uri=https%3A%2F%2F10.11.249.54%2Fapi%2Fregister-42%2F&response_type=code';
     });
 }
 

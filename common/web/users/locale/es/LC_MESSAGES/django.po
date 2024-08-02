@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 05:35+0200\n"
+"POT-Creation-Date: 2024-08-01 20:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,17 +19,24 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
 
-#: users/templates/login/login_form.html:9
-#: users/templates/login/register_form.html:12
+#: users/templates/login/login_form.html:8
+#: users/templates/profil/box-profil.html:70
+#, fuzzy
+#| msgid "Invalid email or password."
+msgid "Invalid email format"
+msgstr "Correo electrónico o contraseña no válidos."
+
+#: users/templates/login/login_form.html:10
+#: users/templates/login/register_form.html:14
 msgid "Email"
 msgstr "Email"
 
-#: users/templates/login/login_form.html:14
-#: users/templates/login/register_form.html:16
+#: users/templates/login/login_form.html:15
+#: users/templates/login/register_form.html:19
 msgid "Password"
 msgstr "Contraseña"
 
-#: users/templates/login/login_form.html:21
+#: users/templates/login/login_form.html:24
 #: users/templates/login/login_view.html:4
 #: users/templates/login/login_view.html:25
 #: users/templates/login/other_connexion.html:11
@@ -45,7 +52,7 @@ msgid "Sign in to play Pong"
 msgstr "Inicia sesión para jugar a Pong"
 
 #: users/templates/login/login_view.html:26
-#: users/templates/login/register_form.html:22
+#: users/templates/login/register_form.html:28
 msgid "Register"
 msgstr "Regístrese en"
 
@@ -53,50 +60,118 @@ msgstr "Regístrese en"
 msgid "or continue with"
 msgstr "o continuar con"
 
-#: users/templates/login/register_form.html:8
+#: users/templates/login/register_form.html:9
 msgid "Username"
 msgstr "Nombre de usuario"
 
 #: users/templates/profil/box-profil.html:9
+#: users/templates/profil/box-profil.html:11
 msgid " Avatar"
 msgstr ""
 
-#: users/templates/profil/box-profil.html:25
-#, fuzzy
-#| msgid "42 Friend(s)"
-msgid "Friend(s)"
-msgstr "42 Amigo(s)"
+#: users/templates/profil/box-profil.html:64
+msgid "Invalid username format"
+msgstr ""
 
-#: users/templates/profil/box-profil.html:27
-msgid "ELO"
+#: users/templates/profil/box-profil.html:66
+#, fuzzy
+#| msgid "Username"
+msgid "Username :"
+msgstr "Nombre de usuario"
+
+#: users/templates/profil/box-profil.html:72
+#, fuzzy
+#| msgid "Email"
+msgid "Email :"
+msgstr "Email"
+
+#: users/templates/profil/box-profil.html:78
+#: users/templates/profil/box-profil.html:130
+msgid "Update"
+msgstr ""
+
+#: users/templates/profil/box-profil.html:84
+#: users/templates/profil/box-profil.html:90
+#, fuzzy
+#| msgid "Password"
+msgid "Change Password"
+msgstr "Contraseña"
+
+#: users/templates/profil/box-profil.html:101
+#: users/templates/profil/box-profil.html:110
+#, fuzzy
+#| msgid "Invalid email or password."
+msgid "Invalid password format"
+msgstr "Correo electrónico o contraseña no válidos."
+
+#: users/templates/profil/box-profil.html:103
+#, fuzzy
+#| msgid "Password"
+msgid "Current Password :"
+msgstr "Contraseña"
+
+#: users/templates/profil/box-profil.html:112
+#, fuzzy
+#| msgid "Password"
+msgid "New Password :"
+msgstr "Contraseña"
+
+#: users/templates/profil/box-profil.html:119
+msgid "Passwords do not match"
+msgstr ""
+
+#: users/templates/profil/box-profil.html:121
+msgid "Confirm New Password :"
 msgstr ""
 
 #: users/templates/profil/box-skill.html:7
+#: users/templates/progress/progress.html:65
 msgid "Game Stats Dashboards"
 msgstr ""
 
-#: users/templates/profil/box-skill.html:9
+#: users/templates/profil/box-skill.html:18
+#: users/templates/progress/progress.html:67
 msgid "Players"
 msgstr "Jugadores"
 
-#: users/templates/profil/box-skill.html:10
+#: users/templates/profil/box-skill.html:19
+#: users/templates/progress/progress.html:68
 msgid "Time"
 msgstr "Tiempo"
 
-#: users/templates/profil/box-skill.html:11
+#: users/templates/profil/box-skill.html:20
+#: users/templates/progress/progress.html:69
 msgid "Winner"
 msgstr "Ganador"
 
-#: users/templates/profil/box-skill.html:12
-msgid "ELO Before"
+#: users/templates/profil/box-skill.html:21
+msgid "ELO"
+msgstr ""
+
+#: users/templates/profil/box-skill.html:59
+msgid "Show My Progress"
+msgstr ""
+
+#: users/templates/profil/box-skill.html:61
+#, fuzzy
+#| msgid "ELO Before"
+msgid "Show His Progress"
 msgstr "ELO Antes"
 
-#: users/templates/profil/box-skill.html:13
-msgid "ELO After"
-msgstr "ELO Después"
+#: users/templates/profil/box-skill.html:67
+msgid "Vous n'avez aucun match joué pour le moment"
+msgstr ""
 
-#: users/templates/profil/box-skill.html:27
-msgid "Show My Progress"
+#: users/templates/profil/box-skill.html:68
+msgid "Jouer"
+msgstr ""
+
+#: users/templates/profil/box-skill.html:70
+msgid "N'as encore aucun match joué pour le moment"
+msgstr ""
+
+#: users/templates/profil/box-skill.html:71
+msgid "Play with"
 msgstr ""
 
 #: users/templates/profil/profil_view.html:14
@@ -107,22 +182,70 @@ msgstr "Perfil"
 msgid " banner"
 msgstr ""
 
-#: users/templates/progress/progress.html:4
+#: users/templates/progress/progress.html:5
 #, fuzzy
 #| msgid "ELO Before"
 msgid "Progress"
 msgstr "ELO Antes"
 
 #: users/templates/progress/progress.html:14
-#: users/templates/progress/progress.html:76
-msgid "Win/Lose Ratio"
+msgid "Stats Panels"
 msgstr ""
 
-#: users/templates/progress/progress.html:41
+#: users/templates/progress/progress.html:20
+msgid "Stats"
+msgstr ""
+
+#: users/templates/progress/progress.html:24
+msgid "Statistic"
+msgstr ""
+
+#: users/templates/progress/progress.html:25
+msgid "Value"
+msgstr ""
+
+#: users/templates/progress/progress.html:30
+msgid "Number of games"
+msgstr ""
+
+#: users/templates/progress/progress.html:34
+msgid "Max win streak"
+msgstr ""
+
+#: users/templates/progress/progress.html:38
+msgid "Average game time"
+msgstr ""
+
+#: users/templates/progress/progress.html:42
+msgid "Current Elo"
+msgstr ""
+
+#: users/templates/progress/progress.html:46
+msgid "Max Elo"
+msgstr ""
+
+#: users/templates/progress/progress.html:50
+msgid "Number of tournament participations"
+msgstr ""
+
+#: users/templates/progress/progress.html:59
 #, fuzzy
 #| msgid "ELO Before"
 msgid "ELO Progress"
 msgstr "ELO Antes"
+
+#: users/templates/progress/progress.html:70
+msgid "ELO Before"
+msgstr "ELO Antes"
+
+#: users/templates/progress/progress.html:71
+msgid "ELO After"
+msgstr "ELO Después"
+
+#, fuzzy
+#~| msgid "42 Friend(s)"
+#~ msgid "Friend(s)"
+#~ msgstr "42 Amigo(s)"
 
 #~ msgid " default user avatars"
 #~ msgstr "avatares de usuario por defecto"
@@ -134,6 +257,3 @@ msgstr "ELO Antes"
 
 #~ msgid "Login successful!"
 #~ msgstr "Inicio de sesión correcto."
-
-#~ msgid "Invalid email or password."
-#~ msgstr "Correo electrónico o contraseña no válidos."

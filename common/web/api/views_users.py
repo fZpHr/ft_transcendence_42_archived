@@ -92,7 +92,7 @@ def register_42(request, format=None):
         "client_id": "u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193",
         "client_secret": "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",
         "code": request.query_params["code"],
-        "redirect_uri": "https://localhost/api/register-42/"
+        "redirect_uri": "https://10.11.249.54/api/register-42/"
     }
     headers = {"Content-Type": "application/json; charset=utf-8"}
     r = requests.post('https://api.intra.42.fr/oauth/token', headers=headers, json=body)

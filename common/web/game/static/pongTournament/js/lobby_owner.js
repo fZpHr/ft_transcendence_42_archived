@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     await connectLobbySocket(lobbyUUID);
     toggleAddingPlayer();
     handlersLockLobby();
- 
+
     window.addEventListener('beforeunload', disconnectLobbySocket);
     window.addEventListener('unload', disconnectLobbySocket);
 });
@@ -110,8 +110,9 @@ async function selectThisPlayer(user) {
         parrentBox.removeChild(box);
         parrentBox.remove();
         users = users.filter(user => user.id !== userIdToRemove);
-        sendNewPlayerLobby(userIdToRemove);
+        let msg = 'addPlayer | ' + userIdToRemove;
         await APIaddPlayerToLobby(lobbyUUID, userIdToRemove);
+        managerSendToWsLobby('addPlayer', msg, userIdToRemove);
     } catch (error) {
         console.error('Failed to selectThisPlayer', error);
     }
@@ -121,7 +122,7 @@ async function redirectionManager(tournamentorganized) {
     try {
         console.log('tournamentorganized', tournamentorganized);
         games = tournamentorganized.games;
-        console.log('games', games);
+        console.log('debog games', games);
     } catch (error) {
         console.error('Failed to redirectionManager', error);
     }
@@ -263,7 +264,8 @@ function handlersChosePlayer() {
         });
 
         newIASlot.addEventListener('click', async function () {
-            sendNewIaLobby();
+            let msg = 'addIa | null';
+            managerSendToWsLobby('addIa', msg, null);
             await APIaddIaToLobby(lobbyUUID);
             hideChosePlayerMenus();
             displayNewPlayerForm();
@@ -301,30 +303,37 @@ function handlersLockLobby() {
                 return;
             }
 
-            // remove all player slot
+            let data = {
+                'eventType': 'lock_lobby',
+                'UUID': lobbyUUID
+            }
+            console.log('lock lobby', data, 'wsLobby [' ,wsLobby,']');
+            wsLobby.send(JSON.stringify(data));
             deleteLobbyBody();
 
             // set loader
-            let loader = document.getElementById('loader-container');
-            loader.style.display = 'block';
+            // let loader = document.getElementById('loader-container');
+            // loader.style.display = 'block';
 
-            // init canva tournament
-            await innerCanvaTournament();
+            // // init canva tournament
+            // await innerCanvaTournament();
 
-            // load data and draw tournament
-            tournamentorganized = await APIlockLobby(lobbyUUID);
-            ctx = await initCanvas();
-            await drawTournament(ctx, tournamentorganized, NbrPlayer);
+            // // load data and draw tournament
+            // tournamentorganized = await APIlockLobby(lobbyUUID);
+            // ctx = await initCanvas();
+            // await drawTournament(ctx, tournamentorganized, NbrPlayer);
 
-            console.log('tournamentorganized', tournamentorganized.tournament.UUID);
-            tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
-            loader.style.display = 'none';
-            // display canva tournament
-            await displayCanvaTournament();
-            // spleep 10s
-            // await sleep(10000);
-            // redirect to tournament
-            redirectionManager(tournamentINfo);
+            // console.log('tournamentorganized', tournamentorganized.tournament.UUID);
+            // tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
+            // loader.style.display = 'none';
+            // // display canva tournament
+
+
+            // await displayCanvaTournament();
+            // // spleep 10s
+            // // await sleep(10000);
+            // // redirect to tournament
+            // redirectionManager(tournamentINfo);
         });
     } catch (error) {
         console.error('Failed to handlersLockLobby', error);

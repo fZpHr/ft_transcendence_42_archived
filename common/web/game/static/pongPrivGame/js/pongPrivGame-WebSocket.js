@@ -46,7 +46,6 @@ async function connectWsGame(roomName) {
             console.error('[WS-G] => error observed:', event);
         };
 
-        //  
     } catch (error) {
         console.error(error);
     }

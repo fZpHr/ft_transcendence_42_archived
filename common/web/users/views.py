@@ -18,20 +18,13 @@ from api.login_required import login_required, not_login_required
 
 @not_login_required
 def login_view(request):
-    language_code = request.session.get('django_language', 'en')
-    activate(language_code)
-    context = {
-        'no_footer': True,
-        'LANGUAGE_CODE': language_code,
-    }
+    context = { 'no_footer': True }
     return render(request, 'login/login_view.html', context)
 
 @login_required
 def profil_view(request, format=None):
     try:
         data = Player.objects.get(username=request.user)
-        language_code = request.session.get('django_language', 'en')
-        activate(language_code)
         is42 = True
         print("================== DEBOG IMG", data.img)
         if (data.img.name.startswith("profile_pics/")):
@@ -76,8 +69,8 @@ def profil_view(request, format=None):
 def visited_profil_view(request, username):
     try:
         data = Player.objects.get(username=username)
-        language_code = request.session.get('django_language', 'en')
-        activate(language_code)
+        # language_code = request.session.get('django_language', 'en')
+        # activate(language_code)
         is42 = True
         if (data.img.name.startswith("profile_pics")):
             is42 = False
