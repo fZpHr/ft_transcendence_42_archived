@@ -1,5 +1,5 @@
 import { startGame } from '/static/pong3D/js/local/pong3D.js';
-console.log('pongLocal.js loaded');
+
 async function toggleMenu() {
     toggleChangeControls();
     toggleCustomGame();
@@ -135,7 +135,7 @@ async function toggleCustomGame() {
 async function toggleStartGame() {
     try {
         let startGameBox = document.getElementById('start-game');
-
+        console.log('startGameBox => ', startGameBox);
         startGameBox.addEventListener('click', function() {
             let gameInfo = getGameUserInfo();
             console.log('game user info => ', gameInfo);
@@ -151,5 +151,9 @@ async function toggleStartGame() {
         console.error(error);
     }
 }
+
+document.addEventListener('htmx:beforeSwap', function(event) {
+    /* TODO remove all event listeners here*/
+}, {once: true});
 
 toggleMenu();

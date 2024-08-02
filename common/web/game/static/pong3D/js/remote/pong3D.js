@@ -1,10 +1,9 @@
-import * as THREE from 'three';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
 import { Plateau } from "./class/plateau.js"
 import { Ball } from "./class/ball.js"
 import { Game } from './class/games.js'
 import { Player } from './class/player.js'
 import { sendToWsGame } from '../../../pongPrivGame/js/pongPrivGame.js';
-
 
 async function startGame(players, game, { up, down, userId }) {
     let move_up = false;
@@ -241,6 +240,37 @@ async function startGame(players, game, { up, down, userId }) {
             });
         } catch (error) {
             console.error(error);
+        }
+    }
+    
+    document.addEventListener('htmx:beforeOnLoad', function() {
+        console.log("htmx:beforeOnLoad removing scene");
+        game.renderer.setAnimationLoop(null);
+        game.scene.traverse((object) => {
+            if (!object.isMesh) return;
+    
+            object.geometry.dispose();
+    
+            if (object.material.isMaterial) {
+                cleanMaterial(object.material);
+            } else {
+                // an array of materials
+                for (const material of object.material) cleanMaterial(material);
+            }
+        });
+        
+        // Dispose of renderer
+        game.renderer.dispose();
+    });
+
+    function cleanMaterial(material) {
+        material.dispose();
+    
+        // Dispose of textures
+        for (const key in material) {
+            if (material[key] && material[key].isTexture) {
+                material[key].dispose();
+            }
         }
     }
 }

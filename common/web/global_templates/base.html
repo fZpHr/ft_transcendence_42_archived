@@ -18,6 +18,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{% static 'js/notif.js' %}"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+                "renderpass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/RenderPass.js",
+                "effectcomposer": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/EffectComposer.js",
+                "unrealbloompass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+                "fontloader": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/FontLoader.js",
+                "linematerial": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineMaterial.js",
+                "linegeometry": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineGeometry.js",
+                "line2": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/Line2.js",
+                "timer": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/misc/Timer.js",
+                "orbitcontrols": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js",
+                "cameracontrols": "https://cdn.jsdelivr.net/npm/camera-controls@2.8.5/dist/camera-controls.module.min.js"
+            }
+        }
+    </script>
     {% block extra_head %}{% endblock %}
     {% block custom_css %}{% endblock %}
 </head>
@@ -46,5 +63,10 @@
 
     {% block extra_scripts %}
     {% endblock %}
+    <script>
+        htmx.onLoad(function(evt) {
+            window.scrollTo(0, 0);
+        });
+    </script>
 </body>
 </html>

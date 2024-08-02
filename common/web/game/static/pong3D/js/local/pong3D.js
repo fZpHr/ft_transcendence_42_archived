@@ -8,6 +8,7 @@ console.log('pong3D.js loaded');
 
 async function startGame(player1, player2, nameBord)
 {
+    let element = [];
     let game = new Game();
     
     let ground = new Plateau(
@@ -113,7 +114,7 @@ async function startGame(player1, player2, nameBord)
     game.players.push(player_1);
     game.players.push(player_2);
     await game.setName(nameBord);
-
+    
     let sphereGroup = new THREE.Group();
     let limits = new THREE.Group();
     let paddle_1_grp = new THREE.Group();
@@ -128,6 +129,10 @@ async function startGame(player1, player2, nameBord)
     game.floor.add(sphere.collisionLight);
     game.floor.add(game.nameMesh);
     game.scene.add(sphereGroup);
+    
+    element.push(game.floor);
+    element.push(sphereGroup);
+    element.push(game.nameMesh);
 
     
     for (const data of sphere.torus)
@@ -205,6 +210,15 @@ async function startGame(player1, player2, nameBord)
         );
     }
     window.addEventListener('resize', onWindowResize());
+
+    document.addEventListener('htmx:beforeSwap', function(event) {
+        // remove all event listener
+        window.removeEventListener('resize', onWindowResize);
+        game.renderer.setAnimationLoop(null);
+        game.render = false;
+        for (const data of element)
+            game.scene.remove(data);
+    }, {once: true});
 }
 
 export {

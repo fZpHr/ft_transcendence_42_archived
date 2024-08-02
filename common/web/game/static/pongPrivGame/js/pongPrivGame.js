@@ -8,7 +8,8 @@ let p1Id;
 let p2Id;
 let game;
 
-document.addEventListener('DOMContentLoaded', async function () {
+async function domLoaded()
+{
     toggleCustomGame();
     toggleMakeReady();
 
@@ -17,7 +18,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     let roomName = p1Id < p2Id ? p1Id + p2Id : p2Id + p1Id;
     roomName = await APIgetHashRoom('game_' + roomName);
     await connectWsGame(roomName.roomName);
-});
+} 
+
+// document.addEventListener('DOMContentLoaded', async function () {
+//     toggleCustomGame();
+//     toggleMakeReady();
+
+//     p1Id = document.getElementById('first-player').getAttribute('data-id');
+//     p2Id = document.getElementById('second-player').getAttribute('data-id');
+//     let roomName = p1Id < p2Id ? p1Id + p2Id : p2Id + p1Id;
+//     roomName = await APIgetHashRoom('game_' + roomName);
+//     await connectWsGame(roomName.roomName);
+// });
 
 async function sendToWsGame(eventType, msg) {
     try {
@@ -269,3 +281,5 @@ async function startInstance() {
 export {
     sendToWsGame
 }
+
+domLoaded();
