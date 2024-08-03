@@ -1,4 +1,4 @@
-import { startGame } from '/static/pong3D/js/local/pong3D.js';
+import { startGame } from '../../pong3D/js/local/pong3D.js';
 
 async function toggleMenu() {
     toggleChangeControls();
