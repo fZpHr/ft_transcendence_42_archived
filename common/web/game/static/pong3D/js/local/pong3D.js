@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
+import * as THREE from 'three';
 import { Plateau } from "./class/plateau.js"
 import { Ball } from "./class/ball.js"
 import { Game } from './class/games.js'

@@ -2,16 +2,17 @@
 {% load static %}
 <!-- {% block title %}{% trans "pongLocal" %}{% endblock %} -->
 
-<script>console.log("pongLocal.html");</script>
+<script>console.log("pongLocal.html loaded");</script>
+<script src="{% static 'pongLocal/js/dist/bundle.js' %}"></script>
 <div class="pongLocal-wrapper" id="container-pong3D">
-	<div class="video-background">
-		<video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
-	</div>
-	<section class="play-box">
-		<div class="play-box__header"> 
+    <div class="video-background">
+        <video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
+    </div>
+    <section class="play-box">
+        <div class="play-box__header"> 
             <span>PONG Local</span>
-		</div>
-		<div class="play-box__content">
+        </div>
+        <div class="play-box__content">
             <div class="left-player player-box">
                 <div class="player-box__username">
                     <input type="text" placeholder="Player_1" id="player1_username" value="Player_1" maxlength="15" minlength="4">
@@ -57,8 +58,5 @@
             <button class="btn-custom-game" id="curstom-game"><i class="fa-solid fa-screwdriver-wrench"></i></button>
             <button class="btn-start-game" id="start-game">{% trans "Start Game" %}</button>
         </div>
-	</section>
-    <script>
-        import("{% static 'pongLocal/js/pongLocal.js' %}")
-    </script>
+    </section>
 </div>

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Reflector } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/objects/Reflector.js';
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 
 class CustomPlateau {
 	constructor(game) {
