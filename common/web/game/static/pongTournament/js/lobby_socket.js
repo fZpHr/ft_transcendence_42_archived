@@ -27,7 +27,14 @@ async function setUserToLogout(userId) {
 
 async function handleWsLobbyMessage(data) {
     try {
-        console.log('data', data);
+        // console.log('data', data);
+        if (data.eventType === 'redirect') {
+            if (data.userId && data.userId === userId) {
+                redirect(data);
+                return;
+            }
+            return ;
+        }
         if (data.userId && data.userId === userId) {
             console.log('ignorted')
             return;
@@ -38,7 +45,7 @@ async function handleWsLobbyMessage(data) {
             'leave': leave,
             'addPlayer': addPlayer,
             'addIa': addIa
-        };
+        }; 
         eventTypes[data.eventType](data);
     } catch (error) {
         console.error(error);
@@ -165,6 +172,18 @@ async function addIa(data) {
     try {
         console.log('[WS-G]=> (' + data.message + ')');
         innerNewIA();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function redirect(data) {
+    try {
+        console.log('[WS-G]=> (' + data.message + ')');
+        console.log('redirecting');
+        console.log(data.message);
+        window.location.href = data.message;
+
     } catch (error) {
         console.error(error);
     }

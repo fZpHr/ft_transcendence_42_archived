@@ -301,12 +301,14 @@ function handlersLockLobby() {
                 return;
             }
 
+            // send lock lobby to ws
             let data = {
                 'eventType': 'lock_lobby',
                 'UUID': lobbyUUID
             }
-            console.log('lock lobby', data, 'wsLobby [' ,wsLobby,']');
             wsLobby.send(JSON.stringify(data));
+
+            // UPDATE view
             deleteLobbyBody();
 
             let loader = document.getElementById('loader-container');

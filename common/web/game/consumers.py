@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 import json
 import random
+from game.Class.engine import Engine
 
 room_counts = {}
 
@@ -130,3 +131,70 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         }))
 
     # async def ballMove(self, event):
+
+
+server = Engine()
+
+class GameConsumer(AsyncWebsocketConsumer):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.room_name = None
+        self.room_group_name = None
+        self.server = server
+
+    async def connect(self):
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_group_name = f'game_{self.room_name}'
+
+        print(f"[WebSocket GAME] : Connecting to room {self.room_name}")
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+        print(f"[WebSocket GAME] : Connection established for room {self.room_name}")
+
+    async def disconnect(self, close_code):
+        print(f"[WebSocket GAME] : Disconnecting from room {self.room_name} with close code {close_code}")
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        text_data_json = json.loads(text_data)
+        userId = text_data_json['userId']
+        eventType = text_data_json['eventType']
+        message = text_data_json['message']
+        print(f"[WebSocket GAME] : Received message: {message} in room {self.room_name}")
+
+        command = message.split(" | ")[1]
+        if command == "start":
+            # self.server.checkBall()
+            return 
+
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'game_update',
+                'userId' : userId,
+                'eventType': eventType,
+                'message': message
+            }
+        )
+    
+    async def game_update(self, event):
+        userId = event['userId']
+        eventType = event['eventType']
+        message = event['message']
+
+        print(f"[WebSocket GAME] : Sending message: {message} to room {self.room_name}")
+
+        await self.send(text_data=json.dumps({
+            'userId' : userId,
+            'eventType': eventType,
+            'message': message,
+        }))

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "pong Tournament Game" %}{% endblock %}
+
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'pongTournament/css/pongTournament.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="warp-pongTournament" id="warp-pongT">
+    <p>COUCOU TU EST EN GAME</p>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %}

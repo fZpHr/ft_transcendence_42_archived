@@ -6,11 +6,11 @@
 
 async function updateAllNotif() {
     try {
-        globalNotif = await APIgetGlobalNotif(userId);
-        chatNotif = await getChatNotif(globalNotif);
-        socialNotif = await getSocialNotif(globalNotif);
-        nbrChatNotif = await APIgetNbrChatNotif(userId);
-        nbrSocialNotif = await APIgetNbrSocialNotif(userId);
+        // globalNotif = await APIgetGlobalNotif(userId);
+        // chatNotif = await getChatNotif(globalNotif);
+        // socialNotif = await getSocialNotif(globalNotif);
+        // nbrChatNotif = await APIgetNbrChatNotif(userId);
+        // nbrSocialNotif = await APIgetNbrSocialNotif(userId);
         // console.log('NOtif updated');
     } catch (error) {
         console.error('Failed to updateAllNotif', error);
@@ -71,12 +71,12 @@ async function disableNotifSubMenus() {
 
 async function disableNotifMenus() {
     try {
-        if (globalNotif == 0)
-            return ;
-        let boxNbrNotif = document.getElementById('gl-notif-nbr');
-        boxNbrNotif.innerHTML = globalNotif.length;
-        let boxGlobalNotif = document.getElementById('global-notif');
-        boxGlobalNotif.classList.add('active');
+        // if (globalNotif == 0)
+        //     return ;
+        // let boxNbrNotif = document.getElementById('gl-notif-nbr');
+        // boxNbrNotif.innerHTML = globalNotif.length;
+        // let boxGlobalNotif = document.getElementById('global-notif');
+        // boxGlobalNotif.classList.add('active');
     } catch (error) {
         console.error('Failed to disableNotifMenus', error);
     }

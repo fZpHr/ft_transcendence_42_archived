@@ -2,9 +2,6 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from api.models import Game, Lobby, Player, Game_Tournament, Tournament, GameInvitation
-import time
-import asyncio
-import threading
 from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
@@ -187,10 +184,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
 def get_games(tournament_uuid):
     return list(Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament_uuid))
 
-def get_players(game_id):
-    player = Game_Tournament.objects.get(id=game_id).players.all()
-    print('============== DEBOG 10 ',player)
-    return None
+def get_player(game_id):
+    game_tournament = Game_Tournament.objects.get(id=game_id)
+    players_list = list(game_tournament.players.all())
+    return players_list
+
+
+import json
+from channels.generic.websocket import AsyncWebsocketConsumer
+from asgiref.sync import sync_to_async
+from django.db import DatabaseError
+import logging
+
+logger = logging.getLogger(__name__)
 
 class LobbyConsumer(AsyncWebsocketConsumer):
 
@@ -203,7 +209,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'lobby_{self.room_name}'
 
-        print(f"[WebSocket LOBBY] : Connecting to room {self.room_name}")
+        logger.info(f"[WebSocket LOBBY] : Connecting to room {self.room_name}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -211,168 +217,108 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        print(f"[WebSocket LOBBY] : Connection established for room {self.room_name}")
+        logger.info(f"[WebSocket LOBBY] : Connection established for room {self.room_name}")
 
     async def disconnect(self, close_code):
-        print(f"[WebSocket LOBBY] : Disconnecting from room {self.room_name} with close code {close_code}")
+        logger.info(f"[WebSocket LOBBY] : Disconnecting from room {self.room_name} with close code {close_code}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
     async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        eventType = text_data_json['eventType']
+        try:
+            text_data_json = json.loads(text_data)
+            if 'eventType' in text_data_json:
+                eventType = text_data_json['eventType']
 
-        if eventType == 'lock_lobby':
-            await self.lock_lobby(text_data)
-            return
+                if eventType == 'lock_lobby':
+                    await self.lock_lobby(text_data)
+                    return
 
-        message = text_data_json['message']
-        userId = text_data_json['userId']
-        print(f"[WebSocket LOBBY] : Received message: {message} in room {self.room_name}")
+                message = text_data_json['message']
+                userId = text_data_json['userId']
+                logger.info(f"[WebSocket LOBBY] : Received message: {message} in room {self.room_name}")
 
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'lobby_message',
-                'userId' : userId,
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'lobby_message',
+                        'userId': userId,
+                        'eventType': eventType,
+                        'message': message,
+                    }
+                )
+            else:
+                logger.info(f"[WebSocket LOBBY] : Received message: {text_data_json} in room {self.room_name}")
+        except json.JSONDecodeError as e:
+            logger.error(f"[WebSocket LOBBY] : JSON decode error: {e}")
+        except Exception as e:
+            logger.error(f"[WebSocket LOBBY] : Error in receive: {e}")
+
+    async def lobby_message(self, event):
+        try:
+            userId = event['userId']
+            eventType = event['eventType']
+            message = event['message']
+
+            logger.info(f"[WebSocket LOBBY] : Sending message: {message} to room {self.room_name}")
+
+            await self.send(text_data=json.dumps({
+                'userId': userId,
                 'eventType': eventType,
                 'message': message,
-            }
-        )
-    
-    async def lobby_message(self, event):
-        userId = event['userId']
-        eventType = event['eventType']
-        message = event['message']
-
-        print(f"[WebSocket LOBBY] : Sending message: {message} to room {self.room_name}")
-
-        await self.send(text_data=json.dumps({
-            'userId' : userId,
-            'eventType': eventType,
-            'message': message,
-        }))
+            }))
+        except Exception as e:
+            logger.error(f"[WebSocket LOBBY] : Error in lobby_message: {e}")
 
     async def lock_lobby(self, text_data):
-        text_data_json = json.loads(text_data)
-        print(f"[WebSocket LOBBY] : ======== [ETAPE 1] {text_data_json}")
-        print(f"[WebSocket LOBBY] : ======== [ETAPE 2] {self.room_name}")
+        try:
+            text_data_json = json.loads(text_data)
+            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 1] {text_data_json}")
+            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 2] {self.room_name}")
 
-        # Lock the lobby in the database
-        lobby = await database_sync_to_async(Lobby.objects.get)(UUID=self.room_name)
-        await database_sync_to_async(lobby.lock)()
-        print(f"[WebSocket LOBBY] : ======== [ETAPE 3] {lobby.UUID}")
+            # Lock the lobby in the database
+            lobby = await sync_to_async(Lobby.objects.get)(UUID=self.room_name)
+            await sync_to_async(lobby.lock)()
+            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 3] {lobby.UUID}")
 
-        # Assuming you have logic to create games and determine their URLs
-        tournament = await database_sync_to_async(Tournament.objects.get)(UUID_LOBBY=lobby.UUID)
-        print(f"[WebSocket LOBBY] : ======== [ETAPE 4] {tournament.UUID}")
-        games = await sync_to_async(get_games)(tournament.UUID)
-        print(f"[WebSocket LOBBY] : ======== [ETAPE 5] {games}")
-        # Create a mapping of players to game URLs
-        player_game_urls = {}
-        for game in games:
-            print(f"[WebSocket LOBBY] : ========= [ETAPE 6.0] {game.id}")
-            players = await sync_to_async(get_players)(game.id)
-            print(f"[WebSocket LOBBY] : ========= [ETAPE 6.1] {players}")
-            print(f"---------------------------------")
-            # players = await database_sync_to_async(list)(game.players.all())
-            # for player in players:
-            #     player_game_urls[player.id] = f'/game/{game.id}/'
+            # Assuming you have logic to create games and determine their URLs
+            tournament = await sync_to_async(Tournament.objects.get)(UUID_LOBBY=lobby.UUID)
+            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 4] {tournament.UUID}")
+            games = await sync_to_async(get_games)(tournament.UUID)
+            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 5] {games}")
 
-    #     # Send the redirection message to all players
-    #     for player_id, game_url in player_game_urls.items():
-    #         await self.channel_layer.group_send(
-    #             self.room_group_name,
-    #             {
-    #                 'type': 'redirect_message',
-    #                 'userId': player_id,
-    #                 'eventType': 'redirect',
-    #                 'message': game_url,
-    #             }
-    #         )
+            # Create a mapping of players to game URLs
+            player_game_urls = {}
+            for game in games:
+                logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 6.0] {game.id}")
+                players = await sync_to_async(get_player)(game.id)
+                logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 6.1] {players}")
+                for player in players:
+                    logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 6.2] {player.username}")
+                    player_game_urls[player.id] = f'/game/pong/tournament/game/?gameId={game.id}'
+                    logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 6.3] {player_game_urls[player.id]}")
+                logger.info(f"---------------------------------")
+            logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 7] {player_game_urls}")
 
-    # async def redirect_message(self, event):
-    #     userId = event['userId']
-    #     eventType = event['eventType']
-    #     message = event['message']
-
-    #     if str(self.scope['user'].id) == str(userId):
-    #         print(f"[WebSocket LOBBY] : Redirecting user {userId} to {message}")
-
-    #         await self.send(text_data=json.dumps({
-    #             'userId': userId,
-    #             'eventType': eventType,
-    #             'message': message,
-    #         }))
-
-class GameConsumer(AsyncWebsocketConsumer):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.room_name = None
-        self.room_group_name = None
-        self.reccurs = 0
-        self.update_thread	= threading.Thread(target=asyncio.run, args=(self.checkBall(),))
-        self.update_thread.start()
-    
-    async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f'game_{self.room_name}'
-
-        print(f"[WebSocket GAME] : Connecting to room {self.room_name}")
-
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
-
-        await self.accept()
-        print(f"[WebSocket GAME] : Connection established for room {self.room_name}")
-
-    async def disconnect(self, close_code):
-        print(f"[WebSocket GAME] : Disconnecting from room {self.room_name} with close code {close_code}")
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
-
-    async def checkBall(self):
-        while True:
-            time.sleep(1 / 60)
-
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        userId = text_data_json['userId']
-        eventType = text_data_json['eventType']
-        message = text_data_json['message']
-        print(f"[WebSocket GAME] : Received message: {message} in room {self.room_name}")
-
-        command = message.split(" | ")[1]
-        if command == "start":
-            self.checkBall()
-            return 
-
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'game_update',
-                'userId' : userId,
-                'eventType': eventType,
-                'message': message
-            }
-        )
-    
-    async def game_update(self, event):
-        userId = event['userId']
-        eventType = event['eventType']
-        message = event['message']
-
-        print(f"[WebSocket GAME] : Sending message: {message} to room {self.room_name}")
-
-        await self.send(text_data=json.dumps({
-            'userId' : userId,
-            'eventType': eventType,
-            'message': message,
-        }))
+            # Send the redirection message to all players
+            for player_id, game_url in player_game_urls.items():
+                logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 8] Redirecting user {player_id} to {game_url}")
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'lobby_message',
+                        'userId': player_id,
+                        'eventType': 'redirect',
+                        'message': game_url,
+                    }
+                )
+        except Lobby.DoesNotExist:
+            logger.error(f"[WebSocket LOBBY] : Lobby with UUID {self.room_name} does not exist.")
+        except Tournament.DoesNotExist:
+            logger.error(f"[WebSocket LOBBY] : Tournament with UUID_LOBBY {self.room_name} does not exist.")
+        except DatabaseError as e:
+            logger.error(f"[WebSocket LOBBY] : Database error: {e}")
+        except Exception as e:
+            logger.error(f"[WebSocket LOBBY] : Error in lock_lobby: {e}")

@@ -17,15 +17,9 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.conf import settings
+from api.login_required import login_required, not_login_required
+from django.core.exceptions import ObjectDoesNotExist
 
-# ======================== Decorateur Validator ============================
-
-def login_required(view_func):
-    def _wrapped_view(request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect(settings.LOGIN_URL)
-        return view_func(request, *args, **kwargs)
-    return _wrapped_view
 
 # =============================================================================
 
@@ -146,5 +140,18 @@ def pongTournamentLobby(request):
         return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
     except Lobby.DoesNotExist:
         return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
+
+
+@login_required
+def pongTournamentGame(request):
+    try:
+        # print('coucou mec')
+        print("==============> ", request.GET)
+        gameId = request.GET.get('gameId', 'default_value')
+        print("==============> ", gameId)
+        # playerId = request.user.username
+        # playerId = Player.objects.get(username=playerId).id
+        return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0})
     except Exception as e:
-        return render(request, "pongTournament/pongTournament.html", {"error": "An unexpected error occurred"})
+        print(e)
+        return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})
