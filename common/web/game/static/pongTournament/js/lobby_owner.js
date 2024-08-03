@@ -121,8 +121,6 @@ async function selectThisPlayer(user) {
 async function redirectionManager(tournamentorganized) {
     try {
         console.log('tournamentorganized', tournamentorganized);
-        games = tournamentorganized.games;
-        console.log('debog games', games);
     } catch (error) {
         console.error('Failed to redirectionManager', error);
     }
@@ -311,29 +309,29 @@ function handlersLockLobby() {
             wsLobby.send(JSON.stringify(data));
             deleteLobbyBody();
 
-            // set loader
-            // let loader = document.getElementById('loader-container');
-            // loader.style.display = 'block';
+            let loader = document.getElementById('loader-container');
+            loader.style.display = 'block';
 
-            // // init canva tournament
+            // init canva tournament
             // await innerCanvaTournament();
 
-            // // load data and draw tournament
-            // tournamentorganized = await APIlockLobby(lobbyUUID);
+            // load data and draw tournament
+            tournamentorganized = await APIlockLobby(lobbyUUID);
             // ctx = await initCanvas();
             // await drawTournament(ctx, tournamentorganized, NbrPlayer);
 
             // console.log('tournamentorganized', tournamentorganized.tournament.UUID);
             // tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
-            // loader.style.display = 'none';
-            // // display canva tournament
+            loader.style.display = 'none';
+            // display canva tournament
 
 
             // await displayCanvaTournament();
-            // // spleep 10s
-            // // await sleep(10000);
-            // // redirect to tournament
+            // spleep 10s
+            // await sleep(10000);
+            // redirect to tournament
             // redirectionManager(tournamentINfo);
+            redirectionManager(null);
         });
     } catch (error) {
         console.error('Failed to handlersLockLobby', error);

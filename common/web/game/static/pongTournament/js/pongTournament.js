@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 });
-
+ 
 
 // ========================= INNER newTournament =========================
 

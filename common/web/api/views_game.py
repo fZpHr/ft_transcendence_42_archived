@@ -245,9 +245,11 @@ def lockLobby(request):
         lobby = Lobby.objects.get(UUID=lobbyUUID)
         lobby.locked = True
         lobby.save()
-        # delte all tournamenet game 
-        Tournament.objects.all().delete()
-        Game_Tournament.objects.all().delete()
+        # delte all tournamenet game
+        if Tournament.objects.filter(UUID_LOBBY=lobby).exists():
+            return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
+        if Game_Tournament.objects.filter(UUID_TOURNAMENT__UUID_LOBBY=lobby).exists():
+            return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
 
         print('===========================================')
         Tournament.objects.create(UUID_LOBBY=lobby)

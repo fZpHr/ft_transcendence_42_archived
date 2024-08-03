@@ -2,6 +2,16 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from api.models import Game, Lobby, Player, Game_Tournament, Tournament, GameInvitation
+import time
+import asyncio
+import threading
+from django.core.serializers import serialize
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
+from django.contrib.auth.models import User
+from django.core.serializers.json import DjangoJSONEncoder
+from asgiref.sync import sync_to_async
+
 
 class NotifConsumer(AsyncWebsocketConsumer):
     
@@ -174,6 +184,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'contactId' : contactId
         }))
 
+def get_games(tournament_uuid):
+    return list(Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament_uuid))
+
+def get_players(game_id):
+    player = Game_Tournament.objects.get(id=game_id).players.all()
+    print('============== DEBOG 10 ',player)
+    return None
 
 class LobbyConsumer(AsyncWebsocketConsumer):
 
@@ -240,26 +257,29 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     async def lock_lobby(self, text_data):
         text_data_json = json.loads(text_data)
-        print(f"[WebSocket LOBBY] : Locking lobby {text_data_json}")
-        print(f"[WebSocket LOBBY] : Locking lobby {self.room_name}")
+        print(f"[WebSocket LOBBY] : ======== [ETAPE 1] {text_data_json}")
+        print(f"[WebSocket LOBBY] : ======== [ETAPE 2] {self.room_name}")
 
         # Lock the lobby in the database
         lobby = await database_sync_to_async(Lobby.objects.get)(UUID=self.room_name)
         await database_sync_to_async(lobby.lock)()
-        print(f"[WebSocket LOBBY] : Lobby {lobby.UUID} is now locked")
+        print(f"[WebSocket LOBBY] : ======== [ETAPE 3] {lobby.UUID}")
 
         # Assuming you have logic to create games and determine their URLs
         tournament = await database_sync_to_async(Tournament.objects.get)(UUID_LOBBY=lobby.UUID)
-        print(f"[WebSocket LOBBY] : Redirecting players to tournament {tournament.UUID}")
-        print(f"[WebSocket LOBBY] : Redirecting players to tournament of lobby UUID {tournament.UUID_LOBBY}")        # games = await database_sync_to_async(list)(tournament.games.all())
-
-    #     # Create a mapping of players to game URLs
-        # player_game_urls = {}
-        # for game in games:
-        #     print(f"[WebSocket LOBBY] : Redirecting players to game {game.id}")
+        print(f"[WebSocket LOBBY] : ======== [ETAPE 4] {tournament.UUID}")
+        games = await sync_to_async(get_games)(tournament.UUID)
+        print(f"[WebSocket LOBBY] : ======== [ETAPE 5] {games}")
+        # Create a mapping of players to game URLs
+        player_game_urls = {}
+        for game in games:
+            print(f"[WebSocket LOBBY] : ========= [ETAPE 6.0] {game.id}")
+            players = await sync_to_async(get_players)(game.id)
+            print(f"[WebSocket LOBBY] : ========= [ETAPE 6.1] {players}")
+            print(f"---------------------------------")
             # players = await database_sync_to_async(list)(game.players.all())
-    #         for player in players:
-    #             player_game_urls[player.id] = f'/game/{game.id}/'  # Example URL structure
+            # for player in players:
+            #     player_game_urls[player.id] = f'/game/{game.id}/'
 
     #     # Send the redirection message to all players
     #     for player_id, game_url in player_game_urls.items():
@@ -294,6 +314,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.room_name = None
         self.room_group_name = None
         self.reccurs = 0
+        self.update_thread	= threading.Thread(target=asyncio.run, args=(self.checkBall(),))
+        self.update_thread.start()
     
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -317,11 +339,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
     async def checkBall(self):
-        self.reccurs += 1
-        if self.reccurs == 5:
-            return
-        print(f"cc cmoi le brain de la balle===================================================================== {self.reccurs}")
-        return await self.checkBall()
+        while True:
+            time.sleep(1 / 60)
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -332,8 +351,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         command = message.split(" | ")[1]
         if command == "start":
-            print("je suis juste avant le brain ==================================================================")
-            await self.checkBall()
+            self.checkBall()
             return 
 
         await self.channel_layer.group_send(
