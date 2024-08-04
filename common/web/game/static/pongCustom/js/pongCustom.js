@@ -1,19 +1,19 @@
 import { CustomGame } from './class/CustomGame.js';
 import * as THREE from 'three';
 
-console.log('pongCustom.js');
 let game = new CustomGame();
-document.addEventListener('DOMContentLoaded', function () {
-// function customInit() {
+
+// document.addEventListener('DOMContentLoaded', function () {
+function customInit() {
 	toggleCustomManager();
 	
 	let startBtn = document.getElementById('start');
 	console.log('startBtn', startBtn);
 	startBtn.addEventListener('click', async function () {
 		game.init()
-	});
-// }
-});
+	}, {once: true});
+}
+// });
 
 // ==================== TOGGLE UPDATE CUSTOM ELEMENTS ====================
 
@@ -579,4 +579,4 @@ async function toggleCustomManager() {
 	}
 }
 
-// customInit();
+customInit();

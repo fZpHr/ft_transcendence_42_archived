@@ -3,7 +3,7 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { CustomBall } from './CustomBall.js';
 import { CustomPlateau } from './CustomPlateau.js';
 import { InfiniteGridHelper } from './grid.js';
-import { OrbitControls } from 'orbitcontrols';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
 class CustomGame {
