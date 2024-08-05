@@ -175,6 +175,6 @@ def pongTournamentGame(request):
         # playerId = request.user.username
         # playerId = Player.objects.get(username=playerId).id
         return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0})
-	except Exception as e:
-		print(e)
-		return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})
+    except Exception as e:
+        print(e)
+        return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})
