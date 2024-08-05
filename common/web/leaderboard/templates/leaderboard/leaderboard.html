@@ -1,19 +1,5 @@
-{% extends 'base.html' %}
-
 {% load i18n %}
-{% load static %}
-
-{% block title %}
-{% trans 'Leaderboard' %}
-{% endblock %}
-
-{% block custom_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'leaderboard/css/leaderboard.css' %}">
-{% endblock %}
-
-{% block content %}
-
-<div class="leaderboard-page">
+<div id="leaderboard-content" class="leaderboard-page">
     <main>
         <div class="podium-leaderboard">
             <!-- Deuxième place -->
@@ -98,4 +84,3 @@
         </section>
     </main>
 </div>
-{% endblock %}

@@ -54,7 +54,9 @@ def joinGame(request):
 
 @login_required
 def ranked(request):
-    return render(request, "ranked/ranked.html")
+    if (request.htmx):
+        return render(request, "ranked/ranked.html")
+    return render(request, "ranked/ranked_full.html")
 
 @login_required
 def connect4(request):
@@ -66,17 +68,23 @@ def pong3D(request):
 
 @login_required
 def gameHome(request):
-    return render(request, "home/home.html")
+    if (request.htmx):
+        return render(request, "home/home.html")
+    return render(request, "home/home_full.html")
 
 # view valide
 
 @login_required
 def pongLocal(request):
-    return render(request, "pongLocal/pongLocal.html")
+    if request.htmx:
+        return render(request, "pongLocal/pongLocal.html")
+    return render(request, "pongLocal/pongLocal_full.html")
 
 @login_required
 def pongCustom(request):
-    return render(request, "pongCustom/pongCustom.html")
+    if request.htmx:
+        return render(request, "pongCustom/pongCustom.html")
+    return render(request, "pongCustom/pongCustom_full.html")
 
 @login_required
 def pongPrivGame(request):
@@ -117,7 +125,9 @@ def pongPrivGame(request):
 
 @login_required
 def pongTournament(request):
-    return render(request, "pongTournament/pongTournament.html")
+    if request.htmx:
+        return render(request, "pongTournament/pongTournament.html")
+    return render(request, "pongTournament/pongTournament_full.html")
 
 @login_required
 def pongTournamentLobby(request):
@@ -137,10 +147,23 @@ def pongTournamentLobby(request):
         print("==============> ", players)
         print("==============> ", lobby)
         print("==============> ", playerId)
-        return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
+        if request.htmx:
+            print("htmx")
+            return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
+        print("no htmx")
+        return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
     except Lobby.DoesNotExist:
-        return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
-
+        if request.htmx:
+            print("htmx")
+            return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
+        print("no htmx")
+        return render(request, "pongTournament/pongTournament_full.html", {"error": "Lobby not found"})
+    except Exception as e:
+        if request.htmx:
+            print("htmx")
+            return render(request, "pongTournament/pongTournament.html", {"error": "An unexpected error occurred"})
+        print("no htmx")
+        return render(request, "pongTournament/pongTournament_full.html", {"error": "An unexpected error occurred"})
 
 @login_required
 def pongTournamentGame(request):
@@ -152,6 +175,6 @@ def pongTournamentGame(request):
         # playerId = request.user.username
         # playerId = Player.objects.get(username=playerId).id
         return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0})
-    except Exception as e:
-        print(e)
-        return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})
+	except Exception as e:
+		print(e)
+		return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})

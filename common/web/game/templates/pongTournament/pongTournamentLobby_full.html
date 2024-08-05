@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "lobby" %}{% endblock %}
+
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'pongTournament/css/pongTournamentLobby.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="pongTournamentLobby-content" class="warp-lobby">
+    <!-- <aside class="chat-lobby" style="display: none;">
+        <div class="title-chat-lobby">
+            <h1>chat</h1>
+        </div>
+        <div class="warp-message-lobby">
+            <div class="my-message msg">
+                <span class="username-chat-lobby">username</span>
+                <span class="separator-chat-lobby">:</span>
+                <span class="msg-chat-lobby">message</span>
+            </div>
+            <div class="their-message msg">
+                <span class="username-chat-lobby">username</span>
+                <span class="separator-chat-lobby">:</span>
+                <span class="msg-chat-lobby">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laudantium suscipit placeat optio, in tempora magni dignissimos natus minus sunt et officia ab pariatur quo, alias laborum expedita, iusto voluptatibus consectetur?</span>
+            </div>
+            <div class="my-message msg">
+                <span class="username-chat-lobby">username</span>
+                <span class="separator-chat-lobby">:</span>
+                <span class="msg-chat-lobby">message</span>
+            </div>
+        </div>
+    </aside> -->
+
+    <span class="loader" id="loader-container"></span>
+
+    <section class="lobby-content">
+        <div class="title-lobby">
+            <h1>Lobby</h1>
+        </div> 
+        <div class="lobby-body" id="lobby-body">
+            <div class="slop-content" id="slop-content">
+                {% if lobby.owner.id == user.id %}
+                    <div class="player-slot" id="new-player-slot">
+                        <div id="newplayer-btn" class="newplayer-slot active">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Adding new participate</span>
+                        </div>
+                        <div id="menus-new-player">
+                            <div id="new-player-chose" class="new-option">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Add player</span>
+                            </div>
+                            <div id="new-ia-chose" class="new-option">
+                                <i class="fas fa-robot"></i>
+                                <span>Add IA</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% for player in players %}
+                <div class="player-slot player-present" id="player-{{ player.id }}">
+                    <div class="player-data">
+                        <img src="{{ player.img }}" alt="pp">
+                        <div class="player-status-online online"></div>
+                        <!-- <i class="fa-solid fa-crown"></i> -->
+                        <span>{{ player.username }}</span>
+                    </div>
+                    <div class="player-status">
+                        <div class="pending-player"></div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% for ia_player in ia_players %}
+                <div class="player-slot player-present" id="ia-{{ ia_player.id }}">
+                    <div class="player-data">
+                        <img src="https://www.forbes.fr/wp-content/uploads/2017/01/intelligence-artificielle-872x580.jpg.webp" alt="pp">
+                        <div class="player-status-online online"></div>
+                        <span>IA</span>
+                    </div>
+                    <div class="player-status">
+                        <div class="waiting-player"></div>
+                    </div>
+                </div>
+                {% endfor%}
+            </div>
+        </div>
+        <div class="lobby-footer">
+            <button id="lock-lobby">LOCK</button>
+            <p>Lobby UUID = {{ lobby.UUID|slice:":8" }}</p>
+            <div>
+                <p>Nbr player :</p>
+                <p id="nbr-player">{{ players|length }}</p>
+            </div>
+            <div id="lobby_uuid" data-value="{{ lobby.UUID }}"></div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'pongTournament/js/lobby_socket.js' %}"></script>
+    <script src="{% static 'pongTournament/js/drawTournament.js' %}"></script>
+    {% if lobby.owner.id == user.id %}
+        <script src="{% static 'pongTournament/js/lobby_owner.js' %}"></script>
+    {% else %}
+        <script src="{% static 'pongTournament/js/lobby.js' %}"></script>
+    {% endif %}
+{% endblock %}

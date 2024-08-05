@@ -12,7 +12,7 @@
     padding-top: 10vh;
 }
 
-.chat-lobby {
+#pongTournamentLobby-content .chat-lobby {
     width: 15vw;
     height: 80vh;
     background-color: var(--to-teal-3-rgba);
@@ -23,14 +23,14 @@
     border-radius: 10px;
 }
 
-.title-chat-lobby, .title-lobby {
+#pongTournamentLobby-content .title-chat-lobby, #pongTournamentLobby-content .title-lobby {
     font-size: 20px;
     font-weight: 800;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--text-color);
 }
 
-.warp-message-lobby {
+#pongTournamentLobby-content .warp-message-lobby {
     max-height: 60vh;
     height: fit-content;
     overflow: auto;
@@ -38,7 +38,7 @@
     background-color: blue;
 }
 
-.msg {
+#pongTournamentLobby-content .msg {
     max-width: 80%;
     width: fit-content;
     padding: 5px 10px;
@@ -52,23 +52,23 @@
     text-align: left;
 }
 
-.msg.my-message {
+#pongTournamentLobby-content .msg.my-message {
     justify-content: flex-end;
     flex-direction: row-reverse;
     text-align: right;
     background-color: var(--to-teal-1-rgba);
 }
 
-.msg span.username-chat-lobby {
+#pongTournamentLobby-content .msg span.username-chat-lobby {
     font-weight: 500;
     font-size: 0.6rem;
 }
 
-.msg span.msg-chat-lobby {
+#pongTournamentLobby-content .msg span.msg-chat-lobby {
     font-size: 0.5rem;
 }
 
-.msg span.separator-chat-lobby {
+#pongTournamentLobby-content .msg span.separator-chat-lobby {
     margin-left: 5px;
     margin-right: 5px;
     font-size: 0.5rem;
@@ -76,7 +76,7 @@
 
 /* LOBBY content */
 
-.lobby-content {
+#pongTournamentLobby-content .lobby-content {
     width: 60vw;
     height: 80vh;
     background-color: var(--to-teal-3-rgba);
@@ -91,14 +91,14 @@
     background-color: red;
 } */
 
-.lobby-body {
+#pongTournamentLobby-content .lobby-body {
     /* background-color: green; */
     height: 60%;
     max-height: 60%;
     overflow: auto;
 }
 
-.slop-content {
+#pongTournamentLobby-content .slop-content {
     width: 80%;
     margin: auto;
     display: flex;
@@ -108,7 +108,7 @@
     gap: 10px 10%;
 }
 
-.player-slot {
+#pongTournamentLobby-content .player-slot {
     width: 45%;
     height: 60px;
     background-color: var(--to-teal-5-rgba);
@@ -127,7 +127,7 @@
     transform: scale(1.05);
 } */
 
-.player-slot .player-data {
+#pongTournamentLobby-content .player-slot .player-data {
     width: 70%;
     height: 100%;
     display: flex;
@@ -135,7 +135,7 @@
     align-items: center;    
 }
 
-.player-slot .search-player {
+#pongTournamentLobby-content .player-slot .search-player {
     width: 100%;
     height: 100%;
     display: flex;
@@ -143,7 +143,7 @@
     align-items: center;    
 }
 
-.player-slot .player-status {
+#pongTournamentLobby-content .player-slot .player-status {
     width: 30%;
     height: 100%;
     display: flex;
@@ -152,22 +152,22 @@
     padding: 10px;
 }
 
-.player-status-online {
+#pongTournamentLobby-content .player-status-online {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-.player-status-online.online {
+#pongTournamentLobby-content .player-status-online.online {
     background-color: green;
 }
 
-.player-status-online.offline {
+#pongTournamentLobby-content .player-status-online.offline {
     background-color: red;
 }
 
-.player-slot img {
+#pongTournamentLobby-content .player-slot img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -175,7 +175,7 @@
     margin-right: 10px;
 }
 
-.player-slot .newplayer-slot i, .player-slot .tmp-pp i {
+#pongTournamentLobby-content .player-slot .newplayer-slot i, #pongTournamentLobby-content .player-slot .tmp-pp i {
     min-width: 50px;
     min-height: 50px;
     border-radius: 50%;
@@ -193,7 +193,7 @@
     align-self: center;
 }
 
-.new-option {
+#pongTournamentLobby-content .new-option {
     width: 40%;
     height: 100%;
     display: flex;
@@ -203,17 +203,22 @@
     transition: ease-in-out 0.3s;
 }
 
-.new-option:hover {
+#pongTournamentLobby-content .new-option:hover {
     transform: scale(1.05);
 }
 
-.new-option i {
+#pongTournamentLobby-content .new-option i {
     width: 40px;
     height: 40px;
     margin-right: 5px;
     line-height: 40px;
     font-size: 0.8rem;
 
+}
+
+#pongTournamentLobby-content .lobby-footer {
+    background-color: green;
+    height: 20%;
 }
 
 #menus-new-player {
@@ -234,7 +239,7 @@
 
 /* find player box */
 
-.player-data i.pp {
+#pongTournamentLobby-content .player-data i.pp {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -244,14 +249,14 @@
     font-size: 20px;
 }
 
-.find-player {
+#pongTournamentLobby-content .find-player {
     display: flex;
     justify-content: left;
     align-items: center;
     width: 100%;
 }
 
-.find-player input {
+#pongTournamentLobby-content .find-player input {
     width: 80%;
     padding: 5px;
     border: none;
@@ -259,13 +264,13 @@
     background-color: transparent;
 }
 
-.find-player input::placeholder {
+#pongTournamentLobby-content .find-player input::placeholder {
     color: var(--text-color);
     opacity: 1;
     padding-left: 10px;
 }
 
-.player-found {
+#pongTournamentLobby-content .player-found {
     position: absolute;
     background-color: var(--to-teal-4-rgba);
     border-radius: 0px 0px 10px 10px;
@@ -281,7 +286,7 @@
     flex-direction: column;
 }
 
-.player-found .player {
+#pongTournamentLobby-content .player-found .player {
     padding: 5px;
     border-bottom: white 1px solid;
     display: flex;
@@ -292,7 +297,7 @@
     margin-bottom: 10px;
 }
 
-.player-found .player img {
+#pongTournamentLobby-content .player-found .player img {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -300,7 +305,7 @@
     margin-right: 10px;
 }
 
-.waiting-player {
+#pongTournamentLobby-content .waiting-player {
     width: 40px;
     aspect-ratio: 2;
     --_g: no-repeat radial-gradient(circle closest-side,#ffffff 90%,#c5c2c200);
@@ -319,7 +324,7 @@
     80%{background-position:0%  50%, 50%  50%,100% 100%}
 }
 
-.pending-player {
+#pongTournamentLobby-content .pending-player {
     width: 30px;
     aspect-ratio: 1;
     border-radius: 50%;
@@ -331,7 +336,7 @@
 @keyframes l1 {to{transform: rotate(.5turn)}}
 
 
-.loader {
+#pongTournamentLobby-content .loader {
     color: #ffffff;
     font-size: 45px;
     text-indent: -9999em;

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async function () {
+async function toggleMenu() {
 	
     // Graph and chart canvas and contexts
     var canvasGraph = document.getElementById('progress-chart');
@@ -133,112 +133,114 @@ document.addEventListener('DOMContentLoaded', async function () {
 			fetchAndDrawCircle(endpoints.getWinrate);
 			fetchAndDisplayMatchHistory(userId);
 			addProfileInfo(user);
-});
+};
 
-	function drawBurgerChart(ctx, width, height, percentage, fillColor, backgroundColor) {
+function drawBurgerChart(ctx, width, height, percentage, fillColor, backgroundColor) {
 
-		var radius = Math.min(width, height) / 2;
-		var centerX = width / 2;
-		var centerY = height / 2;
-		var startAngle = 3 * Math.PI / 2;
-		var endAngle = startAngle + (percentage / 100) * (2 * Math.PI);
+	var radius = Math.min(width, height) / 2;
+	var centerX = width / 2;
+	var centerY = height / 2;
+	var startAngle = 3 * Math.PI / 2;
+	var endAngle = startAngle + (percentage / 100) * (2 * Math.PI);
 
-		ctx.fillStyle = backgroundColor;
-		ctx.beginPath();
-		ctx.moveTo(centerX, centerY);
-		ctx.arc(centerX, centerY, radius, startAngle, startAngle + 2 * Math.PI);
-		ctx.closePath();
-		ctx.fill();
+	ctx.fillStyle = backgroundColor;
+	ctx.beginPath();
+	ctx.moveTo(centerX, centerY);
+	ctx.arc(centerX, centerY, radius, startAngle, startAngle + 2 * Math.PI);
+	ctx.closePath();
+	ctx.fill();
 
-		ctx.fillStyle = fillColor;
-		ctx.beginPath();
-		ctx.moveTo(centerX, centerY);
-		ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-		ctx.closePath();
-		ctx.fill();
+	ctx.fillStyle = fillColor;
+	ctx.beginPath();
+	ctx.moveTo(centerX, centerY);
+	ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+	ctx.closePath();
+	ctx.fill();
+}
+
+function drawBurgerChartWinText(ctx, width, height, percentage, fillColor, backgroundColor) {
+	ctx.fillStyle = 'white';
+	ctx.textAlign = 'center';
+	ctx.font = '15px Arial';
+	ctx.fillText('Win ' + percentage + '%', width * 0.70, height * 0.30);
+	ctx.fillText('Lose '+ (100 - percentage) + '%', width * 0.30, height * 0.30);
+}
+
+function drawChart(ctxGraph, width, height, config) {
+	ctxGraph.fillStyle = config.backgroundColor;
+	ctxGraph.fillRect(0, 0, width, height);
+
+	ctxGraph.beginPath();
+	ctxGraph.moveTo(30, 0);
+	ctxGraph.lineTo(30, height);
+	ctxGraph.strokeStyle = config.gridColor;
+	ctxGraph.lineWidth = config.lineWidth;
+	ctxGraph.stroke();
+
+	ctxGraph.beginPath();
+	ctxGraph.moveTo(0, height - 30);
+	ctxGraph.lineTo(width, height - 30);
+	ctxGraph.strokeStyle = config.gridColor;
+	ctxGraph.lineWidth = config.lineWidth;
+	ctxGraph.stroke();
+}
+
+function drawLegendElo(ctxGraph, width, height, config, numLines, maxElo) {
+	ctxGraph.fillStyle = config.gridColor;
+	ctxGraph.textAlign = 'center';
+	ctxGraph.font = '12px Arial';
+
+	var lineHeight = (height - 30) / numLines;
+
+	for (var i = 0; i < numLines; i++) {
+		var elo = Math.round(i * maxElo / (numLines - 1));
+		var y = height - 50 - i * lineHeight;
+		ctxGraph.fillText(elo, 15, y);
+		// console.log("elo : ", i , "{",y,"}");
 	}
+}
 
-	function drawBurgerChartWinText(ctx, width, height, percentage, fillColor, backgroundColor) {
-		ctx.fillStyle = 'white';
-		ctx.textAlign = 'center';
-		ctx.font = '15px Arial';
-		ctx.fillText('Win ' + percentage + '%', width * 0.70, height * 0.30);
-		ctx.fillText('Lose '+ (100 - percentage) + '%', width * 0.30, height * 0.30);
+function drawLegendDate(ctxGraph, width, height, config, numDates, data) {
+	ctxGraph.fillStyle = config.gridColor;
+	ctxGraph.textAlign = 'center';
+	ctxGraph.font = '10px Arial';
+
+	var lineWidth = (width - 30) / numDates;
+
+	for (var i = 0; i < numDates ; i++) {
+		var y = 60 + i * lineWidth;
+		ctxGraph.fillText(data[i][0], y, height - 15);
 	}
+}
 
-    function drawChart(ctxGraph, width, height, config) {
-		ctxGraph.fillStyle = config.backgroundColor;
-		ctxGraph.fillRect(0, 0, width, height);
+function drawData(ctxGraph, width, height, config, data, maxElo) {
+	var numPoints = data.length;
+	var xStep = (width - 30) / numPoints;
+	var lineHeight = (height - 30) / data.length;
+	var maxHeight = lineHeight * data.length - 20;
+	
+	ctxGraph.fillStyle = 'white';
+	// console.log("H : ", height - 50);
+	for (var i = 0; i < numPoints; i++) {
+		var x = 60 + i * xStep;
+		var y = height - 50 - data[i][1] / maxElo * (height - 50);
 
-		ctxGraph.beginPath();
-		ctxGraph.moveTo(30, 0);
-		ctxGraph.lineTo(30, height);
-		ctxGraph.strokeStyle = config.gridColor;
-		ctxGraph.lineWidth = config.lineWidth;
-		ctxGraph.stroke();
-
-		ctxGraph.beginPath();
-		ctxGraph.moveTo(0, height - 30);
-		ctxGraph.lineTo(width, height - 30);
-		ctxGraph.strokeStyle = config.gridColor;
-		ctxGraph.lineWidth = config.lineWidth;
-		ctxGraph.stroke();
-	}
-
-	function drawLegendElo(ctxGraph, width, height, config, numLines, maxElo) {
-		ctxGraph.fillStyle = config.gridColor;
-		ctxGraph.textAlign = 'center';
-		ctxGraph.font = '12px Arial';
-
-		var lineHeight = (height - 30) / numLines;
-
-		for (var i = 0; i < numLines; i++) {
-			var elo = Math.round(i * maxElo / (numLines - 1));
-			var y = height - 50 - i * lineHeight;
-			ctxGraph.fillText(elo, 15, y);
-			// console.log("elo : ", i , "{",y,"}");
-		}
-	}
-
-	function drawLegendDate(ctxGraph, width, height, config, numDates, data) {
-		ctxGraph.fillStyle = config.gridColor;
-		ctxGraph.textAlign = 'center';
-		ctxGraph.font = '10px Arial';
-
-		var lineWidth = (width - 30) / numDates;
-
-		for (var i = 0; i < numDates ; i++) {
-			var y = 60 + i * lineWidth;
-			ctxGraph.fillText(data[i][0], y, height - 15);
-		}
-	}
-
-	function drawData(ctxGraph, width, height, config, data, maxElo) {
-		var numPoints = data.length;
-		var xStep = (width - 30) / numPoints;
-		var lineHeight = (height - 30) / data.length;
-		var maxHeight = lineHeight * data.length - 20;
-		
-		ctxGraph.fillStyle = 'white';
-		// console.log("H : ", height - 50);
-		for (var i = 0; i < numPoints; i++) {
-			var x = 60 + i * xStep;
-			var y = height - 50 - data[i][1] / maxElo * (height - 50);
-
-			// console.log("point : ", i , "{",y,"}");
-			if (i < numPoints - 1) {
-				ctxGraph.beginPath();
-				ctxGraph.strokeStyle = config.pointColor;
-				var xNext = 60 + (i + 1) * xStep;
-				var yNext = height - 50 - data[i + 1][1] / maxElo * (height - 50);
-				ctxGraph.moveTo(x, y);
-				ctxGraph.lineTo(xNext, yNext);
-				ctxGraph.stroke();
-				ctxGraph.fill();
-			}
+		// console.log("point : ", i , "{",y,"}");
+		if (i < numPoints - 1) {
 			ctxGraph.beginPath();
-			ctxGraph.arc(x, y, 3, 0, 2 * Math.PI);
-			ctxGraph.fill();
+			ctxGraph.strokeStyle = config.pointColor;
+			var xNext = 60 + (i + 1) * xStep;
+			var yNext = height - 50 - data[i + 1][1] / maxElo * (height - 50);
+			ctxGraph.moveTo(x, y);
+			ctxGraph.lineTo(xNext, yNext);
+			ctxGraph.stroke();
 			ctxGraph.fill();
 		}
+		ctxGraph.beginPath();
+		ctxGraph.arc(x, y, 3, 0, 2 * Math.PI);
+		ctxGraph.fill();
+		ctxGraph.fill();
 	}
+}
+
+toggleMenu();

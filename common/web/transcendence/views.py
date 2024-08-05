@@ -23,5 +23,6 @@ def custom_404_view(request, exception):
 
 
 def index(request):
-    print('index')
-    return render(request, 'homePage.html', {})
+    if request.htmx:
+        return render(request, 'homePage.html', {})
+    return render(request, 'homePage_full.html', {})

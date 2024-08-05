@@ -1,14 +1,7 @@
-{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Home" %}{%  endblock %}
-
-{% block custom_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-{%  endblock %}
-
-{% block content %}
-<div class="warp-homePage"> 
+{% block title %}{% trans "Home" %}{% endblock %}
+<div id="home-content" class="warp-homePage"> 
     <div class="back-video">
         <video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
     </div>
@@ -245,9 +238,4 @@
         </div>
     </div>  
 </div>
-{%  endblock %}
-
-
-{% block extra_scripts %}
-    <script src="{% static 'js/home.js' %}"></script>
-{%  endblock %}
+<script src="{% static 'js/home.js' %}"></script>

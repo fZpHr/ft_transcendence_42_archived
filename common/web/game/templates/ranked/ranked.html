@@ -1,13 +1,5 @@
-{% extends 'base.html' %}
 {% load i18n %}
-{% load static %}
-{% block title %}{% trans "ranked" %}{% endblock %}
-
-{% block custom_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'ranked/css/ranked.css' %}">
-{% endblock %}
-
-{% block content %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'ranked/css/ranked.css' %}"> -->
 <div class="warp-tournament">
     <div id="game-type">
     </div>
@@ -36,9 +28,5 @@
         <div id="loadingText">Waiting for players.</div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-    <script type="module" src="{% static 'ranked/js/ranked.js' %}"></script>
-    <script src="{% static 'utils/js/api.js' %}"></script>
-{% endblock %}
+<script type="module" src="{% static 'ranked/js/ranked.js' %}"></script>
+<!-- <script src="{% static 'utils/js/api.js' %}"></script> -->

@@ -1,23 +1,18 @@
-{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "pongLocal" %}{% endblock %}
+<!-- {% block title %}{% trans "pongLocal" %}{% endblock %} -->
 
-{% block custom_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'pongLocal/css/pongLocal.css' %}">
-
-{% endblock %}
-
-{% block content %}
+<script>console.log("pongLocal.html loaded");</script>
+<script src="{% static 'pongLocal/js/dist/bundle.js' %}"></script>
 <div class="pongLocal-wrapper" id="container-pong3D">
-	<div class="video-background">
-		<video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
-	</div>
-	<section class="play-box">
-		<div class="play-box__header"> 
+    <div class="video-background">
+        <video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
+    </div>
+    <section class="play-box">
+        <div class="play-box__header"> 
             <span>PONG Local</span>
-		</div>
-		<div class="play-box__content">
+        </div>
+        <div class="play-box__content">
             <div class="left-player player-box">
                 <div class="player-box__username">
                     <input type="text" placeholder="Player_1" id="player1_username" value="Player_1" maxlength="15" minlength="4">
@@ -63,27 +58,5 @@
             <button class="btn-custom-game" id="curstom-game"><i class="fa-solid fa-screwdriver-wrench"></i></button>
             <button class="btn-start-game" id="start-game">{% trans "Start Game" %}</button>
         </div>
-	</section>
+    </section>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
-            "renderpass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/RenderPass.js",
-            "effectcomposer": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/EffectComposer.js",
-            "unrealbloompass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/UnrealBloomPass.js",
-            "fontloader": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/FontLoader.js",
-            "linematerial": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineMaterial.js",
-            "linegeometry": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineGeometry.js",
-            "line2": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/Line2.js",
-            "timer": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/misc/Timer.js",
-            "orbitcontrols": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js",
-            "cameracontrols": "https://cdn.jsdelivr.net/npm/camera-controls@2.8.5/dist/camera-controls.module.min.js"
-        }
-    }
-</script>
-<script type="module" src="{% static 'pongLocal/js/pongLocal.js' %}"></script>
-{% endblock %}

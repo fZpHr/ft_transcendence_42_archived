@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+{% trans 'Leaderboard' %}
+{% endblock %}
+
+{% block content %}
+
+<div id="leaderboard-content" class="leaderboard-page">
+    <main>
+        <div class="podium-leaderboard">
+            <!-- Deuxième place -->
+            {% if leaderboard|length > 1 %}
+            <article class="podium-card second">
+                <div class="podium-body">
+                    <div class="img-podium">
+                        <img src="{% trans media_url %}{% trans leaderboard.1.img %}" alt="{% trans leaderboard.1.user.username %}">
+                    </div>
+                    <div class="data-podium">
+                        <h2>{% trans leaderboard.1.username %}</h2>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.1.elo }}</p>
+                    </div>
+                </div>
+            </article>
+            {% endif %}
+
+            <!-- Première place -->
+            {% if leaderboard|length > 0 %}
+            <article class="podium-card first">
+                <div class="podium-body">
+                    <div class="img-podium">
+                        <img src="{% trans media_url %}{% trans leaderboard.0.img %}" alt="{% trans leaderboard.0.username %}">
+                    </div>
+                    <div class="data-podium">
+                        <h2>{% trans leaderboard.0.username %}</h2>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.0.elo }}</p>
+                    </div>
+                </div>
+            </article>
+            {% endif %}
+
+            <!-- Troisième place -->
+            {% if leaderboard|length > 2 %}
+            <article class="podium-card">
+                <div class="podium-body">
+                    <div class="img-podium">
+                        <img src="{% trans media_url %}{% trans leaderboard.2.img %}" alt="{% trans leaderboard.2.user.username %}">
+                    </div>
+                    <div class="data-podium">
+                        <h2>{% trans leaderboard.2.username %}</h2>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.2.elo }}</p>
+                    </div>
+                </div>
+            </article>
+            {% endif %}
+        </div>
+
+        <section class="leaderboard">
+            <div class="body-leaderboard head">
+                <div class="user">
+                    <div class="rank">
+                        <p>{% trans 'Rank' %}</p>
+                    </div>
+                    <div class="username">
+                        <p>{% trans 'Username' %}</p>
+                    </div>
+                    <div class="elo">
+                        <p>{% trans 'Elo' %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="body-leaderboard">
+                {% for user in leaderboard %}
+                {% if forloop.counter > 3 %}
+                <article class="user">
+                    <div class="rank">
+                        <p>{{ forloop.counter }}</p>
+                    </div>
+                    <div class="username">
+                        <img src="{% trans media_url %}{% trans user.img %}" alt="{{ user.user }}">
+                        <p>{{ user.username }}</p>
+                    </div>
+                    <div class="elo">
+                        <p>{{ user.elo }}</p>
+                    </div>
+                </article>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

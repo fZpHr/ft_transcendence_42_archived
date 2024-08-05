@@ -1,3 +1,10 @@
+@import "./button_style.css";
+@import "./form_style.css";
+@import "./indicator_style.css";
+@import "./input_style.css";
+@import "./other_connexion.css";
+@import "./responsive_styles.css";
+
 .warp-login {
     width: 40vw;
     height: 100%;
@@ -12,34 +19,34 @@
     overflow: auto;
 }
 
-.container-login {
+#login-content .container-login {
     width: 60%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.form-title {
+#login-content .form-title {
     margin: 20px 0px 40px 0px;
 }
 
-.form-title h1 {
+#login-content .form-title h1 {
     font-weight: 800;
     font-size: 60px;
 }
 
-.form-title p {
+#login-content .form-title p {
     margin: 0;
     font-size: 20px;
 }
 
-.chose-form {
+#login-content .chose-form {
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
 }
 
-.chose-form button {
+#login-content .chose-form button {
     background: none;
     border: none;
     color: var(--text-color);
@@ -49,23 +56,23 @@
     transition: color 0.3s, border-bottom 0.3s;
 }
 
-.chose-form button.active {
+#login-content .chose-form button.active {
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
 }
 
-.warp-form {
+#login-content .warp-form {
     width: 70%;
 }
 
-.warp-input {
+#login-content .warp-input {
     position: relative;
     width: 80%;
     margin: 0 auto;
     margin-bottom: 40px;
 }
 
-.warp-input input {
+#login-content .warp-input input {
     width: calc(100% - 40px);
     padding: 10px;
     font-size: 14px;
@@ -77,7 +84,7 @@
     color: var(--text-color);
 }
 
-.input-label {
+#login-content .input-label {
     position: absolute;
     font-family: 'Poppins';
     top: 50%;
@@ -90,8 +97,8 @@
     pointer-events: none;
 }
 
-.warp-input input:focus + .input-label,
-.warp-input input.filled + .input-label {
+#login-content .warp-input input:focus + #login-content .input-label,
+#login-content .warp-input input.filled + #login-content .input-label {
     top: -10px;
     left: 20px;
     font-size: 12px;
@@ -100,7 +107,7 @@
     transition: all 0.3s;
 }
 
-.input-label.filled {
+#login-content .input-label.filled {
     top: -10px;
     left: 20px;
     font-size: 12px;
@@ -108,7 +115,7 @@
     padding: 0 5px;
 }
 
-.toggle-password {
+#login-content .toggle-password {
     position: absolute;
     left: 90%;
     top: 50%;
@@ -118,21 +125,21 @@
     cursor: pointer;
 }
 
-.toggle-password:focus {
+#login-content .toggle-password:focus {
     outline: none;
 }
 
-.toggle-password i {
+#login-content .toggle-password i {
     color: var(--text-color);
     font-size: 18px;
 }
 
-.form-btn {
+#login-content .form-btn {
     width: 100%;
     margin-top: 20px;
 }
 
-.form-btn button {
+#login-content .form-btn button {
     width: 50%;
     padding: 10px;
     border: none;
@@ -144,13 +151,13 @@
     transition: ease-in-out 0.3s;
 }
 
-.form-btn button:hover {
+#login-content .form-btn button:hover {
     background-color: var(--text-color);
     color: var(--to-teal-4-rgba);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.warp-other-connexion {
+#login-content .warp-other-connexion {
     color: var(--to-teal-5-rgba);
     width: 60%;
     text-align: center;
@@ -159,7 +166,7 @@
     margin-top: 50px;
 }
 
-.valid-indicator {
+#login-content .valid-indicator {
     position: absolute;
     left: 0px;
     top: 50%;
@@ -174,24 +181,24 @@
     transition: opacity 0.3s ease-in-out;
 }
 
-.warp-input input:focus + .input-label + .valid-indicator,
-.warp-input input.filled + .input-label + .valid-indicator {
+.warp-input input:focus + #login-content .input-label + #login-content .valid-indicator,
+#login-content .warp-input input.filled + #login-content .input-label + #login-content .valid-indicator {
     opacity: 1;
 }
 
-.valid-indicator i {
+#login-content .valid-indicator i {
     font-size: 16px;
 }
 
-.valid {
+#login-content .valid {
     color: #00cc00;
 }
 
-.invalid {
+#login-content .invalid {
     color: #cc0000;
 }
 
-.other-connexion-line {
+#login-content .other-connexion-line {
     display: block;
     width: 100%;
     height: 1px;
@@ -199,7 +206,7 @@
     margin: 10px 0;
 }
 
-.or-text {
+#login-content .or-text {
     display: inline-block;
     font-size: 16px;
     text-transform: uppercase;
@@ -210,13 +217,13 @@
     background-color: var(--to-teal-2-rgba);
 }
 
-.connexion-btn-container {
+#login-content .connexion-btn-container {
     margin-top: 20px;
     display: flex;
     justify-content: center;
 }
 
-.connexion-btn {
+#login-content .connexion-btn {
     border-radius: 15px;
     background-color: var(--to-teal-2-rgba);
     padding: 5px 30px;
@@ -232,13 +239,13 @@
     transition: ease-in-out 0.3s;
 }
 
-.connexion-btn img {
+#login-content .connexion-btn img {
     width: 30px;
     margin-right: 10px;
     height: auto;
 }
 
-.connexion-btn:hover {
+#login-content .connexion-btn:hover {
     box-shadow: 0 2px 5px rgba(0.1, 0.1, 0.1, 0.9);
     padding: 8px 33px;
 }
@@ -258,12 +265,12 @@
 
 /* Button part */
 
-.form-btn {
+#login-content .form-btn {
     width: 100%;
     margin-top: 20px;
 }
 
-.form-btn button {
+#login-content .form-btn button {
     width: 50%;
     padding: 10px;
     border: none;
@@ -275,19 +282,19 @@
     transition: ease-in-out 0.3s;
 }
 
-.form-btn button:hover {
+#login-content .form-btn button:hover {
     background-color: var(--text-color);
     color: var(--to-teal-4-rgba);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.connexion-btn-container {
+#login-content .connexion-btn-container {
     margin-top: 20px;
     display: flex;
     justify-content: center;
 }
 
-.connexion-btn {
+#login-content .connexion-btn {
     border-radius: 15px;
     background-color: var(--to-teal-2-rgba);
     padding: 5px 30px;
@@ -300,7 +307,7 @@
 
 /* Indicator part */
 
-.valid-indicator {
+#login-content .valid-indicator {
     position: absolute;
     left: 0px;
     top: 50%;
@@ -315,20 +322,20 @@
     transition: opacity 0.3s ease-in-out;
 }
 
-.warp-input input:focus + .input-label + .valid-indicator,
-.warp-input input.filled + .input-label + .valid-indicator {
+#login-content .warp-input input:focus + #login-content .input-label + #login-content .valid-indicator,
+#login-content .warp-input input.filled + #login-content .input-label + #login-content .valid-indicator {
     opacity: 1;
 }
 
-.valid-indicator i {
+#login-content .valid-indicator i {
     font-size: 16px;
 }
 
-.valid {
+#login-content .valid {
     color: #00cc00;
 }
 
-.invalid {
+#login-content .invalid {
     color: #cc0000;
 }
 
@@ -336,7 +343,7 @@
 /* Responsive part */
 
 @media screen and (min-width: 1024px) and (max-width: 1400px) {
-    .warp-login {
+    #login-content .warp-login {
         width: 50vw;
     }
 
@@ -344,17 +351,17 @@
         width: 50vw;
     }
 
-    .container-login {
+    #login-content .container-login {
         width: 100%;
     }
 
-    .warp-form {
+    #login-content .warp-form {
         width: 80%;
     }
 }
 
 @media screen and (max-width: 1023px) {
-    .warp-login {
+    #login-content .warp-login {
         width: 100vw;
     }
 
@@ -362,67 +369,67 @@
         display: none;
     }
 
-    .container-login {
+    #login-content .container-login {
         width: 90%;
     }
 
-    .warp-form {
+    #login-content .warp-form {
         width: 70%;
     }
 
-    .form-title h1 {
+    #login-content .form-title h1 {
         font-size: 40px;
     }
 
-    .chose-form button {
+    #login-content .chose-form button {
         font-size: 16px;
         padding: 8px 16px;
     }
 
-    .form-btn button {
+    #login-content .form-btn button {
         width: 50%;
     }
 }
 
 @media screen and (max-width: 425px) {
 
-    .warp-login {
+    #login-content .warp-login {
         align-items: start;
         padding-top: 100px;
     }
 
-    .container-login {
+    #login-content .container-login {
         width: 100%;
     }
 
-    .warp-form {}
+    #login-content .warp-form {}
 
-    .warp-input {
+    #login-content .warp-input {
         width: 100%;
     }
 
-    .form-title h1 {
+    #login-content .form-title h1 {
         font-size: 30px;
     }
 
-    .chose-form {
+    #login-content .chose-form {
         flex-direction: column;
     }
 
-    .chose-form button {
+    #login-content .chose-form button {
         margin-bottom: 10px;
     }
 
-    .warp-input input {
+    #login-content .warp-input input {
         font-size: 12px;
     }
 
-    .form-btn button {
+    #login-content .form-btn button {
         font-size: 14px;
         padding: 8px;
     }
 
-    .connexion-btn {
+    #login-content .connexion-btn {
         padding: 5px 20px;
         font-size: 16px;
     }

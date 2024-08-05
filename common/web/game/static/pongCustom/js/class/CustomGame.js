@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { Reflector } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/objects/Reflector.js';
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { CustomBall } from './CustomBall.js';
 import { CustomPlateau } from './CustomPlateau.js';
 import { InfiniteGridHelper } from './grid.js';
-import { OrbitControls } from 'orbitcontrols';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
 class CustomGame {
@@ -81,6 +81,7 @@ class CustomGame {
 			this.width = container.clientWidth;
 			this.height = container.clientHeight;
 
+			console.log(THREE.WebGLRenderer)
 			this.renderer = new THREE.WebGLRenderer({ antialias: true });
 			this.renderer.outputEncoding = THREE.sRGBEncoding;
 			this.grid = new InfiniteGridHelper(5, 10);

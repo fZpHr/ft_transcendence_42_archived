@@ -7,7 +7,7 @@
 	align-items: center;
 }
 
-.aside-stats {
+#progress-content .aside-stats {
 	width: 15%;
     background-color: var(--to-teal-2-rgba);
 	height: fit-content;
@@ -21,11 +21,11 @@
     padding: 20px;
 }
 
-.aside-stats:hover, .warp-stats:hover , .aside-profil:hover {
+#progress-content .aside-stats:hover, #progress-content .warp-stats:hover , #progress-content .aside-profil:hover {
     transform: scale(1.02);
 }
 
-.warp-burger-menus {
+#progress-content .warp-burger-menus {
     width: 90%;
     height: fit-content;
     display: flex;
@@ -35,7 +35,7 @@
     padding: 20px;
 }
 
-.warp-display-stats {
+#progress-content .warp-display-stats {
     width: 90%;
     height: fit-content;
     display: flex;
@@ -46,7 +46,7 @@
 }
 
 
-.warp-stats {
+#progress-content .warp-stats {
 	width: 60%;
 	height: 80vh;
     margin-top: 10vh;
@@ -58,7 +58,7 @@
 }
 
 
-.game-graph {
+#progress-content .game-graph {
     border-radius: 10px 10px 0px 0px;
 	background-color: var(--to-teal-2-rgba);
 	width: 100%;
@@ -70,7 +70,7 @@
     pointer-events: none;
 }
 
-.game-history {
+#progress-content .game-history {
     border-radius: 0px 0px 20px 20px;
 	width: 100%;
 	height: 30%;
@@ -107,11 +107,11 @@
     border-bottom: 1px solid var(--text-color);
 }
 
-.underline {
+#progress-content .underline {
     border-bottom: 2px solid var(--text-color);
 }
 
-.match-legend {
+#progress-content .match-legend {
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -122,11 +122,11 @@
     text-align: center;
 }
 
-.match-legend .legend-item {
+#progress-content .match-legend .legend-item {
     flex: 1;
 }
 
-.match-history {
+#progress-content .match-history {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -136,7 +136,7 @@
     overflow-y: scroll;
 }
 
-.match {
+#progress-content .match {
     width: 100%;
     padding: 5px;
     background-color: var(--to-teal-3-rgba);
@@ -148,34 +148,34 @@
     flex-wrap: wrap;
 }
 
-.match>div {
+#progress-content .match>div {
     flex: 1;
     text-align: center;
     padding: 5px;
 }
 
-.player-info,
-.match-info,
-.match-winner,
-.match-elo {
+#progress-content .player-info,
+#progress-content .match-info,
+#progress-content .match-winner,
+#progress-content .match-elo {
     font-size: 1rem;
     color: var(--text-color);
 }
 
-.match-elo {
+#progress-content .match-elo {
     display: flex;
     flex-direction: column;
     gap: 5px;
     font-size: 0.9rem;
 }
 
-.match-elo div {
+#progress-content .match-elo div {
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
 }
 
-.progress-chart {
+#progress-content .progress-chart {
     display: flex;
     align-items: flex-end;
     width: 90%;
@@ -218,16 +218,16 @@
     font-size: 13px;
 }
 
-.warp-burger-menus, .warp-display-stats {
+#progress-content .warp-burger-menus, #progress-content .warp-display-stats {
     margin-bottom: 20px;
 }
 
-.warp-burger-menus h3, .warp-display-stats h3 {
+#progress-content .warp-burger-menus h3, #progress-content .warp-display-stats h3 {
     margin-bottom: 10px;
     font-size: 18px;
 }
 
-.aside-profil {
+#progress-content .aside-profil {
 	width: 15%;
     background-color: var(--to-teal-2-rgba);
 	height: fit-content;
@@ -243,7 +243,7 @@
     transition: ease-in-out 0.3s;
 }
 
-.img-profil {
+#progress-content .img-profil {
     width: 200px;
     height: 200px;
     border-radius: 50%;
@@ -251,18 +251,18 @@
     overflow: hidden;
 }
 
-.img-profil img {
+#progress-content .img-profil img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.warp-info {
+#progress-content .warp-info {
     width: 80%;
 }
 
-.info-items {
+#progress-content .info-items {
     display: flex;
     justify-content: left;
     align-items: center;
@@ -270,13 +270,13 @@
     padding: 5px 10px;
 }
 
-.info-items p {
+#progress-content .info-items p {
     margin: 0;
     font-size: 15px;
     width: 50%;
 }
 
-button {
+#progress-content button {
     margin-top: 20px;
     background-color: var(--to-teal-3-rgba);
     color: var(--text-color);
@@ -288,7 +288,7 @@ button {
     transition: ease-in-out 0.3s;
 }
 
-button:hover {
+#progress-content button:hover {
     color: var(--to-teal-3-rgba);
     background-color: var(--text-color);
 }

@@ -1,4 +1,3 @@
-
 .home-game-wrapper {
     width: 100vw;
     height: 100vh;
@@ -12,7 +11,7 @@
     overflow: hidden;
 }
 
-.left-game {
+#game-home-content .left-game {
     position: absolute;
     top: 8vh;
     left: 0%;
@@ -27,11 +26,11 @@
     overflow: hidden;
 }
 
-.left-game video {
+#game-home-content .left-game video {
     transform: translateX(-10%);
 }
 
-.right-game {
+#game-home-content .right-game {
     position: absolute;
     top: 8vh;
     right: 0%;
@@ -45,7 +44,7 @@
     z-index: 999;
 }
 
-.left-hover {
+#game-home-content .left-hover {
     position: absolute;
     top: 0%;
     left: 0%;
@@ -55,7 +54,7 @@
 }
 
 
-.right-hover {
+#game-home-content .right-hover {
     position: absolute;
     top: 0%;
     right: 0%;
@@ -71,11 +70,11 @@
     z-index: 200;
 }
 
-.left-game:hover, .right-game:hover {
+#game-home-content .left-game:hover, #game-home-content .right-game:hover {
     filter: grayscale(0%);
 }
 
-.circle {
+#game-home-content .circle {
     position: absolute;
     width: 200px;
     height: 200px;
@@ -90,7 +89,7 @@
     z-index: 10000;
 }
 
-.circle-select {
+#game-home-content .circle-select {
     position: absolute;
     width: 200px;
     height: 200px;
@@ -105,7 +104,7 @@
     z-index: 1000;
 }
 
-.circle-select::before {
+#game-home-content .circle-select::before {
     content: '';
     position: absolute;
     top: 0px;
@@ -118,7 +117,7 @@
     transition: transform 0.3s ease;
 }
 
-.circle-select-2 {
+#game-home-content .circle-select-2 {
     position: absolute;
     width: 200px;
     height: 200px;
@@ -133,7 +132,7 @@
     z-index: 1000;
 }
 
-.circle-select-2::before {
+#game-home-content .circle-select-2::before {
     content: '';
     position: absolute;
     top: 0px;
@@ -146,7 +145,7 @@
     transition: transform 0.3s ease;
 }
 
-.left-bounth {
+#game-home-content .left-bounth {
     position: absolute;
     width: 200px;
     height: 200px;
@@ -162,7 +161,7 @@
     rotate: -90deg;
 }
 
-.left-bounth::before {
+#game-home-content .left-bounth::before {
     content: '';
     position: absolute;
     top: 0px;
@@ -176,7 +175,7 @@
     transition: transform 0.3s ease;
 }
 
-.right-bounth {
+#game-home-content .right-bounth {
     position: absolute;
     width: 200px;
     height: 200px;
@@ -192,7 +191,7 @@
     rotate: 90deg;
 }
 
-.right-bounth::before {
+#game-home-content .right-bounth::before {
     content: '';
     position: absolute;
     top: 0px;
@@ -206,7 +205,7 @@
     transition: transform 0.3s ease;
 }
 
-.row-select {
+#game-home-content .row-select {
     width: 88%;
     height: 250px;
     position: absolute;
@@ -218,7 +217,7 @@
     align-items: center;
 }
 
-.row-select-right {
+#game-home-content .row-select-right {
     width: 88%;
     height: 250px;
     position: absolute;
@@ -230,7 +229,7 @@
     align-items: center;
 }
 
-.select-game {
+#game-home-content .select-game {
     width: 250px;
     height: 250px;
     z-index: 3000;
@@ -241,17 +240,17 @@
     opacity: 0;
 }
 
-.select-game.right {
+#game-home-content .select-game#game-home-content .right {
     align-items: start;
 }
 
-.select-game.right {
+#game-home-content .select-game#game-home-content .right {
     right: 0%;
     left: 20%;
     align-items: start;
 }
 
-.select-game .select-option {
+#game-home-content .select-game #game-home-content .select-option {
     background-color: var(--to-teal-5-rgba);
     width: 40px;
     height: 40px;
@@ -265,7 +264,7 @@
     transition: ease-in-out 0.3s;
 }
 
-.select-option:hover {
+#game-home-content .select-option:hover {
     background-color: var(--text-color);
     color: var(--to-teal-4-rgba);
 }
@@ -288,14 +287,14 @@
     }
 }
 
-.left-game video, .right-game video {
+#game-home-content .left-game video, #game-home-content .right-game video {
     display: none;
     width: 120%;
     height: 150%;
     object-fit: cover;
 }
 
-.left-hover:hover{
+#game-home-content .left-hover:hover{
     
     ~ .left-game {
         filter: blur(0);
@@ -306,7 +305,7 @@
         width: 45%;
     }
 
-    ~.left-game img {
+    ~ .left-game img {
         display: none;
     }
     
@@ -333,7 +332,7 @@
     }
 }
 
-.right-hover:hover{
+#game-home-content .right-hover:hover{
     
     ~ .right-game {
         filter: blur(0);
@@ -343,11 +342,7 @@
     ~ .left-game {
         width: 45%;
     }
-
-    /* ~.right-game img {
-        display: none;
-    }
-     */
+    
     ~ .right-game video {
         display: flex;
     }
