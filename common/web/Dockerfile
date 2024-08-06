@@ -11,5 +11,5 @@ RUN pipenv install --deploy --ignore-pipfile
 
 COPY . .
 
-CMD [pipenv,run,python,manage.py,migrate]
+# CMD ["pipenv", "run", "python", "manage.py", "migrate", "&&", "python", "manage.py", "makemigrations"]
 # RUN flake8 --ignore=E501,F401 .
