@@ -27,19 +27,5 @@
         <button style="border: none; background-color: none;" >GO LAG</button>
     </div>
 </div>
-<script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
-            "renderpass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/RenderPass.js",
-            "effectcomposer": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/EffectComposer.js",
-            "unrealbloompass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/UnrealBloomPass.js",
-            "fontloader": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/FontLoader.js",
-            "linematerial": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineMaterial.js",
-            "linegeometry": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineGeometry.js",
-            "orbitcontrols": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js"
-        }
-    }
-</script>
-<script type="module" src="{% static 'pongCustom/js/pongCustom.js' %}"></script>
+<script src="{% static 'pongCustom/js/bundle.js' %}"></script>
 {% endblock %}
