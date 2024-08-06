@@ -21,6 +21,7 @@ django-otp-webauthn = "*"
 werkzeug = "*"
 django-extensions = "*"
 django-htmx = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 

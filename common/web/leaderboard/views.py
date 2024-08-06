@@ -19,9 +19,9 @@ def login_required(view_func):
 @login_required
 def leaderboard(request):
     language_code = request.session.get('django_language', 'en')
-    time.sleep(0.5)
     activate(language_code)
-    allPlayer = Player.objects.all().order_by('elo').values().reverse()
+    allPlayer = Player.objects.all().order_by('elo').values().reverse()[:10]
+    # allPlayer = Player.objects.none() 
     for player in allPlayer:
         if not 'http' in player['img']:
             player['img'] = settings.MEDIA_URL + player['img']

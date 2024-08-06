@@ -17,7 +17,7 @@
 				<a hx-get="{% url 'leaderboard' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'leaderboard' %}">{% trans "Leaderboard" %}</a>
 			</li>
 			<li class="nav-item">
-				<a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" class="nav-link" href="/game/game/">{% trans "Play" %}</a>
+				<a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" class="nav-link">{% trans "Play" %}</a>
 			</li>
 			<li class="nav-item">
 				<a hx-get="{% url 'profil' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'profil' %}">{% trans "Profil" %}</a>
@@ -27,7 +27,7 @@
 			</li>
 			{% else %}
 			<li class="nav-item">
-				<a hx-get="{% url 'login' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="/login/">{% trans "Login" %}</a>
+				<a hx-get="{% url 'login' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
 			</li>
 			{% endif %}
 			<li class="nav-item dropdown">

@@ -14,7 +14,7 @@ services:
       transcendence:
 
   adminer:
-    build: common/adminer/.
+    image: adminer
     container_name: adminer
     depends_on:
       - postgres
