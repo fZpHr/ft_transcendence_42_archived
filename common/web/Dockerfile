@@ -1,15 +1,10 @@
 FROM python:3.11-slim-buster
 
-WORKDIR /usr/src/app
+RUN pip install --upgrade pip
+COPY ./tools/. .
+RUN pip install -r requirements.txt
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+COPY conf/. .
 
-RUN pip install --upgrade pip pipenv flake8
-COPY Pipfile* ./
-RUN pipenv install --deploy --ignore-pipfile
-
-COPY . .
-
-# CMD ["pipenv", "run", "python", "manage.py", "migrate", "&&", "python", "manage.py", "makemigrations"]
-# RUN flake8 --ignore=E501,F401 .
+ENTRYPOINT ["bash"]
+CMD ["script.sh", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
