@@ -1,7 +1,5 @@
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Login" %}{% endblock %}
-
 <div id="login-content" class="warp-login"> 
     <div class="container-login">
         <div class="form-title">
@@ -23,7 +21,6 @@
     <script src="{% static 'login/js/login.js' %}"></script>
 </div>
 {% include 'login/demo_section.html' %}
-{% endblock %}
 
 {% block extra_scripts %}
 <script src="{% static 'login/js/login.js' %}"></script>

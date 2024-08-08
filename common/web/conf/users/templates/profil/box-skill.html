@@ -65,10 +65,10 @@
     <div class="no-match">
         {% if not user_data.visited %}
         <p>{% trans "Vous n'avez aucun match joué pour le moment"%}</p>
-        <a href="/play/" id="btn-play">{% trans "Jouer"%}</a>
+        <a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" id="btn-play">{% trans "Jouer"%}</a>
         {% else %}
         <p>{% trans "N'as encore aucun match joué pour le moment"%}</p>
-        <a href="/play/" id="btn-play">{% trans "Play with"%}</a>
+        <a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" id="btn-play">{% trans "Play with"%}</a>
         {% endif %}
     </div>
     {% endif %}
