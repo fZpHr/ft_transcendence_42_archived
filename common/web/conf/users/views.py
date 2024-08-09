@@ -24,7 +24,13 @@ def login_view(request):
         'no_footer': True,
     }
     if request.htmx:
+        context = {
+            'no_footer': True,
+            'updateNav': True,
+        }
+        print("HTMX")
         return render(request, 'login/login_view.html', context)
+    print("NO HTMX")
     return render(request, 'login/login_view_full.html', context)
 
 @login_required
