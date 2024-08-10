@@ -1,11 +1,13 @@
 {% load i18n %}
-<!-- <link rel="stylesheet" type="text/css" href="{% static 'ranked/css/ranked.css' %}"> -->
-<div class="warp-tournament">
-    <div id="game-type">
-    </div>
+{% load static %}
+<div id="game-chooser">
+    <button id="pong-button">PONG!</button>
+    <button id="connect4-button">Connect4</button>
+</div>
+<div class="warp-new-game" id="wrap">
     <div id="player-btn" class="player-btn">
         <img id="playerAvatar" src="" class="player-avatar">
-        <div id="playerName"></div>
+        <div id="playerName"></div>=
         <div class="additional-info" id="playerInfo">
             <div>Elo: <span id="playerElo"></span></div>
             <div>Ratio: <span id="playerRatio">5/20</span></div>
@@ -24,9 +26,20 @@
             <div>Last Game: <span id="oppsLast">Lose</span></div>
         </div>
     </div>
+    <div id="timer-text">Game starts in </div>
+    <div id="timer"></div>
     <div id="waiting-btn">
         <div id="loadingText">Waiting for players.</div>
     </div>
+    <div id="game-type">
+    </div>
+    <div id="overlay">
+        <div id="textDisconnected">L'opposant s'est déconnecté.</div>
+        <div class="buttons">
+            <button id="reconnect">Rechercher un <br>adversaire</button>
+            <button id="cancel">Menu principal</button>
+        </div>
+    </div>
 </div>
-<script type="module" src="{% static 'ranked/js/ranked.js' %}"></script>
-<!-- <script src="{% static 'utils/js/api.js' %}"></script> -->
+<script type="module" src="{% static 'ranked/js/matchFound.js' %}"></script>
+<script type="module" src="{% static 'ranked/js/socket.js' %}"></script>

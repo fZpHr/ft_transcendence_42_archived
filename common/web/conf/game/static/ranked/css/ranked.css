@@ -1,60 +1,63 @@
-#vs-text {
-    order: 2;
-    justify-content: center;
-    display: none;
-    font-size: 3.5rem;
-}
-
-#opps-btn,
-#player-btn {
-    order: 1;
-    display: none;
-    background-color: none;
-    color: var(--text-color);
-    border: 2px solid var(--text-color);
-    height: 30vh;
-    width: 20vw;
-    background-color: var(--to-teal-1-rgba);
-    border-radius: 5px;
-    border-color: white;
-    padding: 10px 20px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-direction: column;
-}
-
-
-.player-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-right: 10px;
-    }
-    
-    #opps-btn, #player-btn {
-        transition: transform 0.3s ease; /* Smooth transition for transform */
-        }
-        
-        #opps-btn:hover, #player-btn:hover {
-            transform: scale(1.1); /* Increase size by 10% on hover */
-            }
-            
-            .opps-btn-hovered {
-                border-bottom: 2px solid #00b6ad; /* Example line at the bottom */
- }
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
   
- .info-container {
-    display: none;
-    color: white;
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.opps-btn,
+.player-btn,
+#vs-text {
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+}
+
+.opps-btn,
+.player-btn {
+    animation-name: slideIn;
+}
+
+#vs-text {
+    animation-name: fadeIn;
+}
+
+#game-chooser {
+    background: linear-gradient(to bottom right, var(--to-teal-1-rgba), var(--to-teal-4-rgba));
+    user-select: none;
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    text-align: center;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
-    }
-    
-.warp-tournament {
+}
+
+#game-chooser button {
+    width: 200px;
+    height: 200px;
+    margin: 100px;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    background-color: var(--to-teal-5-rgba);
+    border-radius: 15px;
+    border: none;
+    align-items: center;
+    background: linear-gradient(to bottom right, var(--to-teal-3-rgba), var(--to-teal-4-rgba));
+    transition: transform 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+#game-chooser button:hover {
+    transform: scale(1.1);
+    height: 20vh;
+    box-shadow: 0 0px 15px rgba(0, 0, 3, 0.5);
+}
+
+.warp-new-game {
     user-select: none;
     width: 100vw;
     height: 100%;
@@ -62,7 +65,7 @@
     text-align: center;
     background: linear-gradient(to bottom right, var(--to-teal-1-rgba), var(--to-teal-4-rgba));
     color: #fff;
-    display: flex;
+    display: none;
     justify-content: space-evenly;
     align-items: center;
     padding-top: 10vh;
@@ -75,16 +78,16 @@
     font-size: 4rem;
     font-weight: bold;
     color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px var(--to-teal-1-rgba);
 }
 
 .opps-btn,
 .player-btn {
     order: 1;
     display: none;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--to-teal-5-rgb);
     color: #ffffff;
-    border: 2px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     height: 30vh;
     width: 20vw;
     border-radius: 15px;
@@ -96,19 +99,17 @@
     flex-direction: column;
     position: relative;
     transition: transform 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .opps-btn {
-    order: 3;
+order: 3;
 }
 
 .opps-btn:hover,
 .player-btn:hover {
     transform: scale(1.1);
-    height: 40vh; /* Augmente la hauteur au survol */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Augmente l'ombre au survol */
-    background: rgba(255, 255, 255, 0.2); /* Change légèrement la couleur de fond au survol */
+    height: 40vh;
+    box-shadow: 0 0px 15px rgba(0, 0, 3, 0.5);
 }
 
 .player-avatar {
@@ -149,5 +150,85 @@
 #playerElo {
     color: #349ab9;
 }
-additional
-#oppsL
+
+#oppsLast {
+    color: red;
+}
+#playerLast {
+    color: #189100;
+}
+
+#game-type {
+    display: flex;
+    position: absolute;
+    top: 20%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#timer,
+#timer-text {
+    display: none;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#timer {
+    bottom: 5%;
+}
+
+#warp-new-game {
+    position: relative;
+    z-index: 1;
+}
+
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    z-index: 2;
+    flex-direction: column;
+}
+
+#textDisconnected {
+    padding: 200px;
+}
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    align-items: center;
+}
+
+#cancel,
+#reconnect {
+    border: none;
+    background: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    align-items: center;
+}
+
+#cancel:hover,
+#reconnect:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

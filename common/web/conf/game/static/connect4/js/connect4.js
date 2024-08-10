@@ -1,34 +1,41 @@
 const searchParams = new URLSearchParams(window.location.search);
 let gameId = searchParams.get('id'); // This will be '17' for your example URL
 
-let connect4WebSocket = new WebSocket(`wss://${window.location.host}/ws/game/connect4/${gameId}/`);        
+let connect4WebSocket = new WebSocket("ws://" + window.location.host + `/ws/game/connect4/${gameId}` + "/");
 
 connect4WebSocket.onopen = function(e) {
     console.log("WebSocket connection established");
-    connect4WebSocket.send(JSON.stringify({ type: 'join' }));
+    let checkUserIdInterval = setInterval(() => {
+        if (userId && connect4WebSocket.readyState === WebSocket.OPEN) {
+            connect4WebSocket.send(JSON.stringify({ type: 'join', player_id: `${userId}` }));
+          clearInterval(checkUserIdInterval); // Stop checking once the message is sent
+        }
+      }, 100); // Check every 100 milliseconds
 }
 
 connect4WebSocket.onclose = function(e) {
     console.error("WebSocket connection closed unexpectedly");
     setTimeout(() => {
-        connect4WebSocket = new WebSocket("wss://" + window.location.host + "/ws/game/connect4/" + gameId + "/");
+        connect4WebSocket = new WebSocket("ws://" + window.location.host + "/ws/game/connect4/" + gameId + "/");
     }, 1000);
 }
 
-var board = [
-    [null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null]
-];
+var board;
 
 
 var currentPlayer = null;
 var playerTurn = null;
 const playerTurnHeader = document.getElementById("player-turn");
 const curHeader = document.getElementById("current-player");
+let firstMove = true;
+
+function updatePlayerInfo(playerInfo, opponentInfo) {
+    document.getElementById('player-info').style.display = "flex";
+    document.getElementById('player1-img').src = playerInfo.img;
+    document.getElementById('player1-name').innerText = playerInfo.username;
+    document.getElementById('player2-img').src = opponentInfo.img;
+    document.getElementById('player2-name').innerText = opponentInfo.username;
+}
 
 connect4WebSocket.onerror = function(error) {
     console.error("WebSocket error:", error);
@@ -38,42 +45,109 @@ connect4WebSocket.onmessage = function(e) {
     console.log("After receiving")
     let data = JSON.parse(e.data);
     console.log(data)
-    if (data.type == 'error')
-    {
+    if (data.type == 'error') {
         handleError(data.error_message)
         console.log(data.error_message)
         return
     }
-    if (data.type == 'reset')
-    {
-        resetGame()
+    if (data.type == 'reset') {
+        gameFinished(data.winner);
+        board = data.board;
         return
     }
-    if (data.type == 'roleGiving')
-    {
+    if (data.type == 'roleGiving') {
         currentPlayer = data.role;
         playerTurn = data.playerTurn;
         curHeader.innerHTML = "Current player: " + currentPlayer;
         playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
+        board = data.board;
+        const playerInfo = {
+            img: data.playerInfo.img.startsWith("profile_pics") ? `/media/${data.playerInfo.img}` : data.playerInfo.img,
+            username: data.playerInfo.username + " (" + data.role + ")"
+        };
+        
+        if (data.role == "yellow")
+            opponent = "red"
+        else
+            opponent = "yellow"
+        const opponentInfo = {
+            img: data.opponentInfo.img.startsWith("profile_pics") ? `/media/${data.opponentInfo.img}` : data.opponentInfo.img,
+            username: data.opponentInfo.username + " (" + opponent + ")"
+        };
+
+        updatePlayerInfo(playerInfo, opponentInfo);
+        firstMove = false;
+        // check if the board is empty
+        for (var row = 0; row < 6; row++) {
+            for (var col = 0; col < 7; col++) {
+                if (board[row][col] == 'red') {
+                    document.getElementById(row + " " + col).classList.add("red");
+                } else if (board[row][col] == 'yellow') {
+                    document.getElementById(row + " " + col).classList.add("yellow");
+                }
+            }
+        }
         return
     }
     console.log(data);
+    board = data.board;
     let playerPlayed = data.player;
-    board[data.row][data.column] = playerPlayed
     let tile = document.getElementById(data.row + " " + data.column);
     tile.classList.add(playerPlayed);
     playerTurn = data.next_player;
     playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
-    if (checkWin(data.row, data.col)) {
-        connect4WebSocket.send(JSON.stringify({ type:"reset" }))
-        resetGame();
+
+    if (checkWin(data.row, data.column)) {
+        connect4WebSocket.send(JSON.stringify({ type:"reset", player_id: `${userId}`, winner: playerPlayed}));
         return;
     }
+    playerMove(data.column, playerTurn);
 }
 
+let timeoutId;
+let intervalId;
+const turnTimeLimit = 30000;
 
+function startTurnTimer(checkPlayer, remainingTime = turnTimeLimit / 1000) {
 
-function resetGame() {
+    clearTimeout(timeoutId);
+    clearInterval(intervalId);
+
+    let timeLeft = remainingTime;
+    document.getElementById('timer').style.display = "flex";
+    document.getElementById('timer').innerText = timeLeft;
+    intervalId = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerText = timeLeft;
+        localStorage.setItem('remainingTime', timeLeft);
+        localStorage.setItem('currentPlayer', checkPlayer);
+        if (timeLeft <= 0) {
+            clearInterval(intervalId);
+        }
+    }, 1000);
+
+    timeoutId = setTimeout(() => {
+        clearInterval(intervalId);
+        localStorage.removeItem('remainingTime');
+        localStorage.removeItem('currentPlayer');
+        connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: checkPlayer }));
+        declareWinner(checkPlayer);
+    }, timeLeft * 1000);
+}
+
+function playerMove() {
+    checkPlayer = playerTurn == "red" ? "yellow" : "red";
+    startTurnTimer(checkPlayer);
+}
+
+function declareWinner(winner) {
+    console.log(`${winner} wins due to timeout!`);
+
+}
+
+playerMove();
+
+function gameFinished(winner) {
     for (var row = 0; row < 6; row++) {
         for (var col = 0; col < 7; col++) {
             board[row][col] = null;
@@ -81,13 +155,20 @@ function resetGame() {
             document.getElementById(row + " " + col).classList.remove("yellow");
         }
     }
+    // Clear the timer display
+    clearTimeout(timeoutId);
+    clearInterval(intervalId);
+    document.getElementById('timer').innerText = '';
+    localStorage.removeItem('remainingTime');
+    localStorage.removeItem('currentPlayer');
+    alert(`${winner} wins!`);
 }
 
 function checkWin(row, col) {
     var count = 0;
     var i;
 
-    // Check row
+
     for (i = 0; i < 7; i++) {
         if (board[row][i] == currentPlayer) {
             count++;
@@ -102,6 +183,9 @@ function checkWin(row, col) {
     // Check column
     count = 0;
     for (i = 0; i < 6; i++) {
+        console.log("row", i, col)
+        console.log("currentPlayer", currentPlayer)
+        console.log("board", board[i][col])
         if (board[i][col] == currentPlayer) {
             count++;
             if (count == 4) {
@@ -112,7 +196,7 @@ function checkWin(row, col) {
         }
     }
 
-    // Check diagonal
+    // Check diagonal (top-left to bottom-right)
     count = 0;
     for (i = -3; i <= 3; i++) {
         if (row + i >= 0 && row + i < 6 && col + i >= 0 && col + i < 7) {
@@ -127,7 +211,7 @@ function checkWin(row, col) {
         }
     }
 
-    // Check anti-diagonal
+    // Check diagonal (bottom-left to top-right)
     count = 0;
     for (i = -3; i <= 3; i++) {
         if (row + i >= 0 && row + i < 6 && col - i >= 0 && col - i < 7) {
@@ -144,14 +228,13 @@ function checkWin(row, col) {
 
     return false;
 }
-
 function checkAvailableTile(row, col)
 {
-    if (board[row][col] != null)
+    if (board[row][col] != '')
         return false;
-    if (row != 5 && board[row + 1][col] != null)
+    if (row != 5 && board[row + 1][col] != '')
         return true;
-    if (row == 5 && board[row][col] == null)
+    if (row == 5 && board[row][col] == '')
         return true;
     return false;
 }
@@ -178,6 +261,7 @@ function setGame()
                         type:"game.move",
                         player: currentPlayer,
                         row: tileRow, col: tileCol,
+                        player_id: `${userId}`
                     }));
                 }
             })

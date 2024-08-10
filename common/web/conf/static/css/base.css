@@ -9,6 +9,7 @@
 @import "/static/pongTournament/css/pongTournamentLobby.css";
 @import "/static/pongCustom/css/pongCustom.css";
 @import "/static/pongLocal/css/pongLocal.css";
+@import "/static/ranked/css/ranked.css";
 
 * {
     padding: 0;
