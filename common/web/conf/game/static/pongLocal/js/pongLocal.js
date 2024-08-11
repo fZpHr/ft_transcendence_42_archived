@@ -154,6 +154,7 @@ async function toggleStartGame() {
 
 document.addEventListener('htmx:beforeSwap', function(event) {
     /* TODO remove all event listeners here*/
+    console.log("htmx:beforeSwap event listener");
 }, {once: true});
 
 toggleMenu();

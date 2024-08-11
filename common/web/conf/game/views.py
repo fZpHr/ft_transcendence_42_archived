@@ -60,7 +60,9 @@ def ranked(request):
 
 @login_required
 def connect4(request):
-    return render(request, "ranked/connect4.html")
+    if request.htmx:
+        return render(request, "ranked/connect4.html")
+    return render(request, "ranked/connect4_full.html")
 
 @login_required
 def pong3D(request):

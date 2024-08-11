@@ -275,4 +275,12 @@ function handleError(message)
     let msgError = document.createElement("div")
     msgError.innerHTML = message
 }
+
+document.addEventListener('htmx:beforeSwap', function(event) {
+    connect4WebSocket.close();
+    console.log("htmx:beforeSwap event listener matchMakingSocket close");
+    clearInterval(intervalId);
+    clearTimeout(timeoutId);
+});
+
 setGame();

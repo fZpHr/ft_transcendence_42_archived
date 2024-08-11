@@ -12,8 +12,8 @@ function createSocket() {
     updateLoadingText();
   }, 100); // Check every 100 milliseconds
   matchMakingSocket.onclose = function(e) {
-    console.error('Matchmaking socket closed unexpectedly');
-    setTimeout(connectWebSocket, 1000);
+    console.log('Matchmaking socket closed');
+    // setTimeout(connectWebSocket, 1000);
   };
   
   matchMakingSocket.onmessage = function(e) {
@@ -49,7 +49,7 @@ function createSocket() {
   matchMakingSocket.onerror = function(error) {
     console.error('WebSocket error:', error);
   };
-  setInterval(() => {
+  let heartbeat = setInterval(() => {
     if (matchMakingSocket.readyState === WebSocket.OPEN) {
       console.log("send message");
       try {
@@ -59,7 +59,14 @@ function createSocket() {
         console.error("Error while sending heartbeat");
       }
     }
-  }, 3000);  
+  }, 3000);
+
+  document.addEventListener('htmx:beforeSwap', function(event) {
+    /* TODO remove all event listeners here*/
+    matchMakingSocket.close();
+    console.log("htmx:beforeSwap event listener matchMakingSocket close");
+    heartbeat = clearInterval(heartbeat);
+  }, {once: true});
 }
 
 function updateLoadingText() {
@@ -74,7 +81,7 @@ function updateLoadingText() {
   }
 }
 
-setInterval(updateLoadingText, 500);
+let loadingText = setInterval(updateLoadingText, 500);
 
 
 document.getElementById("connect4-button").addEventListener("click", function() {
@@ -114,3 +121,9 @@ document.getElementById("cancel").addEventListener("click", function() {
   let divOpponentDisconnected = document.getElementById("overlay");
   divOpponentDisconnected.style.display = "none";
 });
+
+document.addEventListener('htmx:beforeSwap', function(event) {
+  /* TODO remove all event listeners here*/
+  console.log("htmx:beforeSwap event listener clear interval");
+  clearInterval(loadingText);
+}, {once: true});

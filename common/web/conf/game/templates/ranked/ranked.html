@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load static %}
+<script src="{% static 'ranked/js/bundle.js' %}"></script>
 <div id="game-chooser">
     <button id="pong-button">PONG!</button>
     <button id="connect4-button">Connect4</button>
@@ -41,5 +42,3 @@
         </div>
     </div>
 </div>
-<script type="module" src="{% static 'ranked/js/matchFound.js' %}"></script>
-<script type="module" src="{% static 'ranked/js/socket.js' %}"></script>
