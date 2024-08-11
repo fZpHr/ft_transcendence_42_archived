@@ -1,5 +1,6 @@
 xpack.security.enabled: true
 xpack.encryptedSavedObjects.encryptionKey: ${KIBANA_ENCRYPTION_KEY}
+xpack.reporting.capture.browser.chromium.disableSandbox: false
 monitoring.ui.container.elasticsearch.enabled: true
 elasticsearch.hosts: ["http://elasticsearch:9200"]
 elasticsearch.username: "elastic"

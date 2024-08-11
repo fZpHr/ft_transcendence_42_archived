@@ -1,0 +1,85 @@
+services:
+  portainer:
+    build: common/portainer/.
+    container_name: portainer
+    ports:
+      - "8001:8001"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/portainer:/data
+    environment:
+      TZ: "Europe/Paris"
+    # restart: on-failure
+    networks:
+      transcendence:
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    depends_on:
+      - postgres
+    ports:
+      - "9000:8080"
+    environment:
+      TZ: "Europe/Paris"
+    # restart: on-failure
+    networks:
+      transcendence:
+
+  nginx:
+    build: common/nginx/.
+    container_name: nginx
+    depends_on:
+      - adminer
+      - web
+    environment:
+      TZ: "Europe/Paris"
+    volumes:
+      - ./common/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./data/logs/nginx/:/var/log/nginx/
+      - ./common/nginx/certs:/etc/nginx/certs
+      - ./data/logs/modsecurity:/var/log/modsecurity/
+    ports:
+      - "443:443"
+    env_file:
+      - .env
+    # restart: on-failure
+    networks:
+      - transcendence
+
+  postgres:
+    image: postgres:13
+    hostname: postgres_network
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: "Europe/Paris"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    # restart: on-failure
+    networks:
+      transcendence:
+    
+  web:
+    build: common/web/.
+    container_name: web
+    depends_on:
+      - postgres
+    ports:
+      - "80:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./data/logs/web/:/usr/src/app/logs/
+    # restart: on-failure
+    networks:
+      transcendence:
+
+networks:
+  transcendence:
+    driver: bridge

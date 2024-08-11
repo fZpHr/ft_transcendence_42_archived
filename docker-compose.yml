@@ -141,8 +141,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./data/logs/web/:/usr/src/app/logs
-      - ./common/web:/usr/src/app
+      - ./data/logs/web/:/usr/src/app/logs/
     # restart: on-failure
     networks:
       transcendence:

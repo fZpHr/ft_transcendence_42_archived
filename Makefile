@@ -1,19 +1,31 @@
-all:
+all : dev
+
+dev:
+	@docker compose -f docker-compose-dev.yml up --build
+
+mandatory:
 	@docker compose up --build
+
 down:
+	@-docker compose -f docker-compose-dev.yml down
+	@docker system prune -a -f
+	@docker volume prune -f
+	@docker network prune -f
+
+down-mandatory:
 	@-docker compose -f docker-compose.yml down
 	@docker system prune -a -f
 	@docker volume prune -f
 	@docker network prune -f
-stop:
-	@docker compose -f docker-compose.yml stop
 
 env:
-	@chmod -R 777 ./data/*
-	@touch .env
-	@docker compose -f gen_env/docker-compose-env.yml up --build
-	@docker system prune -a -f
-	@docker network prune -f
+	@if [ ! -f .env ]; then \
+			sudo chmod -R 777 ./data/*; \
+			touch .env; \
+			docker compose -f gen_env/docker-compose-env.yml up --build; \
+			docker system prune -a -f; \
+			docker network prune -f; \
+		fi
 	
 re:
 	@make down
