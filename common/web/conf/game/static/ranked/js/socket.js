@@ -1,12 +1,12 @@
 import { matchFound } from './matchFound.js';
 
-function createSocket() {
-  let matchMakingSocket = new WebSocket('ws://' + window.location.host + '/ws/game/ranked');
+function createSocket(gameType) {
+  let matchMakingSocket = new WebSocket('wss://' + window.location.host + '/ws/game/ranked/' + gameType + '/');
   console.log('Matchmaking socket connected ' + matchMakingSocket.url);
 
   let checkUserIdInterval = setInterval(() => {
     if (userId && matchMakingSocket.readyState === WebSocket.OPEN) {
-      matchMakingSocket.send(JSON.stringify({ action: 'join', player_id: `${userId}` }));
+      matchMakingSocket.send(JSON.stringify({ action: 'join', player_id: `${userId}`, game_type: gameType }));
       clearInterval(checkUserIdInterval); // Stop checking once the message is sent
     }
     updateLoadingText();
@@ -86,7 +86,21 @@ let loadingText = setInterval(updateLoadingText, 500);
 
 document.getElementById("connect4-button").addEventListener("click", function() {
   console.log("connect4-button clicked");
-  createSocket();
+  createSocket("connect4");
+  let divWaiting = document.getElementById("game-chooser");
+  let divConnect4 = document.getElementById("wrap");
+  const playerDiv = document.getElementById("player-btn");
+  const opponentDiv = document.getElementById("opps-btn");
+  const gameDiv = document.getElementById("game-type");
+  const vsDiv = document.getElementById("vs-text");
+  const waitingDiv = document.getElementById("waiting-btn");
+  [playerDiv, opponentDiv, gameDiv, vsDiv, divWaiting].forEach(el => el.style.display = "none");
+  [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
+});
+
+document.getElementById("pong-button").addEventListener("click", function() {
+  console.log("pong-button clicked");
+  createSocket("pong");
   let divWaiting = document.getElementById("game-chooser");
   let divConnect4 = document.getElementById("wrap");
   const playerDiv = document.getElementById("player-btn");

@@ -273,7 +273,7 @@ class RankedGameConsumer(WebsocketConsumer):
             return 
         if (len(RankedGameConsumer.waiting_list) > 0):
             opps = RankedGameConsumer.waiting_list[0]['player']
-            game = models.Game.objects.create(player1 = player, player2 = opps, elo_before_player1 = player.elo, elo_before_player2 = opps.elo, elo_after_player1 = player.elo, elo_after_player2 = opps.elo, winner = opps)
+            game = models.Game.objects.create(player1 = player, player2 = opps, elo_before_player1 = player.elo, elo_before_player2 = opps.elo, elo_after_player1 = player.elo, elo_after_player2 = opps.elo, winner = opps, type = text_data_json.get('game_type'))
             serializePlayer = PlayerSerializer(player).data
             serializePlayer['img'] = player.img.name
             serializeOpps = PlayerSerializer(opps).data

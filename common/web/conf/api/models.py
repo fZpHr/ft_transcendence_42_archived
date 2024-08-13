@@ -37,7 +37,7 @@ class Messages(models.Model):
 
 class Game(models.Model):
     id = models.AutoField(primary_key=True)
-    type = models.CharField(max_length=10, default='connect4')
+    type = models.CharField(max_length=10)
     finish = models.BooleanField(default=False)
     time = models.IntegerField(default=0)
     winner = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='winner', null=True)

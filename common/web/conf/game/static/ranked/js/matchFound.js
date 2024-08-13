@@ -22,7 +22,7 @@ function updateGameInfo(data)
     setTimeout(() => {
       const timerText = document.getElementById("timer-text");
       if (timerText.style.display === "flex") {
-        window.location.href = `https://localhost/game/${data.game_type}?id=${data.game_id}`;
+        window.location.href = `https://` + window.location.host + `/game/${data.game_type}?id=${data.game_id}`;
       }
     }, 5000);
 }

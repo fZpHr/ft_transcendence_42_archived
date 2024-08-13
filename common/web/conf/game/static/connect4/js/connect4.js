@@ -1,7 +1,7 @@
 const searchParams = new URLSearchParams(window.location.search);
 let gameId = searchParams.get('id'); // This will be '17' for your example URL
 
-let connect4WebSocket = new WebSocket("ws://" + window.location.host + `/ws/game/connect4/${gameId}` + "/");
+let connect4WebSocket = new WebSocket("wss://" + window.location.host + `/ws/game/connect4/${gameId}` + "/");
 
 connect4WebSocket.onopen = function(e) {
     console.log("WebSocket connection established");
@@ -16,7 +16,7 @@ connect4WebSocket.onopen = function(e) {
 connect4WebSocket.onclose = function(e) {
     console.error("WebSocket connection closed unexpectedly");
     setTimeout(() => {
-        connect4WebSocket = new WebSocket("ws://" + window.location.host + "/ws/game/connect4/" + gameId + "/");
+        connect4WebSocket = new WebSocket("wss://" + window.location.host + "/ws/game/connect4/" + gameId + "/");
     }, 1000);
 }
 
