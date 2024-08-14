@@ -11,7 +11,7 @@
                 <div class="select-option" id="pong-tournament-btn" tabindex="1" href="/game/pong/tournament" hx-get="/game/pong/tournament" hx-target="#main-content" hx-push-url="true">
                     <i class="fas fa-trophy"></i>
                 </div>
-                <div class="select-option" id="pong-ranked-btn" tabindex="2" href="/game/pong/ranked" hx-get="/game/pong/ranked" hx-target="#main-content" hx-push-url="true">
+                <div class="select-option" id="pong-ranked-btn" tabindex="2" href="/game/ranked" hx-get="/game/ranked" hx-target="#main-content" hx-push-url="true">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="select-option" id="pong-ia-btn" tabindex="3" href="/game/pong/privGame" hx-get="/game/pong/privGame" hx-target="#main-content" hx-push-url="true"> 
@@ -57,4 +57,7 @@
     <div class="left-bounth"><div class="left-bounth-part"></div></div>
     <div class="right-bounth"><div class="right-bounth-part"></div></div> -->
 </div>
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="{% static 'home/js/home.js' %}"></script>
 {% endblock %}
