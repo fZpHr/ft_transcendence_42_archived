@@ -244,6 +244,7 @@ class RankedGameConsumer(WebsocketConsumer):
     waiting_list = []
     playing_list = []
     def connect(self):
+        print("CONNECTED")
         self.accept()
 
     def disconnect(self, close_code):
@@ -261,6 +262,7 @@ class RankedGameConsumer(WebsocketConsumer):
                 break
 
     def receive(self, text_data):
+        print("RECEIVED")
         text_data_json = json.loads(text_data)
         message = text_data_json['action']
         if text_data_json['action'] == 'heartbeat':
@@ -296,6 +298,5 @@ class RankedGameConsumer(WebsocketConsumer):
             self.playing_list.append({"socket": self.waiting_list[0]['socket'], "player": opps, "opponent": player, "socket_opps": self, "game": game})
             self.playing_list.append({"socket": self, "player": player, "opponent": opps, "socket_opps": RankedGameConsumer.waiting_list[0]['socket'], "game": game})
             RankedGameConsumer.waiting_list.pop(0)
-            print("TESTTT")
             return
         return

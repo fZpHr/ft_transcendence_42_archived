@@ -1,5 +1,7 @@
-import { startGame, movePaddles } from '/static/pong3D/js/remote/pong3D.js';
-import { Game } from '/static/pong3D/js/remote/class/games.js'
+// import { startGame, movePaddles } from '/static/pong3D/js/remote/pong3D.js';
+// import { Game } from '/static/pong3D/js/remote/class/games.js'
+import { startGame, movePaddles } from '../../pong3D/js/remote/pong3D.js';
+import { Game } from '../../pong3D/js/remote/class/games.js';
 
 let p1Ready = false;
 let p2Ready = false;
