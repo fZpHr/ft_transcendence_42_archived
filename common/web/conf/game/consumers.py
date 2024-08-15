@@ -18,7 +18,9 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         if self.room_name not in Connect4GameConsumer.games:
             Connect4GameConsumer.games[self.room_name] = {
                 'board': [['' for i in range(7)] for j in range(6)],
-                'playerTurn': 'red'
+                'playerTurn': 'red',
+                'gameFinished': False,
+                'winner': None
             }
         if room_counts.get(self.room_group_name, 0) >= 2:
             return
@@ -62,6 +64,14 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                 role = random.choice(roles)
                 player_colors[player_id] = role
             else:
+                if Connect4GameConsumer.games[self.room_name]['gameFinished'] == True:
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'reset',
+                            'winner': Connect4GameConsumer.games[self.room_name]['winner']
+                        }
+                    )
                 role = player_colors[player_id]
 
             print("Role: ", role)
@@ -86,7 +96,7 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
-                    'type': "reset",
+                    'type': 'reset',
                     'winner': text_data_json['winner']
                 }
             )
@@ -163,14 +173,10 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
 
     async def reset(self, event):
         print("RESET called")
-        Connect4GameConsumer.games[self.room_name] = {
-            'board': [['' for i in range(7)] for j in range(6)],
-            'playerTurn': 'red'
-        }
-        # send to all
+        Connect4GameConsumer.games[self.room_name]['gameFinished'] = True
+        Connect4GameConsumer.games[self.room_name]['winner'] = event['winner']
         await self.send(text_data=json.dumps({
-            'type': 'reset',
-            'board': Connect4GameConsumer.games[self.room_name]['board'],
+            'type': "reset",
             'winner': event['winner']
         }))
 

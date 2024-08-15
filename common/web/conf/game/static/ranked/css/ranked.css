@@ -206,9 +206,12 @@ order: 3;
     flex-direction: column;
 }
 
-#textDisconnected {
+#winnerText,
+#eloText {
     padding: 200px;
 }
+
+
 .buttons {
     display: flex;
     justify-content: center;

@@ -52,7 +52,6 @@ connect4WebSocket.onmessage = function(e) {
     }
     if (data.type == 'reset') {
         gameFinished(data.winner);
-        board = data.board;
         return
     }
     if (data.type == 'roleGiving') {
@@ -148,20 +147,31 @@ function declareWinner(winner) {
 playerMove();
 
 function gameFinished(winner) {
-    for (var row = 0; row < 6; row++) {
-        for (var col = 0; col < 7; col++) {
-            board[row][col] = null;
-            document.getElementById(row + " " + col).classList.remove("red");
-            document.getElementById(row + " " + col).classList.remove("yellow");
-        }
-    }
-    // Clear the timer display
     clearTimeout(timeoutId);
     clearInterval(intervalId);
     document.getElementById('timer').innerText = '';
     localStorage.removeItem('remainingTime');
     localStorage.removeItem('currentPlayer');
-    alert(`${winner} wins!`);
+    console.log(`${winner} wins!`);
+    let divOpponentDisconnected = document.getElementById("overlay");
+    // const timer = document.getElementById("timer");
+    // const timerText = document.getElementById("timer-text");
+    const reconnect = document.getElementById("reconnect");
+    const cancel = document.getElementById("cancel");
+    const winnerText = document.getElementById("winnerText");
+    if (winner == currentPlayer)
+    {
+        winnerText.innerHTML = "You win!";
+        winnerText.style.color = "green";
+    }
+    else
+    {
+        winnerText.innerHTML = "You lose";
+        winnerText.style.color = "red";
+    }
+    // [timer, timerText].forEach(el => el.style.display = "none");
+    [reconnect, cancel, divOpponentDisconnected, winnerText].forEach(el => el.style.display = "flex");
+    matchMakingSocket.close(1000);
 }
 
 function checkWin(row, col) {
