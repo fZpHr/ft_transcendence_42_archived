@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from api.models import Game, Lobby, Player, Game_Tournament, Tournament, GameInvitation
+import logging
+
+logger = logging.getLogger('print')
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -41,7 +44,7 @@ def joinGame(request):
             if game.players.filter(id=currentPlayer.id).exists() :
                 # get the id of the game
                 game_id = game.id
-                print(f"Player is in game with id: {game_id}")
+                logger.info("Player is in game with id: {game_id}")
         
 
         return HttpResponse("Player is not in any of the tournament's games. Proceed with joining logic.")
@@ -71,7 +74,10 @@ def pong3D(request):
 @login_required
 def gameHome(request):
     if (request.htmx):
+        logger.info("htmx")
+        logger.info(request)
         return render(request, "home/home.html")
+    logger.info("no htmx")
     return render(request, "home/home_full.html")
 
 # view valide
@@ -122,7 +128,7 @@ def pongPrivGame(request):
             'p2Id' : privGame.player2.id,
         }
     }
-    print(data)
+    logger.info(data)
     return render(request, "pongPrivGame/pongPrivGame.html", data)
 
 @login_required
@@ -145,38 +151,38 @@ def pongTournamentLobby(request):
                 if img_path.startswith('profile_pics/'):
                     player.img = '/media/' + img_path
         ia_players = lobby.ai_players.all()
-        print("==============> ", ia_players)
-        print("==============> ", players)
-        print("==============> ", lobby)
-        print("==============> ", playerId)
+        logger.info("==============> ", ia_players)
+        logger.info("==============> ", players)
+        logger.info("==============> ", lobby)
+        logger.info("==============> ", playerId)
         if request.htmx:
-            print("htmx")
+            logger.info("htmx")
             return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
-        print("no htmx")
+        logger.info("no htmx")
         return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
     except Lobby.DoesNotExist:
         if request.htmx:
-            print("htmx")
+            logger.info("htmx")
             return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
-        print("no htmx")
+        logger.info("no htmx")
         return render(request, "pongTournament/pongTournament_full.html", {"error": "Lobby not found"})
     except Exception as e:
         if request.htmx:
-            print("htmx")
+            logger.info("htmx")
             return render(request, "pongTournament/pongTournament.html", {"error": "An unexpected error occurred"})
-        print("no htmx")
+        logger.info("no htmx")
         return render(request, "pongTournament/pongTournament_full.html", {"error": "An unexpected error occurred"})
 
 @login_required
 def pongTournamentGame(request):
     try:
-        # print('coucou mec')
-        print("==============> ", request.GET)
+        # logger.info('coucou mec')
+        logger.info("==============> ", request.GET)
         gameId = request.GET.get('gameId', 'default_value')
-        print("==============> ", gameId)
+        logger.info("==============> ", gameId)
         # playerId = request.user.username
         # playerId = Player.objects.get(username=playerId).id
         return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0})
     except Exception as e:
-        print(e)
+        logger.info(e)
         return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})

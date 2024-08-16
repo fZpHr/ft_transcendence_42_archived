@@ -1,4 +1,4 @@
-from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 import json
 import random
@@ -246,14 +246,14 @@ class GameConsumer(AsyncWebsocketConsumer):
             'message': message,
         }))
 
-class RankedGameConsumer(WebsocketConsumer):
+class RankedGameConsumer(AsyncWebsocketConsumer):
     waiting_list = []
     playing_list = []
-    def connect(self):
+    async def connect(self):
         print("CONNECTED")
-        self.accept()
+        await self.accept()
 
-    def disconnect(self, close_code):
+    async def disconnect(self, close_code):
         for i in range(len(RankedGameConsumer.waiting_list)):
             if RankedGameConsumer.waiting_list[i]['socket'] == self:
                 RankedGameConsumer.waiting_list.pop(i)
@@ -261,40 +261,53 @@ class RankedGameConsumer(WebsocketConsumer):
         pass
         for i in range(len(RankedGameConsumer.playing_list)):
             if RankedGameConsumer.playing_list[i]['socket'] == self:
-                RankedGameConsumer.playing_list[i]['socket_opps'].send(text_data=json.dumps({
+                await RankedGameConsumer.playing_list[i]['socket_opps'].send(text_data=json.dumps({
                     'type': 'opponentDisconnected'
                 }))
                 RankedGameConsumer.playing_list.pop(i)
                 break
 
-    def receive(self, text_data):
+    async def receive(self, text_data):
         print("RECEIVED")
         text_data_json = json.loads(text_data)
         message = text_data_json['action']
         if text_data_json['action'] == 'heartbeat':
             return
-        if (len(RankedGameConsumer.waiting_list) > 0 and self in RankedGameConsumer.waiting_list):
+        player = await sync_to_async(models.Player.objects.get)(id = text_data_json.get('player_id'))
+        if (len(RankedGameConsumer.waiting_list) > 0 and 
+            any(entry["player"] == player for entry in RankedGameConsumer.waiting_list)):
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyInQueue',
+                'message': 'You are already in queue'
+            }))
             return
-        player = models.Player.objects.get(id = text_data_json.get('player_id'))
         if (len(RankedGameConsumer.waiting_list) == 0):
             self.waiting_list.append({"socket": self, "player":player})
             return 
         if (len(RankedGameConsumer.waiting_list) > 0):
             opps = RankedGameConsumer.waiting_list[0]['player']
-            game = models.Game.objects.create(player1 = player, player2 = opps, elo_before_player1 = player.elo, elo_before_player2 = opps.elo, elo_after_player1 = player.elo, elo_after_player2 = opps.elo, winner = opps, type = text_data_json.get('game_type'))
+            game = await sync_to_async(models.Game.objects.create)(
+                player1 = player, 
+                player2 = opps, 
+                elo_before_player1 = player.elo,
+                elo_before_player2 = opps.elo,
+                elo_after_player1 = player.elo,
+                elo_after_player2 = opps.elo,
+                winner = opps,
+                type = text_data_json.get('game_type'))
             serializePlayer = PlayerSerializer(player).data
             serializePlayer['img'] = player.img.name
             serializeOpps = PlayerSerializer(opps).data
             serializeOpps['img'] = opps.img.name
             print(serializePlayer['img'])
-            RankedGameConsumer.waiting_list[0]['socket'].send(text_data=json.dumps({
+            await RankedGameConsumer.waiting_list[0]['socket'].send(text_data=json.dumps({
                 'type': 'matchFound',
                 'player': serializeOpps,
                 'opponent': serializePlayer,
                 'game_id': game.id,
                 'game_type': game.type
             }))
-            self.send(text_data=json.dumps({
+            await self.send(text_data=json.dumps({
                 'type': 'matchFound',
                 'player': serializePlayer,
                 'opponent': serializeOpps,

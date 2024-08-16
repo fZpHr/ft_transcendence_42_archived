@@ -235,6 +235,12 @@ LOGGING = {
             'filename': '/usr/src/app/logs/debug.log',
             'formatter': 'simple',
         },
+        'print_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/usr/src/app/logs/print.log',
+            'formatter': 'simple',
+        },
     },
     'loggers': {
         'django': {
@@ -247,5 +253,10 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'print': {
+            'handlers': ['print_file'],
+            'level': 'INFO',
+            'propagate': True,
+        }
     },
 }

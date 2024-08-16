@@ -16,7 +16,9 @@ function createSocket(gameType) {
     // setTimeout(connectWebSocket, 1000);
   };
   
-  matchMakingSocket.onmessage = function(e) {
+  let loadingText = setInterval(updateLoadingText, 500);
+
+  matchMakingSocket.onmessage = async function(e) {
     console.log("on message trigger")
     const data = JSON.parse(e.data);
     console.log(data)
@@ -29,6 +31,12 @@ function createSocket(gameType) {
         break;
       case 'matchmakingStatus':
         console.log('Matchmaking status:', data.status);
+        break;
+      case 'alreadyInQueue':
+        console.log('Already in queue');
+        clearInterval(loadingText);
+        let divWaiting = document.getElementById("loadingText");
+        countdownText(divWaiting.textContent);
         break;
       case 'opponentDisconnected':
         console.log('Opponent disconnected');
@@ -46,9 +54,32 @@ function createSocket(gameType) {
     }
   };
 
+  function countdownText()
+  {
+    let count = 5;
+    let countdown = setInterval(() => {
+      if (count === 0) {
+        clearInterval(countdown);
+        htmx.ajax('GET', '/game/game/', {
+          target: '#main-content', // The target element to update
+          swap: 'innerHTML', // How to swap the content
+        }).then(response => {
+          console.log("Redirected to game page", response);
+          history.pushState({}, '', '/game/game/');
+        })
+      }
+      else {
+        let divWaiting = document.getElementById("loadingText");
+        divWaiting.textContent = "Already in queue. Redirecting in " + count + " seconds";
+        count--;
+      }
+    }, 1000);
+  }
+
   matchMakingSocket.onerror = function(error) {
     console.error('WebSocket error:', error);
   };
+
   let heartbeat = setInterval(() => {
     if (matchMakingSocket.readyState === WebSocket.OPEN) {
       console.log("send message");
@@ -98,8 +129,6 @@ function createSocket(gameType) {
   
   }
   
-  let loadingText = setInterval(updateLoadingText, 500);
-
   document.addEventListener('htmx:beforeSwap', function(event) {
     /* TODO remove all event listeners here*/
     matchMakingSocket.close();
@@ -108,7 +137,4 @@ function createSocket(gameType) {
     clearInterval(loadingText);
   }, {once: true});
 }
-
-
-
 export { createSocket };
