@@ -194,7 +194,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         while True:
             await asyncio.sleep(1)
             if Connect4GameConsumer.games[self.room_name]['timer'] > 0:
-                Connect4GameConsumer.games[self.room_name]['timer'] -= 1
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
@@ -202,6 +201,7 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                         'timer': Connect4GameConsumer.games[self.room_name]['timer']
                     }
                 )
+                Connect4GameConsumer.games[self.room_name]['timer'] -= 1
             else:
                 # Handle timeout (e.g., end the game, declare a winner, etc.)
                 if Connect4GameConsumer.games[self.room_name]['playerTurn'] == 'red':
