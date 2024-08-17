@@ -51,7 +51,7 @@ connect4WebSocket.onmessage = function(e) {
         return
     }
     if (data.type == 'reset') {
-        // gameFinished(data.winner);
+        gameFinished(data.winner);
         declareWinner(data.winner);
         return
     }
@@ -68,9 +68,7 @@ connect4WebSocket.onmessage = function(e) {
             console.log("You win due to timeout");
         else
             console.log("You lose due to timeout");
-        declareWinner(data.winner);
-        gameFinished(data.winner);
-        // connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: checkPlayer }));
+        connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: data.winner }));
         return
     }
     if (data.type == 'roleGiving') {
@@ -121,36 +119,7 @@ connect4WebSocket.onmessage = function(e) {
     playerMove(data.column, playerTurn);
 }
 
-let timeoutId;
-let intervalId;
 const turnTimeLimit = 30000;
-
-// function startTurnTimer(checkPlayer, remainingTime = turnTimeLimit / 1000) {
-
-//     clearTimeout(timeoutId);
-//     clearInterval(intervalId);
-
-//     let timeLeft = remainingTime;
-//     document.getElementById('timer').style.display = "flex";
-//     document.getElementById('timer').innerText = timeLeft;
-//     intervalId = setInterval(() => {
-//         timeLeft--;
-//         document.getElementById('timer').innerText = timeLeft;
-//         localStorage.setItem('remainingTime', timeLeft);
-//         localStorage.setItem('currentPlayer', checkPlayer);
-//         if (timeLeft <= 0) {
-//             clearInterval(intervalId);
-//         }
-//     }, 1000);
-
-//     timeoutId = setTimeout(() => {
-//         clearInterval(intervalId);
-//         localStorage.removeItem('remainingTime');
-//         localStorage.removeItem('currentPlayer');
-//         connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: checkPlayer }));
-//         declareWinner(checkPlayer);
-//     }, timeLeft * 1000);
-// }
 
 function playerMove() {
     checkPlayer = playerTurn == "red" ? "yellow" : "red";
@@ -164,8 +133,6 @@ function declareWinner(winner) {
 playerMove();
 
 function gameFinished(winner) {
-    clearTimeout(timeoutId);
-    clearInterval(intervalId);
     document.getElementById('timer').innerText = '';
     localStorage.removeItem('remainingTime');
     localStorage.removeItem('currentPlayer');
@@ -304,8 +271,6 @@ function handleError(message)
 document.addEventListener('htmx:beforeSwap', function(event) {
     connect4WebSocket.close();
     console.log("htmx:beforeSwap event listener matchMakingSocket close");
-    clearInterval(intervalId);
-    clearTimeout(timeoutId);
 });
 
 setGame();
