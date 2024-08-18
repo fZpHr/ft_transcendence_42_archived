@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from .models import Player, Friends, Messages, User, Game
+from .models import Player, Friends, Messages, Game
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import FormParser
 from .serializer import LoginEncoder
@@ -24,6 +24,7 @@ from datetime import datetime
 from django.utils import timezone
 import tempfile
 from api.login_required import login_required
+from django.contrib.auth.hashers import make_password
 
 @api_view(['POST'])
 def login_player(request):
@@ -90,9 +91,9 @@ def register_42(request, format=None):
     body = {
         "grant_type": "authorization_code",
         "client_id": "u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193",
-        "client_secret": "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",
+        "client_secret": "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",
         "code": request.query_params["code"],
-        "redirect_uri": "https://10.11.249.54/api/register-42/"
+        "redirect_uri": "https://10.12.249.33/api/register-42/"
     }
     headers = {"Content-Type": "application/json; charset=utf-8"}
     r = requests.post('https://api.intra.42.fr/oauth/token', headers=headers, json=body)
@@ -101,7 +102,7 @@ def register_42(request, format=None):
     r = requests.get('https://api.intra.42.fr/v2/me', headers=headers, json=body)
     mail = r.json()["email"]
     username = r.json()["login"]
-    password = User.objects.make_random_password(25, token)
+    password = make_password(token)
     try:
         u = User.objects.get(email=mail)
         u.set_password(password)
