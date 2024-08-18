@@ -1,4 +1,4 @@
-from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 import json
 import random
@@ -6,6 +6,11 @@ from game.Class.engine import Engine
 from asgiref.sync import sync_to_async
 from api import models
 from api.serializer import PlayerSerializer
+import asyncio
+import logging
+import hashlib
+
+logger = logging.getLogger('print')
 
 room_counts = {}
 player_colors = {}  # Global dictionary to store player colors
@@ -18,19 +23,27 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         if self.room_name not in Connect4GameConsumer.games:
             Connect4GameConsumer.games[self.room_name] = {
                 'board': [['' for i in range(7)] for j in range(6)],
-                'playerTurn': 'red'
+                'playerTurn': 'red',
+                'gameFinished': False,
+                'winner': None,
+                'timer': 30,
+                'timer_started': False,
+                'game_id': self.room_name,
+                'player1': None,
+                'player2': None
             }
         if room_counts.get(self.room_group_name, 0) >= 2:
+            #maybe send a message to the user that the room is full
             return
 
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
-        print("CONNECT called" + self.room_group_name)
+        logger.info("CONNECT called")
+        logger.info(self.room_group_name)
 
         room_counts[self.room_group_name] = room_counts.get(self.room_group_name, 0) + 1
-
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -42,51 +55,56 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print("RECEIVE called")
-        print(text_data_json)
-        print(self.room_group_name)
-        print(self.room_name)
+        logger.info("RECEIVE called")
+        logger.info(text_data_json)
+        logger.info(self.room_group_name)
+        logger.info(self.room_name)
         player_id = text_data_json.get('player_id')
         player = await sync_to_async(models.Player.objects.get)(id=player_id)
-        print("player : ", player)
+        logger.info("player : ")
+        logger.info(str(player))
 
         if room_counts.get(self.room_group_name, 0) != 2:
-            print("Error: You are alone!")
+            logger.info("Error: You are alone!")
             return
 
         if text_data_json['type'] == "join":
-            print("JOIN called")
+            logger.info("JOIN called")
             roles = ['yellow', 'red']
 
-            if player_id not in player_colors:
+            if Connect4GameConsumer.games[self.room_name]['player1'] is None:
                 role = random.choice(roles)
                 player_colors[player_id] = role
-            else:
-                role = player_colors[player_id]
-
-            print("Role: ", role)
-            for i in player_colors:
-                if i != player.id:
-                    opponent = await sync_to_async(models.Player.objects.get)(id=i)
-                    break
-            await self.channel_layer.group_send(
+                Connect4GameConsumer.games[self.room_name]['player1'] = {'player_id': player_id,'color': role}
+                return
+            elif Connect4GameConsumer.games[self.room_name]['player2'] is None:
+                color = Connect4GameConsumer.games[self.room_name]['player1']['color']
+                role = 'yellow' if color == 'red' else 'red'
+                opponent = await sync_to_async(models.Player.objects.get)(id=Connect4GameConsumer.games[self.room_name]['player1']['player_id'])
+                Connect4GameConsumer.games[self.room_name]['player2'] = {'player_id': player_id, 'color': role}
+                await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'role.giver',
                     'role': role,
                     'playerTurn': Connect4GameConsumer.games[self.room_name]['playerTurn'],
                     'sender': self.channel_name,
+                    'board': Connect4GameConsumer.games[self.room_name]['board'],
                     'playerInfo': player,
                     'opponentInfo': opponent
                 }
             )
+            if not Connect4GameConsumer.games[self.room_name]['timer_started']:
+                asyncio.create_task(self.start_timer()) # Start timer for the game
+                Connect4GameConsumer.games[self.room_name]['timer_started'] = True
             return
+        
         if text_data_json['type'] == "reset":
-            print("RESET called")
+            logger.info("RESET called")
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
-                    'type': "reset",
+                    'type': 'reset',
                     'winner': text_data_json['winner']
                 }
             )
@@ -100,7 +118,9 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
             if i != player.id:
                 opponent = await sync_to_async(models.Player.objects.get)(id=i)
                 break
-        print("OPPONENT: ", opponent)
+        logger.info("OPPONENT: ")
+        logger.info(opponent)
+        Connect4GameConsumer.games[self.room_name]['timer'] = 30
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -115,7 +135,7 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         )
 
     async def game_move(self, event):
-        print("GAME MOVE called")
+        logger.info("GAME MOVE called")
         column = event['column']
         row = event['row']
         serializePlayer = PlayerSerializer(event['playerInfo']).data
@@ -134,43 +154,114 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
             'next_player': event['nextTurn'],
             'board': Connect4GameConsumer.games[self.room_name]['board']
         }))
+        
 
     async def role_giver(self, event):
-        print("Role giver called")
-        serializePlayer = PlayerSerializer(event['playerInfo']).data
+        logger.info("Role giver called")
         serializeOpps = PlayerSerializer(event['opponentInfo']).data
+        serializePlayer = PlayerSerializer(event['playerInfo']).data
+        logger.info("OPPS:")
+        logger.info(str(serializeOpps))
+        logger.info("PLAYER:")
+        logger.info(str(serializePlayer))
+        logger.info(event['sender'])
         serializePlayer['img'] = event['playerInfo'].img.name
         serializeOpps['img'] = event['opponentInfo'].img.name
-        if self.channel_name != event['sender']:
+        if self.channel_name == event['sender']:
+            logger.info("player role giving")
             await self.send(text_data=json.dumps({
                 'type': "roleGiving",
                 'role': event['role'],
                 'playerTurn': event['playerTurn'],
-                'board': Connect4GameConsumer.games[self.room_name]['board'],
+                'board': event['board'],
                 'playerInfo': serializePlayer,
                 'opponentInfo': serializeOpps
             }))
         else:
+            logger.info("opponent role giving")
             opposite_role = 'red' if event['role'] == 'yellow' else 'yellow'
             await self.send(text_data=json.dumps({
                 'type': "roleGiving",
                 'role': opposite_role,
                 'playerTurn': event['playerTurn'],
-                'board': Connect4GameConsumer.games[self.room_name]['board'],
+                'board': event['board'],
                 'playerInfo': serializeOpps,
                 'opponentInfo': serializePlayer
             }))
 
     async def reset(self, event):
-        print("RESET called")
-        Connect4GameConsumer.games[self.room_name] = {
-            'board': [['' for i in range(7)] for j in range(6)],
-            'playerTurn': 'red'
-        }
-        # send to all
+        logger.info("RESET called")
+        Connect4GameConsumer.games[self.room_name]['gameFinished'] = True
+        Connect4GameConsumer.games[self.room_name]['winner'] = event['winner']
+        gameid = Connect4GameConsumer.games[self.room_name]['game_id'] # self.room_name
+        player1 = Connect4GameConsumer.games[self.room_name]['player1']
+        player2 = Connect4GameConsumer.games[self.room_name]['player2']
+        game = await sync_to_async(models.Game.objects.get)(UUID=gameid)
+        player1DB = await sync_to_async(models.Player.objects.get)(id=player1['player_id'])
+        player2DB = await sync_to_async(models.Player.objects.get)(id=player2['player_id'])
+        if event['winner'] == player1['color']:
+            player1DB.elo += 10 * (1 - ((2 ** (player1DB.elo/ 100)) / ((2 ** (player1DB.elo/ 100)) + (2 ** (player2DB.elo/ 100)))))
+            player2DB.elo += 10 * (0 - ((2 ** (player2DB.elo/ 100)) / ((2 ** (player2DB.elo/ 100)) + (2 ** (player1DB.elo/ 100)))))
+            game.winner = player1DB
+        elif event['winner'] == player2['color']:
+            player1DB.elo += 10 * (0 - ((2 ** (player1DB.elo/ 100)) / ((2 ** (player1DB.elo/ 100)) + (2 ** (player2DB.elo/ 100)))))
+            player2DB.elo += 10 * (1 - ((2 ** (player2DB.elo/ 100)) / ((2 ** (player2DB.elo/ 100)) + (2 ** (player1DB.elo/ 100)))))
+            game.winner = player2DB
+        game.elo_after_player1 = player1DB.elo
+        game.elo_after_player2 = player2DB.elo
+        game.finish = True
+        logger.info("WINNER: ")
+        logger.info(event['winner'])
+        if event['winner'] == player1['color']:
+            logger.info(player1DB.elo)
+        elif event['winner'] == player2['color']:
+            logger.info(player2DB.elo)
+        await sync_to_async(game.save)()
+        await sync_to_async(player1DB.save)()
+        await sync_to_async(player2DB.save)()
         await self.send(text_data=json.dumps({
-            'type': 'reset',
-            'board': Connect4GameConsumer.games[self.room_name]['board'],
+            'type': "reset",
+            'winner': event['winner']
+        }))
+
+    async def start_timer(self):
+        while True:
+            if Connect4GameConsumer.games[self.room_name]['gameFinished']:
+                break
+            await asyncio.sleep(1)
+            if Connect4GameConsumer.games[self.room_name]['timer'] > 0:
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'timer_update',
+                        'timer': Connect4GameConsumer.games[self.room_name]['timer']
+                    }
+                )
+                Connect4GameConsumer.games[self.room_name]['timer'] -= 1
+            else:
+                # Handle timeout (e.g., end the game, declare a winner, etc.)
+                if Connect4GameConsumer.games[self.room_name]['playerTurn'] == 'red':
+                    winner = 'yellow'
+                else:
+                    winner = 'red'
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'timeout',
+                        'winner': winner
+                    }
+                )
+                break
+
+    async def timer_update(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'timer_update',
+            'timer': event['timer']
+        }))
+
+    async def timeout(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'timeout',
             'winner': event['winner']
         }))
 
@@ -189,7 +280,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'game_{self.room_name}'
 
-        print(f"[WebSocket GAME] : Connecting to room {self.room_name}")
+        logger.info(f"[WebSocket GAME] : Connecting to room {self.room_name}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -197,10 +288,10 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        print(f"[WebSocket GAME] : Connection established for room {self.room_name}")
+        logger.info(f"[WebSocket GAME] : Connection established for room {self.room_name}")
 
     async def disconnect(self, close_code):
-        print(f"[WebSocket GAME] : Disconnecting from room {self.room_name} with close code {close_code}")
+        logger.info(f"[WebSocket GAME] : Disconnecting from room {self.room_name} with close code {close_code}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -211,7 +302,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         userId = text_data_json['userId']
         eventType = text_data_json['eventType']
         message = text_data_json['message']
-        print(f"[WebSocket GAME] : Received message: {message} in room {self.room_name}")
+        logger.info(f"[WebSocket GAME] : Received message: {message} in room {self.room_name}")
 
         command = message.split(" | ")[1]
         if command == "start":
@@ -237,7 +328,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         eventType = event['eventType']
         message = event['message']
 
-        print(f"[WebSocket GAME] : Sending message: {message} to room {self.room_name}")
+        logger.info(f"[WebSocket GAME] : Sending message: {message} to room {self.room_name}")
 
         await self.send(text_data=json.dumps({
             'userId' : userId,
@@ -245,18 +336,22 @@ class GameConsumer(AsyncWebsocketConsumer):
             'message': message,
         }))
 
+<<<<<<< HEAD
     # async def sendtoPlayers(message, eventType):
     #     for data in self.players:
             
 
 class RankedGameConsumer(WebsocketConsumer):
+=======
+class RankedGameConsumer(AsyncWebsocketConsumer):
+>>>>>>> 39e3b15cc4a64bdf8ef9168ae09b19e0dc7b6481
     waiting_list = []
     playing_list = []
-    def connect(self):
-        print("CONNECTED")
-        self.accept()
+    async def connect(self):
+        logger.info("CONNECTED")
+        await self.accept()
 
-    def disconnect(self, close_code):
+    async def disconnect(self, close_code):
         for i in range(len(RankedGameConsumer.waiting_list)):
             if RankedGameConsumer.waiting_list[i]['socket'] == self:
                 RankedGameConsumer.waiting_list.pop(i)
@@ -264,44 +359,59 @@ class RankedGameConsumer(WebsocketConsumer):
         pass
         for i in range(len(RankedGameConsumer.playing_list)):
             if RankedGameConsumer.playing_list[i]['socket'] == self:
-                RankedGameConsumer.playing_list[i]['socket_opps'].send(text_data=json.dumps({
+                await RankedGameConsumer.playing_list[i]['socket_opps'].send(text_data=json.dumps({
                     'type': 'opponentDisconnected'
                 }))
                 RankedGameConsumer.playing_list.pop(i)
                 break
 
-    def receive(self, text_data):
-        print("RECEIVED")
+    async def receive(self, text_data):
+        logger.info("RECEIVED")
         text_data_json = json.loads(text_data)
         message = text_data_json['action']
         if text_data_json['action'] == 'heartbeat':
             return
-        if (len(RankedGameConsumer.waiting_list) > 0 and self in RankedGameConsumer.waiting_list):
+        player = await sync_to_async(models.Player.objects.get)(id = text_data_json.get('player_id'))
+        if (len(RankedGameConsumer.waiting_list) > 0 and 
+            any(entry["player"] == player for entry in RankedGameConsumer.waiting_list)):
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyInQueue',
+                'message': 'You are already in queue'
+            }))
             return
-        player = models.Player.objects.get(id = text_data_json.get('player_id'))
         if (len(RankedGameConsumer.waiting_list) == 0):
             self.waiting_list.append({"socket": self, "player":player})
             return 
         if (len(RankedGameConsumer.waiting_list) > 0):
             opps = RankedGameConsumer.waiting_list[0]['player']
-            game = models.Game.objects.create(player1 = player, player2 = opps, elo_before_player1 = player.elo, elo_before_player2 = opps.elo, elo_after_player1 = player.elo, elo_after_player2 = opps.elo, winner = opps, type = text_data_json.get('game_type'))
+            game = await sync_to_async(models.Game.objects.create)(
+                player1 = player, 
+                player2 = opps, 
+                elo_before_player1 = player.elo,
+                elo_before_player2 = opps.elo,
+                elo_after_player1 = player.elo,
+                elo_after_player2 = opps.elo,
+                winner = opps,
+                type = text_data_json.get('game_type'))
+            # game_id_hash = hashlib.sha256(str(game.id).encode()).hexdigest()
+            # game.id = game_id_hash
             serializePlayer = PlayerSerializer(player).data
             serializePlayer['img'] = player.img.name
             serializeOpps = PlayerSerializer(opps).data
             serializeOpps['img'] = opps.img.name
-            print(serializePlayer['img'])
-            RankedGameConsumer.waiting_list[0]['socket'].send(text_data=json.dumps({
+            logger.info(serializePlayer['img'])
+            await RankedGameConsumer.waiting_list[0]['socket'].send(text_data=json.dumps({
                 'type': 'matchFound',
                 'player': serializeOpps,
                 'opponent': serializePlayer,
-                'game_id': game.id,
+                'game_id': str(game.UUID),
                 'game_type': game.type
             }))
-            self.send(text_data=json.dumps({
+            await self.send(text_data=json.dumps({
                 'type': 'matchFound',
                 'player': serializePlayer,
                 'opponent': serializeOpps,
-                'game_id': game.id,
+                'game_id': str(game.UUID),
                 'game_type': game.type
             }))
             self.playing_list.append({"socket": self.waiting_list[0]['socket'], "player": opps, "opponent": player, "socket_opps": self, "game": game})

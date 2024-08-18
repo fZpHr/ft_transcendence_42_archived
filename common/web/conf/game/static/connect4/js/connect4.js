@@ -52,7 +52,23 @@ connect4WebSocket.onmessage = function(e) {
     }
     if (data.type == 'reset') {
         gameFinished(data.winner);
-        board = data.board;
+        declareWinner(data.winner);
+        return
+    }
+    if (data.type == 'timer_update')
+    {
+        let divTimer = document.getElementById("timer");
+        divTimer.style.display = "flex";
+        divTimer.innerHTML = data.timer;
+        return
+    }
+    if (data.type == 'timeout')
+    {
+        if (data.winner == currentPlayer)
+            console.log("You win due to timeout");
+        else
+            console.log("You lose due to timeout");
+        connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: data.winner }));
         return
     }
     if (data.type == 'roleGiving') {
@@ -89,7 +105,6 @@ connect4WebSocket.onmessage = function(e) {
         }
         return
     }
-    console.log(data);
     board = data.board;
     let playerPlayed = data.player;
     let tile = document.getElementById(data.row + " " + data.column);
@@ -104,64 +119,41 @@ connect4WebSocket.onmessage = function(e) {
     playerMove(data.column, playerTurn);
 }
 
-let timeoutId;
-let intervalId;
 const turnTimeLimit = 30000;
-
-function startTurnTimer(checkPlayer, remainingTime = turnTimeLimit / 1000) {
-
-    clearTimeout(timeoutId);
-    clearInterval(intervalId);
-
-    let timeLeft = remainingTime;
-    document.getElementById('timer').style.display = "flex";
-    document.getElementById('timer').innerText = timeLeft;
-    intervalId = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timer').innerText = timeLeft;
-        localStorage.setItem('remainingTime', timeLeft);
-        localStorage.setItem('currentPlayer', checkPlayer);
-        if (timeLeft <= 0) {
-            clearInterval(intervalId);
-        }
-    }, 1000);
-
-    timeoutId = setTimeout(() => {
-        clearInterval(intervalId);
-        localStorage.removeItem('remainingTime');
-        localStorage.removeItem('currentPlayer');
-        connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: checkPlayer }));
-        declareWinner(checkPlayer);
-    }, timeLeft * 1000);
-}
 
 function playerMove() {
     checkPlayer = playerTurn == "red" ? "yellow" : "red";
-    startTurnTimer(checkPlayer);
+    // startTurnTimer(checkPlayer);
 }
 
 function declareWinner(winner) {
     console.log(`${winner} wins due to timeout!`);
-
 }
 
 playerMove();
 
 function gameFinished(winner) {
-    for (var row = 0; row < 6; row++) {
-        for (var col = 0; col < 7; col++) {
-            board[row][col] = null;
-            document.getElementById(row + " " + col).classList.remove("red");
-            document.getElementById(row + " " + col).classList.remove("yellow");
-        }
-    }
-    // Clear the timer display
-    clearTimeout(timeoutId);
-    clearInterval(intervalId);
     document.getElementById('timer').innerText = '';
     localStorage.removeItem('remainingTime');
     localStorage.removeItem('currentPlayer');
-    alert(`${winner} wins!`);
+    console.log(`${winner} wins!`);
+    let divOpponentDisconnected = document.getElementById("overlay");
+    document.getElementById("timer").style.display = "none";
+    // const timerText = document.getElementById("timer-text");
+    const reconnect = document.getElementById("reconnect");
+    const cancel = document.getElementById("cancel");
+    const winnerText = document.getElementById("winnerText");
+    if (winner == currentPlayer)
+    {
+        winnerText.innerHTML = "You win!";
+        winnerText.style.color = "green";
+    }
+    else
+    {
+        winnerText.innerHTML = "You lose";
+        winnerText.style.color = "red";
+    }
+    [reconnect, cancel, divOpponentDisconnected, winnerText].forEach(el => el.style.display = "flex");
 }
 
 function checkWin(row, col) {
@@ -279,8 +271,6 @@ function handleError(message)
 document.addEventListener('htmx:beforeSwap', function(event) {
     connect4WebSocket.close();
     console.log("htmx:beforeSwap event listener matchMakingSocket close");
-    clearInterval(intervalId);
-    clearTimeout(timeoutId);
 });
 
 setGame();
