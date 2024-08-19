@@ -338,15 +338,11 @@ class GameConsumer(AsyncWebsocketConsumer):
             'message': message,
         }))
 
-<<<<<<< HEAD
     # async def sendtoPlayers(message, eventType):
     #     for data in self.players:
             
 
-class RankedGameConsumer(WebsocketConsumer):
-=======
 class RankedGameConsumer(AsyncWebsocketConsumer):
->>>>>>> 39e3b15cc4a64bdf8ef9168ae09b19e0dc7b6481
     waiting_list = []
     playing_list = []
     async def connect(self):
