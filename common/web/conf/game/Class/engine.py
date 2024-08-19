@@ -11,7 +11,13 @@ class Engine:
         self.thread.start()
         self.ball = Ball()
     
+    async def moveBall(self):
+            self.ball.pos.x += 0.5
+            
+    
+	
     async def checkBall(self):
         while True:
             # print("==================================================")
             time.sleep(1 / 60)
+            

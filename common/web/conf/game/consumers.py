@@ -276,6 +276,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.room_name = None
         self.room_group_name = None
         self.server = server
+        self.players = []
 
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -307,7 +308,11 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         command = message.split(" | ")[1]
         if command == "start":
-            # self.server.checkBall()
+            self.server.checkBall()
+            return 
+        
+        if command == "ready":
+            self.players.append(userId)
             return 
 
         await self.channel_layer.group_send(
@@ -333,7 +338,15 @@ class GameConsumer(AsyncWebsocketConsumer):
             'message': message,
         }))
 
+<<<<<<< HEAD
+    # async def sendtoPlayers(message, eventType):
+    #     for data in self.players:
+            
+
+class RankedGameConsumer(WebsocketConsumer):
+=======
 class RankedGameConsumer(AsyncWebsocketConsumer):
+>>>>>>> 39e3b15cc4a64bdf8ef9168ae09b19e0dc7b6481
     waiting_list = []
     playing_list = []
     async def connect(self):
