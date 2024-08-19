@@ -9,6 +9,7 @@ from api.serializer import PlayerSerializer
 import asyncio
 import logging
 import hashlib
+from django.utils import timezone
 
 logger = logging.getLogger('print')
 
@@ -200,22 +201,23 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         player1DB = await sync_to_async(models.Player.objects.get)(id=player1['player_id'])
         player2DB = await sync_to_async(models.Player.objects.get)(id=player2['player_id'])
         if event['winner'] == player1['color']:
-            player1DB.elo += 10 * (1 - ((2 ** (player1DB.elo/ 100)) / ((2 ** (player1DB.elo/ 100)) + (2 ** (player2DB.elo/ 100)))))
-            player2DB.elo += 10 * (0 - ((2 ** (player2DB.elo/ 100)) / ((2 ** (player2DB.elo/ 100)) + (2 ** (player1DB.elo/ 100)))))
+            player1DB.eloConnect4 += 10 * (1 - ((2 ** (player1DB.eloConnect4/ 100)) / ((2 ** (player1DB.eloConnect4/ 100)) + (2 ** (player2DB.eloConnect4/ 100)))))
+            player2DB.eloConnect4 += 10 * (0 - ((2 ** (player2DB.eloConnect4/ 100)) / ((2 ** (player2DB.eloConnect4/ 100)) + (2 ** (player1DB.eloConnect4/ 100)))))
             game.winner = player1DB
         elif event['winner'] == player2['color']:
-            player1DB.elo += 10 * (0 - ((2 ** (player1DB.elo/ 100)) / ((2 ** (player1DB.elo/ 100)) + (2 ** (player2DB.elo/ 100)))))
-            player2DB.elo += 10 * (1 - ((2 ** (player2DB.elo/ 100)) / ((2 ** (player2DB.elo/ 100)) + (2 ** (player1DB.elo/ 100)))))
+            player1DB.eloConnect4 += 10 * (0 - ((2 ** (player1DB.eloConnect4/ 100)) / ((2 ** (player1DB.eloConnect4/ 100)) + (2 ** (player2DB.eloConnect4/ 100)))))
+            player2DB.eloConnect4 += 10 * (1 - ((2 ** (player2DB.eloConnect4/ 100)) / ((2 ** (player2DB.eloConnect4/ 100)) + (2 ** (player1DB.eloConnect4/ 100)))))
             game.winner = player2DB
-        game.elo_after_player1 = player1DB.elo
-        game.elo_after_player2 = player2DB.elo
+        game.elo_after_player1 = player1DB.eloConnect4
+        game.elo_after_player2 = player2DB.eloConnect4
         game.finish = True
+        game.time = (int)((timezone.now() - game.created_at).total_seconds())
         logger.info("WINNER: ")
         logger.info(event['winner'])
         if event['winner'] == player1['color']:
-            logger.info(player1DB.elo)
+            logger.info(player1DB.eloConnect4)
         elif event['winner'] == player2['color']:
-            logger.info(player2DB.elo)
+            logger.info(player2DB.eloConnect4)
         await sync_to_async(game.save)()
         await sync_to_async(player1DB.save)()
         await sync_to_async(player2DB.save)()
@@ -368,18 +370,29 @@ class RankedGameConsumer(AsyncWebsocketConsumer):
             return
         if (len(RankedGameConsumer.waiting_list) == 0):
             self.waiting_list.append({"socket": self, "player":player})
-            return 
+            return
         if (len(RankedGameConsumer.waiting_list) > 0):
             opps = RankedGameConsumer.waiting_list[0]['player']
-            game = await sync_to_async(models.Game.objects.create)(
-                player1 = player, 
-                player2 = opps, 
-                elo_before_player1 = player.elo,
-                elo_before_player2 = opps.elo,
-                elo_after_player1 = player.elo,
-                elo_after_player2 = opps.elo,
-                winner = opps,
-                type = text_data_json.get('game_type'))
+            if (text_data_json.get('game_type') == 'pong'):
+                game = await sync_to_async(models.Game.objects.create)(
+                    player1 = player, 
+                    player2 = opps, 
+                    elo_before_player1 = player.eloPong,
+                    elo_before_player2 = opps.eloPong,
+                    elo_after_player1 = player.eloPong,
+                    elo_after_player2 = opps.eloPong,
+                    winner = opps,
+                    type = text_data_json.get('game_type'))
+            else:
+                game = await sync_to_async(models.Game.objects.create)(
+                    player1 = player, 
+                    player2 = opps, 
+                    elo_before_player1 = player.eloConnect4,
+                    elo_before_player2 = opps.eloConnect4,
+                    elo_after_player1 = player.eloConnect4,
+                    elo_after_player2 = opps.eloConnect4,
+                    winner = opps,
+                    type = text_data_json.get('game_type'))
             # game_id_hash = hashlib.sha256(str(game.id).encode()).hexdigest()
             # game.id = game_id_hash
             serializePlayer = PlayerSerializer(player).data

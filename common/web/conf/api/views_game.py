@@ -331,7 +331,8 @@ def logUserForPlay(request):
         player = Player.objects.get(mail=mail)
         user = authenticate(request, username=player.username, password=password)
         if user is not None:
-            return JsonResponse({'success': True, 'username': player.username, 'img': str(player.img), 'id': player.id, 'elo': player.elo})
+            return JsonResponse({'success': True, 'username': player.username, 'img': str(player.img),
+                                 'id': player.id, 'eloPong': player.eloPong, 'eloConnect4': player.eloConnect4})
         else:
             return JsonResponse({'success': False, 'error': 'Invalid email or password'})
     except Player.DoesNotExist:

@@ -11,7 +11,7 @@
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.1.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.1.elo }}</p>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.1.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -26,7 +26,7 @@
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.0.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.0.elo }}</p>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.0.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.2.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.2.elo }}</p>
+                        <p>{% trans 'Elo:' %} {{ leaderboard.2.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -75,7 +75,7 @@
                         <p>{{ user.username }}</p>
                     </div>
                     <div class="elo">
-                        <p>{{ user.elo }}</p>
+                        <p>{{ user.eloPong }}</p>
                     </div>
                 </article>
                 {% endif %}

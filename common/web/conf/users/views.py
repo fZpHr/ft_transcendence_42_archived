@@ -68,7 +68,8 @@ def profil_view(request, format=None):
             'username': data.username,
             'mail': data.mail,
             'friends_count': 10,
-            'elo': data.elo,
+            'eloPong': data.eloPong,
+            'eloConnect4': data.eloConnect4,
             'avatar_url': data.img,
             'is42': is42,
             'matches': matches
@@ -93,7 +94,8 @@ def visited_profil_view(request, username):
             'username': data.username,
             'mail': data.mail,
             'friends_count': 10,
-            'elo': data.elo,
+            'eloPong': data.eloPong,
+            'eloConnect4': data.eloConnect4,
             'avatar_url': data.img,
             'is42': is42,
             'matches': []

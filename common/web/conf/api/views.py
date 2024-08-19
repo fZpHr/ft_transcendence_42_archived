@@ -34,7 +34,8 @@ def get_me(request):
         img = player.img.url
     else:
         img = player.img.name
-    return JsonResponse({'id': player.id, 'username': player.username, 'mail': player.mail, 'img': img, 'elo': player.elo})
+    return JsonResponse({'id': player.id, 'username': player.username,
+                        'mail': player.mail, 'img': img, 'eloPong': player.eloPong, 'eloConnect4': player.eloConnect4})
 
 @login_required
 @api_view(['GET'])

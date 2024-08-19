@@ -216,6 +216,7 @@ async function APIaddIaToLobby(lobbyUUID) {
 async function getFetchAPI(url) {
 	return new Promise(async (resolve, reject) => {
 		try {
+			console.log(url)
 			let response = await fetch(url, {
 				method: "GET",
 				headers: {
