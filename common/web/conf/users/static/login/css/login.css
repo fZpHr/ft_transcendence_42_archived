@@ -343,7 +343,7 @@
 /* Responsive part */
 
 @media screen and (min-width: 1024px) and (max-width: 1400px) {
-    #login-content .warp-login {
+    .warp-login {
         width: 50vw;
     }
 
@@ -361,11 +361,11 @@
 }
 
 @media screen and (max-width: 1023px) {
-    #login-content .warp-login {
+    .warp-login {
         width: 100vw;
     }
 
-    .demo {
+    #login-content .demo {
         display: none;
     }
 
@@ -393,7 +393,7 @@
 
 @media screen and (max-width: 425px) {
 
-    #login-content .warp-login {
+    .warp-login {
         align-items: start;
         padding-top: 100px;
     }

@@ -159,7 +159,7 @@ def pongTournamentLobby(request):
             logger.info("htmx")
             return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
         logger.info("no htmx")
-        return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players})
+        return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
     except Lobby.DoesNotExist:
         if request.htmx:
             logger.info("htmx")

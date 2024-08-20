@@ -4,7 +4,7 @@
 {% block title %}{% trans "lobby" %}{% endblock %}
 
 {% block custom_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'pongTournament/css/pongTournamentLobby.css' %}">
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'pongTournament/css/pongTournamentLobby.css' %}"> -->
 {% endblock %}
 
 {% block content %}
@@ -40,7 +40,7 @@
         </div> 
         <div class="lobby-body" id="lobby-body">
             <div class="slop-content" id="slop-content">
-                {% if lobby.owner.id == user.id %}
+                {% if lobby.owner.id == userId %}
                     <div class="player-slot" id="new-player-slot">
                         <div id="newplayer-btn" class="newplayer-slot active">
                             <i class="fa-solid fa-plus"></i>
@@ -102,7 +102,7 @@
 {% block extra_scripts %}
     <script src="{% static 'pongTournament/js/lobby_socket.js' %}"></script>
     <script src="{% static 'pongTournament/js/drawTournament.js' %}"></script>
-    {% if lobby.owner.id == user.id %}
+    {% if lobby.owner.id == userId %}
         <script src="{% static 'pongTournament/js/lobby_owner.js' %}"></script>
     {% else %}
         <script src="{% static 'pongTournament/js/lobby.js' %}"></script>
