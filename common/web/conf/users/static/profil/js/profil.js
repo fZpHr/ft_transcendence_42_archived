@@ -1,12 +1,12 @@
-
-document.addEventListener('DOMContentLoaded', async function () {
-
+// document.addEventListener('DOMContentLoaded', async function () {
+function loadProfile() {
 	handlerUpdatePP();
 	handlerUpdateData();
 	toggleBackPanel();
 	toggleBackPasswordPanel();
 	toggleAllPasswords();
-});
+};
+// });
 
 
 // ===================== Profile utils =====================
@@ -215,4 +215,4 @@ async function toggleAllPasswords() {
     }
 }
 
-
+loadProfile();

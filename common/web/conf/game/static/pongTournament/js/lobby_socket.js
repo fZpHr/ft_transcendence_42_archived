@@ -28,6 +28,8 @@ async function setUserToLogout(userId) {
 async function handleWsLobbyMessage(data) {
     try {
         // console.log('data', data);
+        console.log('data', data);
+        console.log('userId', userId);
         if (data.eventType === 'redirect') {
             if (data.userId && data.userId === userId) {
                 redirect(data);

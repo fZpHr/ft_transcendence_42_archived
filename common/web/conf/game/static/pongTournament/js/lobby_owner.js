@@ -3,6 +3,7 @@ let lobbyUUID;
 var ws;
 
 document.addEventListener('DOMContentLoaded', async function () {
+    console.log("lobby_owner.js loaded");
     lobbyElement = document.getElementById('lobby_uuid');
     lobbyUUID = lobbyElement.getAttribute('data-value');
     users = await APIgetUserAvailableToLobby(lobbyUUID);

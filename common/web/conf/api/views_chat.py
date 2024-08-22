@@ -102,8 +102,8 @@ def sendInvite(request):
         newGamePriv = Game.objects.create(
             player1=player,
             player2=friend,
-            elo_before_player1=player.elo,
-            elo_before_player2=friend.elo,
+            elo_before_player1=player.eloPong,
+            elo_before_player2=friend.eloPong,
             elo_after_player1=None,
             elo_after_player2=None,
             finish=False,

@@ -16,4 +16,4 @@ class LoginEncoder(DjangoJSONEncoder):
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ['id', 'username', 'mail', 'img', 'created_at', 'elo', 'is_online', 'lastConnexion']
+        fields = ['id', 'username', 'mail', 'img', 'created_at', 'eloPong', 'eloConnect4', 'is_online', 'lastConnexion']

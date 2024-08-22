@@ -1,18 +1,21 @@
-function updatePlayerInfo(player, isOpponent = false)
+function updatePlayerInfo(player, gameType, isOpponent = false)
 {
     const prefix = isOpponent ? 'opps' : 'player'
     const imgPath = player.img.startsWith("profile_pics") ? `/media/${player.img}` : player.img;
   
     document.getElementById(`${prefix}Avatar`).src = imgPath;
     document.getElementById(`${prefix}Name`).textContent = player.username;
-    document.getElementById(`${prefix}Elo`).textContent = player.elo;
+    if (gameType === "pong")
+        document.getElementById(`${prefix}Elo`).textContent = player.eloPong;
+    else
+        document.getElementById(`${prefix}Elo`).textContent = player.eloConnect4;
     document.getElementById(`${prefix}-btn`).style.display = "flex";
 }
 
 function updateGameInfo(data)
 {
-    updatePlayerInfo(data.player);
-    updatePlayerInfo(data.opponent, true);
+    updatePlayerInfo(data.player, data.game_type);
+    updatePlayerInfo(data.opponent, data.game_type, true);
 
     document.getElementById("vs-text").style.display = "flex";
     document.getElementById("waiting-btn").style.display = "none";

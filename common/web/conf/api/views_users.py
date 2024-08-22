@@ -219,7 +219,7 @@ def getCurrentElo(request):
     try:
         id = request.query_params["user"]
         player = Player.objects.get(id=id)
-        return Response({'value': player.elo}, status=200)
+        return Response({'valuePong': player.eloPong, 'valueConnect4': player.eloConnect4}, status=200)
     except Player.DoesNotExist:
         return Response({"error": "Player not found"}, status=404)
     except Exception as e:

@@ -20,7 +20,7 @@ def login_required(view_func):
 def leaderboard(request):
     language_code = request.session.get('django_language', 'en')
     activate(language_code)
-    allPlayer = Player.objects.all().order_by('elo').values().reverse()[:10]
+    allPlayer = Player.objects.all().order_by('eloPong').values().reverse()[:10]
     # allPlayer = Player.objects.none() 
     for player in allPlayer:
         if not 'http' in player['img']:
