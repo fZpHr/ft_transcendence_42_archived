@@ -1,17 +1,12 @@
-import { CustomGame } from './class/CustomGame.js';
 import * as THREE from 'three';
+import { CustomGame } from './class/CustomGame.js';
 
 let game = new CustomGame();
 
 // document.addEventListener('DOMContentLoaded', function () {
 function customInit() {
 	toggleCustomManager();
-	
-	let startBtn = document.getElementById('start');
-	console.log('startBtn', startBtn);
-	startBtn.addEventListener('click', async function () {
-		game.init()
-	}, {once: true});
+	game.init();
 }
 // });
 

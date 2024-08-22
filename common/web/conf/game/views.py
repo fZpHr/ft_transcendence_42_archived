@@ -96,40 +96,41 @@ def pongCustom(request):
 
 @login_required
 def pongPrivGame(request):
-    user = request.user
-    player = Player.objects.get(username=user.username)
-    opponentId = request.GET.get('opponent', 'default_value')
-    opponent = Player.objects.get(id=opponentId)
+    # user = request.user
+    # player = Player.objects.get(username=user.username)
+    # opponentId = request.GET.get('opponent', 'default_value')
+    # opponent = Player.objects.get(id=opponentId)
 
-    invitGame = GameInvitation.objects.filter(player1=player, player2=opponent)
-    if not invitGame:
-        invitGame = GameInvitation.objects.filter(player1=opponent, player2=player)
-    if not invitGame:
-        return render(request, "pongPrivGame/pongPrivGame.html", {"error": "Game not found"})
-    player.img = player.img.name.startswith('profile_pics/') and '/media/' + player.img.name or player.img
-    opponent.img = opponent.img.name.startswith('profile_pics/') and '/media/' + opponent.img.name or opponent.img
-    privGame = Game.objects.get(id=invitGame[0].game_id.id)
-    data = {
-        'player' : {
-            'id': player.id,
-            'username': player.username,
-            'img': player.img,
-        },
-        'opponent' : {
-            'id': opponent.id,
-            'username': opponent.username,
-            'img': opponent.img,
-        },
-        'game': {
-            'id': privGame.id,
-            'type': privGame.type,
-            'finish': privGame.finish,
-            'p1Id': privGame.player1.id,
-            'p2Id' : privGame.player2.id,
-        }
-    }
-    logger.info(data)
-    return render(request, "pongPrivGame/pongPrivGame.html", data)
+    # invitGame = GameInvitation.objects.filter(player1=player, player2=opponent)
+    # if not invitGame:
+    #     invitGame = GameInvitation.objects.filter(player1=opponent, player2=player)
+    # if not invitGame:
+    #     return render(request, "pongPrivGame/pongPrivGame.html", {"error": "Game not found"})
+    # player.img = player.img.name.startswith('profile_pics/') and '/media/' + player.img.name or player.img
+    # opponent.img = opponent.img.name.startswith('profile_pics/') and '/media/' + opponent.img.name or opponent.img
+    # privGame = Game.objects.get(id=invitGame[0].game_id.id)
+    # data = {
+    #     'player' : {
+    #         'id': player.id,
+    #         'username': player.username,
+    #         'img': player.img,
+    #     },
+    #     'opponent' : {
+    #         'id': opponent.id,
+    #         'username': opponent.username,
+    #         'img': opponent.img,
+    #     },
+    #     'game': {
+    #         'id': privGame.id,
+    #         'type': privGame.type,
+    #         'finish': privGame.finish,
+    #         'p1Id': privGame.player1.id,
+    #         'p2Id' : privGame.player2.id,
+    #     }
+    # }
+    # logger.info(data)
+    # return render(request, "pongPrivGame/pongPrivGame.html", data)
+    return render(request, "pongPrivGame/pongPrivGame.html")
 
 @login_required
 def pongTournament(request):

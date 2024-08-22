@@ -214,27 +214,27 @@ async function startGame(players, game, { up, down, userId }) {
         try {
             document.addEventListener('keydown', function (event) {
                 if (event.key === 'w' || event.key === 'W') {
-                    // let msg = userId + ' | up';
-                    // sendToWsGame('move', msg);
-                    // movePaddles(game, userId, 'up')
+                    let msg = userId + ' | up';
+                    sendToWsGame('move', msg);
+                    movePaddles(game, userId, 'up')
                     move_up = true;
                 } else if (event.key === 's' || event.key === 'S') {
-                    // let msg = userId + ' | down';
-                    // sendToWsGame('move', msg);
-                    // movePaddles(game, userId, 'down')
+                    let msg = userId + ' | down';
+                    sendToWsGame('move', msg);
+                    movePaddles(game, userId, 'down')
                     move_down = true;
                 }
             });
             document.addEventListener('keyup', function (event) {
                 if (event.key === 'w' || event.key === 'W') {
-                    // let msg = userId + ' | up';
-                    // sendToWsGame('move', msg);
-                    // movePaddles(game, userId, 'up')
+                    let msg = userId + ' | up';
+                    sendToWsGame('move', msg);
+                    movePaddles(game, userId, 'up')
                     move_up = false;
                 } else if (event.key === 's' || event.key === 'S') {
-                    // let msg = userId + ' | down';
-                    // sendToWsGame('move', msg);
-                    // movePaddles(game, userId, 'down');
+                    let msg = userId + ' | down';
+                    sendToWsGame('move', msg);
+                    movePaddles(game, userId, 'down');
                     move_down = false;
                 }
             });
