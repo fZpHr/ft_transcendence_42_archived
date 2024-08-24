@@ -31,13 +31,13 @@
 
     <main id="main-content">
         {% block content %}{% endblock %}
+        {% if user.is_authenticated %}
+            {% block chat %}
+                {% include 'menus/menus.html' %}
+            {% endblock %}
+        {% endif %}
     </main>
     
-    {% if user.is_authenticated %}
-        {% block chat %}
-            {% include 'menus/menus.html' %}
-        {% endblock %}
-    {% endif %}
     
     <div id="notif-box"></div>
     {% if not no_footer %}
