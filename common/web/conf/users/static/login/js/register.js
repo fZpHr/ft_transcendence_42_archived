@@ -83,11 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		const isEmailValid = emailIndicator.classList.contains('valid');
 		const isPasswordValid = passwordIndicator.classList.contains('valid');
-		console.log('checkIndicatorsRegister  : ');
-		console.log(isEmailValid);
-		console.log(isPasswordValid)
 		if (isEmailValid && isPasswordValid) {
-			console.log("enable button")
 			submitButton.removeAttribute('disabled');
 		} else {
 			submitButton.setAttribute('disabled', 'disabled');
