@@ -60,7 +60,9 @@
             </li>
         </ul>
         `;
+        document.getElementById('chat').innerHTML = ``;
         htmx.process(document.getElementById('navbarNav'));
+        htmx.process(document.getElementById('chat'))
     </script>
 {% endif %}
 <script src="{% static 'login/js/login.js' %}"></script>
