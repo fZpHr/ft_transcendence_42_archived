@@ -60,6 +60,7 @@ function createSocket(gameType) {
     let countdown = setInterval(() => {
       if (count === 0) {
         clearInterval(countdown);
+        console.log("Redirecting to game page");
         htmx.ajax('GET', '/game/game/', {
           target: '#main-content', // The target element to update
           swap: 'innerHTML', // How to swap the content
