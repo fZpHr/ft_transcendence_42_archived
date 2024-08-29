@@ -8,7 +8,7 @@ connect4WebSocket.onopen = function(e) {
     let checkUserIdInterval = setInterval(() => {
         if (userId && connect4WebSocket.readyState === WebSocket.OPEN) {
             connect4WebSocket.send(JSON.stringify({ type: 'join', player_id: `${userId}` }));
-          clearInterval(checkUserIdInterval); // Stop checking once the message is sent
+            clearInterval(checkUserIdInterval); // Stop checking once the message is sent
         }
       }, 100); // Check every 100 milliseconds
 }

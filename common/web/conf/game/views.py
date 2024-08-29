@@ -151,10 +151,10 @@ def pongTournamentLobby(request):
                 if img_path.startswith('profile_pics/'):
                     player.img = '/media/' + img_path
         ia_players = lobby.ai_players.all()
-        logger.info("==============> ", ia_players)
-        logger.info("==============> ", players)
-        logger.info("==============> ", lobby)
-        logger.info("==============> ", playerId)
+        logger.info("==============> %s", ia_players)
+        logger.info("==============> %s", players)
+        logger.info("==============> %s", lobby)
+        logger.info("==============> %s", playerId)
         if request.htmx:
             logger.info("htmx")
             return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
@@ -176,11 +176,8 @@ def pongTournamentLobby(request):
 @login_required
 def pongTournamentGame(request):
     try:
-        # logger.info('coucou mec')
-        logger.info("==============> ", request.GET)
         gameId = request.GET.get('gameId', 'default_value')
-        logger.info("==============> ", gameId)
-        # playerId = request.user.username
+        logger.info("==============> %s", gameId)
         # playerId = Player.objects.get(username=playerId).id
         return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0})
     except Exception as e:
