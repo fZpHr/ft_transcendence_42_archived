@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "pong Tournament Game" %}{% endblock %}
+{% block title %}pong Tournament Game{% endblock %}
 
 {% block custom_css %}
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'pongTournament/css/pongTournament.css' %}"> -->
@@ -9,9 +9,19 @@
 
 {% block content %}
 <div class="warp-pongTournament" id="warp-pongT">
-    <p>COUCOU TU EST EN GAME</p>
-    
+    <p>{{ game }}</p>
+    <div class="participant-lst">
+        {% for participant in participants %}
+            <div class="participant">
+                <p>ID: {{ participant.id }}</p>
+                <p>Username: {{ participant.username }}</p>
+            </div>
+        {% endfor %}
+    </div>
 </div>
+{% endblock %}
+
+{% block custom_js %}
 {% endblock %}
 
 {% block extra_scripts %}

@@ -334,7 +334,7 @@ function handlersLockLobby() {
             // await sleep(10000);
             // redirect to tournament
             // redirectionManager(tournamentINfo);
-            redirectionManager(null);
+            // redirectionManager(null);
         });
     } catch (error) {
         console.error('Failed to handlersLockLobby', error);

@@ -151,10 +151,6 @@ def pongTournamentLobby(request):
                 if img_path.startswith('profile_pics/'):
                     player.img = '/media/' + img_path
         ia_players = lobby.ai_players.all()
-        logger.info("==============> %s", ia_players)
-        logger.info("==============> %s", players)
-        logger.info("==============> %s", lobby)
-        logger.info("==============> %s", playerId)
         if request.htmx:
             logger.info("htmx")
             return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
@@ -178,8 +174,27 @@ def pongTournamentGame(request):
     try:
         gameId = request.GET.get('gameId', 'default_value')
         logger.info("==============> %s", gameId)
-        # playerId = Player.objects.get(username=playerId).id
-        return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0})
+        game = Game_Tournament.objects.get(id=gameId)
+        logger.info("==============> %s", game)
+        participantsPlayer = game.players.all()
+        participantsAI = game.ai_players.all()
+        participants = []
+        for player in participantsPlayer:
+            participants.append({
+                'id': player.id,
+                'username': player.username,
+                'img': player.img
+            })
+        for player in participantsAI:
+            participants.append({
+                'id': '-1',
+                'username': 'ia',
+                'img': 'ia'
+            })
+        logger.info('====================')
+        logger.info(participants)
+
+        return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0, 'game': game, 'participants': participants})
     except Exception as e:
         logger.info(e)
         return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})

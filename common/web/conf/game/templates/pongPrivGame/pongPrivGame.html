@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "pongPrivGame" %}{% endblock %}
+{% block title %}pongPrivGame{% endblock %}
 
 {% block custom_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'pongPrivGame/css/pongPrivGame.css' %}">
@@ -38,7 +38,7 @@
         </div>
         <div class="play-box__footer" id="box-btn">
             <button class="btn-custom-game" id="curstom-game"><i class="fa-solid fa-screwdriver-wrench"></i></button>
-            <button class="btn-ready-game" id="ready-game">{% trans "Make Ready" %}</button>
+            <button class="btn-ready-game" id="ready-game">Make Ready</button>
         </div>
 	</section>
 </div>

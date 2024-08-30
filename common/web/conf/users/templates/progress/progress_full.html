@@ -2,48 +2,48 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% trans "Progress" %}{% endblock %}
+{% block title %}Progress{% endblock %}
 
 {% block content %}
 <section id="progress-content" class="warp-progress">
 	<aside class="aside-stats">
-		<h2 class="underline">{% trans "Stats Panels" %}</h2>
+		<h2 class="underline">Stats Panels</h2>
 		<div class="warp-burger-menus">
 			<h3>Winrate</h3>
 			<canvas id="progress-burger" width="200" height="200"></canvas>
 		</div>
 		<div class="warp-display-stats">
-			<h3>{% trans "Stats" %}</h3>
+			<h3>Stats</h3>
 			<table id="stats-table">
 				<thead>
 					<tr>
-						<th>{% trans "Statistic" %}</th>
-						<th>{% trans "Value" %}</th>
+						<th>Statistic</th>
+						<th>Value</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>{% trans "Number of games" %}</td>
+						<td>Number of games</td>
 						<td id="games-count">-</td>
 					</tr>
 					<tr>
-						<td>{% trans "Max win streak" %}</td>
+						<td>Max win streak</td>
 						<td id="max-win-streak">-</td>
 					</tr>
 					<tr>
-						<td>{% trans "Average game time" %}</td>
+						<td>Average game time</td>
 						<td id="avg-game-time">-</td>
 					</tr>
 					<tr>
-						<td>{% trans "Current Elo" %}</td>
+						<td>Current Elo</td>
 						<td id="current-elo">-</td>
 					</tr>
 					<tr>
-						<td>{% trans "Max Elo" %}</td>
+						<td>Max Elo</td>
 						<td id="max-elo">-</td>
 					</tr>
 					<tr>
-						<td>{% trans "Number of tournament participations" %}</td>
+						<td>Number of tournament participations</td>
 						<td id="tournament-count">-</td>
 					</tr>
 				</tbody>
@@ -52,19 +52,19 @@
 	</aside>
     <section class="warp-stats">
         <article class="game-graph">
-            <h2 class="underline">{% trans "ELO Progress" %}</h2>
+            <h2 class="underline">ELO Progress</h2>
 			<div class="progress-chart">
                 <canvas id="progress-chart" width="1000" height="500"></canvas>
             </div>
         </article>
         <article class="game-history">
-            <h2 class="underline">{% trans "Game Stats Dashboards" %}</h2>
+            <h2 class="underline">Game Stats Dashboards</h2>
             <div class="match-legend">
-                <div class="legend-item">{% trans "Players" %}</div>
-                <div class="legend-item">{% trans "Time" %}</div>
-                <div class="legend-item">{% trans "Winner" %}</div>
-                <div class="legend-item">{% trans "ELO Before" %}</div>
-                <div class="legend-item">{% trans "ELO After" %}</div>
+                <div class="legend-item">Players</div>
+                <div class="legend-item">Time</div>
+                <div class="legend-item">Winner</div>
+                <div class="legend-item">ELO Before</div>
+                <div class="legend-item">ELO After</div>
             </div>
             <div class="match-history" id="match-history-container">
             </div>

@@ -100,8 +100,6 @@ async function toggleSubmitForm() {
                         if (result.success) {
                             window.location.href = result.redirect_url || '/';
                         } else {
-                            // error = `{% trans "${result.error}" %}`
-                            const error = gettext(result.error);
                             event.errorBox.innerHTML = error;
                             event.errorBox.style.display = 'block';
                         }

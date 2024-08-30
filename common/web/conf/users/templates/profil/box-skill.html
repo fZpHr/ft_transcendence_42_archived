@@ -4,7 +4,7 @@
 
 {% block box-skill %}
 <div class="box-skill">
-    <span class="title">{% trans "Game Stats Dashboards" %}</span>
+    <span class="title">Game Stats Dashboards</span>
     {% if user_data.matches %}
     <div class="select-game-history">
         <div class="select-game-history-option">
@@ -15,10 +15,10 @@
         </div>
     </div>
     <div class="match-legend">
-        <div class="legend-item player-info">{% trans "Players" %}</div>
-        <div class="legend-item match-info">{% trans "Time" %}</div>
-        <div class="match-winner legend-item">{% trans "Winner" %}</div>
-        <div class="legend-item match-elo">{% trans "ELO" %}</div>
+        <div class="legend-item player-info">Players</div>
+        <div class="legend-item match-info">Time</div>
+        <div class="match-winner legend-item">Winner</div>
+        <div class="legend-item match-elo">ELO</div>
     </div>
     <div class="match-history">
         {% for match in user_data.matches %}
@@ -56,19 +56,19 @@
     </div>
     <div class="progress-button">
         {% if not user_data.visited %}
-        <a hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn">{% trans "Show My Progress" %}</a>
+        <a hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn">Show My Progress</a>
         {% else %}
-        <a hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn" disable>{% trans "Show His Progress" %}</a>
+        <a hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn" disable>Show His Progress</a>
         {% endif %}
     </div>
     {% else %}
     <div class="no-match">
         {% if not user_data.visited %}
-        <p>{% trans "Vous n'avez aucun match joué pour le moment"%}</p>
-        <a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" id="btn-play">{% trans "Jouer"%}</a>
+        <p>Vous n'avez aucun match joué pour le moment"%}</p>
+        <a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" id="btn-play">Jouer"%}</a>
         {% else %}
-        <p>{% trans "N'as encore aucun match joué pour le moment"%}</p>
-        <a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" id="btn-play">{% trans "Play with"%}</a>
+        <p>N'as encore aucun match joué pour le moment"%}</p>
+        <a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" id="btn-play">Play with"%}</a>
         {% endif %}
     </div>
     {% endif %}
