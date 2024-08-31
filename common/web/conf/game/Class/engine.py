@@ -18,6 +18,5 @@ class Engine:
 	
     async def checkBall(self):
         while True:
-            # print("==================================================")
             time.sleep(1 / 60)
             

@@ -191,8 +191,6 @@ def pongTournamentGame(request):
                 'username': 'ia',
                 'img': 'ia'
             })
-        logger.info('====================')
-        logger.info(participants)
 
         return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0, 'game': game, 'participants': participants})
     except Exception as e:

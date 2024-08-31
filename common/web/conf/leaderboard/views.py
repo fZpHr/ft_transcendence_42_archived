@@ -3,7 +3,6 @@ import time
 from django.shortcuts import render, redirect
 from django.conf import settings
 from api.models import Player, Game
-from django.utils.translation import activate
 
 # ======================== Decorateur Validator ============================
 
@@ -18,10 +17,7 @@ def login_required(view_func):
 
 @login_required
 def leaderboard(request):
-    language_code = request.session.get('django_language', 'en')
-    activate(language_code)
     allPlayer = Player.objects.all().order_by('eloPong').values().reverse()[:10]
-    # allPlayer = Player.objects.none() 
     for player in allPlayer:
         if not 'http' in player['img']:
             player['img'] = settings.MEDIA_URL + player['img']
@@ -29,7 +25,5 @@ def leaderboard(request):
         'leaderboard': allPlayer,
     }
     if (request.htmx):
-        print('htmx')
         return render(request, 'leaderboard/leaderboard.html', context)
-    print('no htmx')
     return render(request, 'leaderboard/leaderboard_full.html', context)

@@ -27,7 +27,6 @@ urlpatterns += [
     path('getNumberOfGames/', views_users.getNumberOfGames),
     path('getCurrentElo/', views_users.getCurrentElo),
     path('getMaxElo/', views_users.getMaxElo),
-    path('getTournamentCount/', views_users.getTournamentCount),
     path('getAvgGameTime/', views_users.getAvgGameTime),
     path('getMaxWinStreak/', views_users.getMaxWinStreak),
     path('getWinrate/', views_users.getWinrate),
@@ -67,5 +66,6 @@ urlpatterns += [
     path('addIaToLobby/', views_game.addIaToLobby),
     path('lockLobby/', views_game.lockLobby),
     path('getTournamentInfo/', views_game.getTournamentInfo),
-    path('logUserForPlay/', views_game.logUserForPlay),
+    path('getConnect4GameForUser/', views_game.getConnect4GameForUser),
+    path('getPongGameForUser/', views_game.getPongGameForUser),
 ]

@@ -9,17 +9,18 @@ from django.utils.translation import gettext as _
 from django.shortcuts import render
 from rest_framework.response import Response
 import requests
-from django.utils.translation import activate
 from django.contrib.auth.models import User
 from api.models import Player, Game
 from django.core import serializers
 from api.login_required import login_required, not_login_required
+from django.contrib.auth import logout
+import logging
+
+logger = logging.getLogger('print')
 
 
 @not_login_required
 def login_view(request):
-    language_code = request.session.get('django_language', 'en')
-    activate(language_code)
     context = {
         'no_footer': True,
     }
@@ -28,9 +29,7 @@ def login_view(request):
             'no_footer': True,
             'updateNav': True,
         }
-        print("HTMX")
         return render(request, 'login/login_view.html', context)
-    print("NO HTMX")
     return render(request, 'login/login_view_full.html', context)
 
 @login_required
@@ -38,15 +37,16 @@ def profil_view(request, format=None):
     try:
         data = Player.objects.get(username=request.user)
         is42 = True
-        print("================== DEBOG IMG", data.img)
         if (data.img.name.startswith("profile_pics/")):
             is42 = False
-        games = (Game.objects.filter(player1=data, finish=True) | Game.objects.filter(player2=data, finish=True))
+        user = request.user
+        player = Player.objects.get(username=user)
+        games = (Game.objects.filter(player1=player, finish=True, type="pong") | Game.objects.filter(player2=player, finish=True, type="pong"))
         games = games.order_by('-created_at')
-        print('games', games)
+
         matches = []
-        print("=============================================================================================")
         for game in games:
+            logger.info(game.type)
             game.player1.img.name = '/media/' + game.player1.img.name if game.player1.img.name.startswith("profile_pics/") else game.player1.img.name
             game.player2.img.name = '/media/' + game.player2.img.name if game.player2.img.name.startswith("profile_pics/") else game.player2.img.name
             total_seconds = game.time
@@ -59,8 +59,8 @@ def profil_view(request, format=None):
                 'time_minutes': minutes,
                 'time_seconds': seconds,
                 'winner_username': game.winner.username,
-                'elo_player1': game.elo_before_player1 - game.elo_after_player1,
-                'elo_player2': game.elo_before_player2 - game.elo_after_player2,
+                'elo_player1': game.elo_after_player1 - game.elo_before_player1,
+                'elo_player2': game.elo_after_player2 - game.elo_before_player1,
             }
             matches.append(match_data)
         user_data = {
@@ -84,8 +84,6 @@ def profil_view(request, format=None):
 def visited_profil_view(request, username):
     try:
         data = Player.objects.get(username=username)
-        # language_code = request.session.get('django_language', 'en')
-        # activate(language_code)
         is42 = True
         if (data.img.name.startswith("profile_pics")):
             is42 = False
@@ -122,14 +120,21 @@ def visited_profil_view(request, username):
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 
-@login_required
-def progress_view(request):
-    if request.htmx:
-        return render(request, 'progress/progress.html')
-    return render(request, 'progress/progress_full.html')
 
 @login_required
 def visited_progress_view(request, username):
     if request.htmx:
         return render(request, 'progress/progress.html', {'username': username})
     return render(request, 'progress/progress_full.html', {'username': username})
+
+@login_required
+def progressPong_view(request):
+    if request.htmx:
+        return render(request, 'progress/progress.html', {'type': 'pong'})
+    return render(request, 'progress/progress_full.html', {'type': 'pong'})
+
+@login_required
+def progressConnect4_view(request):
+    if request.htmx:
+        return render(request, 'progress/progress.html', {'type': 'connect4'})
+    return render(request, 'progress/progress_full.html', {'type': 'connect4'})

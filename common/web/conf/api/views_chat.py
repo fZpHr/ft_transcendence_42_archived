@@ -90,7 +90,6 @@ def sendInvite(request):
         friend = Player.objects.get(id=id)
         if GameInvitation.objects.filter(player1=player, player2=friend).exists():
             gameid = GameInvitation.objects.get(player1=player, player2=friend).game_id.id
-            print(f"gameid: {gameid}")
             if Game.objects.filter(id=gameid).exists():
                 Game.objects.filter(id=gameid).delete()
             GameInvitation.objects.filter(player1=player, player2=friend).delete()
@@ -193,9 +192,6 @@ def updateSocialStatus(request):
         player = Player.objects.get(username=user)
         SocialUser = request.data.get('socialUserId')
         friend_status = request.data.get('friendStatus')
-        print(f"SocialUser: {SocialUser}")
-        print(f"friend_status: {friend_status}")
-        print(f"player: {player}")
         try:
             friend_status = int(friend_status)
         except ValueError:
@@ -228,7 +224,6 @@ def updateSocialStatus(request):
             Notification.objects.create(sender=player, type=4, recipient=Player.objects.get(id=SocialUser), content=f"{player.username} accepted your friend request")
         return Response({"message": "Status updated successfully"}, status=200)
     except Exception as e:
-        print(f"Exception occurred: {str(e)}")
         return Response({"error": str(e)}, status=500)
 
 def hashRoomName(input_string):
@@ -243,7 +238,6 @@ def getHashRoom(request):
     try:
         roomName = request.GET.get('roomName')
         roomName = hashRoomName(roomName)
-        print(f"roomName: {roomName}")
         return Response({"roomName": roomName}, status=200)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
@@ -270,13 +264,9 @@ def removeChatNotif(request):
         player = Player.objects.get(username=user.username)
         userId = request.GET.get('userId')
         sender = Player.objects.get(id=userId)
-        print(f"player: {player.id}")
-        print(f"friends_id: {sender.id}")
         notif = Notification.objects.filter(sender=sender, recipient=player, type=1)
-        print(f"notif: {notif}")
         notif.delete()
         notif = Notification.objects.filter(sender=sender, recipient=player, type=2)
-        print(f"notif: {notif}")
         notif.delete()
         return Response({"message": "Chat notifications removed successfully"}, status=200)
     except Player.DoesNotExist:
@@ -328,8 +318,6 @@ def updateInviteStatus(request):
     try:
         user = request.user
         contactId = request.data.get('contactId')
-        print(f"friend id: {contactId}")
-        print(f"user: {user}")
         player = Player.objects.get(username=user)
         friend = Player.objects.get(id=contactId)
         status = request.data.get('status')

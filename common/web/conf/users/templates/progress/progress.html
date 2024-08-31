@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block title %}Progress{% endblock %}
+
+{% block content %}
 <section id="progress-content" class="warp-progress">
 	<aside class="aside-stats">
 		<h2 class="underline">Stats Panels</h2>
@@ -39,11 +41,7 @@
 						<td>Max Elo</td>
 						<td id="max-elo">-</td>
 					</tr>
-					<tr>
-						<td>Number of tournament participations</td>
-						<td id="tournament-count">-</td>
-					</tr>
-				</tbody>
+				</tbody> 
 			</table>
 		</div>
 	</aside>
@@ -51,7 +49,7 @@
         <article class="game-graph">
             <h2 class="underline">ELO Progress</h2>
 			<div class="progress-chart">
-                <canvas id="progress-chart" width="1000" height="500"></canvas>
+                <canvas id="progress-chart" width="1000" height="500" style="display: none;"></canvas>
             </div>
         </article>
         <article class="game-history">
@@ -60,8 +58,7 @@
                 <div class="legend-item">Players</div>
                 <div class="legend-item">Time</div>
                 <div class="legend-item">Winner</div>
-                <div class="legend-item">ELO Before</div>
-                <div class="legend-item">ELO After</div>
+                <div class="legend-item">ELO</div>
             </div>
             <div class="match-history" id="match-history-container">
             </div>
@@ -81,14 +78,12 @@
 				<p>Last Game</p>
 				<p id="last-game-is-win"> - </p>
 			</div>
-			<div class="info-items">
-				<p>Last Tournement</p>
-				<p> - </p>
-			</div>
-		</div>
-		<div>
-			<button id="playwith">Play</button>
 		</div>
 	</aside>
 </section>
-<script src="{% static 'progress/js/progress.js' %}"></script>
+
+{% endblock %}
+
+{% block extra_scripts %}
+	<script src="{% static 'progress/js/progress.js' %}"></script>
+{% endblock %}
