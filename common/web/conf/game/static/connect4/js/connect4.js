@@ -41,82 +41,93 @@ connect4WebSocket.onerror = function(error) {
     console.error("WebSocket error:", error);
 }
 
-connect4WebSocket.onmessage = function(e) {
+connect4WebSocket.onmessage = async function(e) {
     console.log("After receiving")
     let data = JSON.parse(e.data);
     console.log(data)
-    if (data.type == 'error') {
-        handleError(data.error_message)
-        console.log(data.error_message)
-        return
-    }
-    if (data.type == 'reset') {
-        gameFinished(data.winner);
-        declareWinner(data.winner);
-        return
-    }
-    if (data.type == 'timer_update')
-    {
-        let divTimer = document.getElementById("timer");
-        divTimer.style.display = "flex";
-        divTimer.innerHTML = data.timer;
-        return
-    }
-    if (data.type == 'timeout')
-    {
-        if (data.winner == currentPlayer)
-            console.log("You win due to timeout");
-        else
-            console.log("You lose due to timeout");
-        connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: data.winner }));
-        return
-    }
-    if (data.type == 'roleGiving') {
-        currentPlayer = data.role;
-        playerTurn = data.playerTurn;
-        curHeader.innerHTML = "Current player: " + currentPlayer;
-        playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
-        board = data.board;
-        const playerInfo = {
-            img: data.playerInfo.img.startsWith("profile_pics") ? `/media/${data.playerInfo.img}` : data.playerInfo.img,
-            username: data.playerInfo.username + " (" + data.role + ")"
-        };
-        
-        if (data.role == "yellow")
-            opponent = "red"
-        else
-            opponent = "yellow"
-        const opponentInfo = {
-            img: data.opponentInfo.img.startsWith("profile_pics") ? `/media/${data.opponentInfo.img}` : data.opponentInfo.img,
-            username: data.opponentInfo.username + " (" + opponent + ")"
-        };
+    switch (data.type) {
+        case 'error':
+            handleError(data.error_message);
+            console.log(data.error_message);
+            break;
+        case 'roomFull':
+            sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            console.log("Room is full");
+            await sleep(3000);
+            htmx.ajax('GET', '/game/game/', {
+                target: '#main-content', // The target element to update
+                swap: 'innerHTML', // How to swap the content
+            }).then(response => {
+                console.log("Redirected to game page", response);
+                history.pushState({}, '', '/game/game/');
+            });
+            break;
+        case 'reset':
+            gameFinished(data.winner);
+            declareWinner(data.winner);
+            break;
+        case 'timer_update':
+            let divTimer = document.getElementById("timer");
+            divTimer.style.display = "flex";
+            divTimer.innerHTML = data.timer;
+            break;
+        case 'timeout':
+            if (data.winner == currentPlayer)
+                console.log("You win due to timeout");
+            else
+                console.log("You lose due to timeout");
+            connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: data.winner }));
+            break;
+        case 'roleGiving':
+            currentPlayer = data.role;
+            playerTurn = data.playerTurn;
+            curHeader.innerHTML = "Current player: " + currentPlayer;
+            playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
+            board = data.board;
+            const playerInfo = {
+                img: data.playerInfo.img.startsWith("profile_pics") ? `/media/${data.playerInfo.img}` : data.playerInfo.img,
+                username: data.playerInfo.username + " (" + data.role + ")"
+            };
 
-        updatePlayerInfo(playerInfo, opponentInfo);
-        firstMove = false;
-        // check if the board is empty
-        for (var row = 0; row < 6; row++) {
-            for (var col = 0; col < 7; col++) {
-                if (board[row][col] == 'red') {
-                    document.getElementById(row + " " + col).classList.add("red");
-                } else if (board[row][col] == 'yellow') {
-                    document.getElementById(row + " " + col).classList.add("yellow");
+            if (data.role == "yellow")
+                opponent = "red"
+            else
+                opponent = "yellow"
+            try {
+                const opponentInfo = {
+                    img: data.opponentInfo.img.startsWith("profile_pics") ? `/media/${data.opponentInfo.img}` : data.opponentInfo.img,
+                    username: data.opponentInfo.username + " (" + opponent + ")"
+                };
+                updatePlayerInfo(playerInfo, opponentInfo);
+            } catch (e) {
+                updatePlayerInfo(playerInfo, { img: "/media/profile_pics/default.png", username: "Waiting for opponent" });
+            }
+            firstMove = false;
+            // check if the board is empty
+            for (var row = 0; row < 6; row++) {
+                for (var col = 0; col < 7; col++) {
+                    if (board[row][col] == 'red') {
+                        document.getElementById(row + " " + col).classList.add("red");
+                    } else if (board[row][col] == 'yellow') {
+                        document.getElementById(row + " " + col).classList.add("yellow");
+                    }
                 }
             }
-        }
-        return
-    }
-    board = data.board;
-    let playerPlayed = data.player;
-    let tile = document.getElementById(data.row + " " + data.column);
-    tile.classList.add(playerPlayed);
-    playerTurn = data.next_player;
-    playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
+            break;
+        default:
+            board = data.board;
+            let playerPlayed = data.player;
+            let tile = document.getElementById(data.row + " " + data.column);
+            tile.classList.add(playerPlayed);
+            playerTurn = data.next_player;
+            playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
 
-    if (checkWin(data.row, data.column)) {
-        connect4WebSocket.send(JSON.stringify({ type:"reset", player_id: `${userId}`, winner: playerPlayed}));
-        return;
+            if (checkWin(data.row, data.column)) {
+                connect4WebSocket.send(JSON.stringify({ type:"reset", player_id: `${userId}`, winner: playerPlayed}));
+                return;
+            }
+            playerMove(data.column, playerTurn);
     }
-    playerMove(data.column, playerTurn);
 }
 
 const turnTimeLimit = 30000;
