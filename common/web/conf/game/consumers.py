@@ -319,7 +319,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.server.ws = self
             logger.info("cc")
             self.server.checkBall()
-            logger.info("coucou")
+            logger.info(f"[WebSocket GAME] : Starting game in room {self.room_name} {self.server.players}")
             return 
         
         if command == "ready":
