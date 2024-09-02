@@ -1,76 +1,73 @@
-<!-- users/templates/profil/box-skill.html -->
 {% load i18n %}
 {% load static %}
 
 {% block box-skill %}
 <div class="box-skill">
-    <span class="title">{% trans "Game Stats Dashboards" %}</span>
-    {% if user_data.matches %}
+    <span class="title">Game Stats Dashboards</span>
     <div class="select-game-history">
-        <div class="select-game-history-option">
-            <i class="fas fa-chess-board"></i>
-        </div>
-        <div class="select-game-history-option">
+        <div class="select-game-history-option active" data-type="pong">
             <i class="fas fa-table-tennis"></i>
+        </div>
+        <div class="select-game-history-option" data-type="connect4">
+            <i class="fas fa-chess-board"></i>
         </div>
     </div>
     <div class="match-legend">
-        <div class="legend-item player-info">{% trans "Players" %}</div>
-        <div class="legend-item match-info">{% trans "Time" %}</div>
-        <div class="match-winner legend-item">{% trans "Winner" %}</div>
-        <div class="legend-item match-elo">{% trans "ELO" %}</div>
+        <div class="legend-item player-info">Players</div>
+        <div class="legend-item match-info">Time</div>
+        <div class="match-winner legend-item">Winner</div>
+        <div class="legend-item match-elo">ELO</div>
     </div>
-    <div class="match-history">
-        {% for match in user_data.matches %}
-        <div class="match">
-            <div class="player-info img-box-match">
-                {% if match.player1_username == match.winner_username %}
-                    <img src="{{ match.p1_img }}" alt="{{ match.player1_username}}" class="img-match online">
-                {% else %}
-                    <img src="{{ match.p1_img }}" alt="{{ match.player1_username}}" class="img-match offline">
-                {% endif %}
-                <span class="split-match">/</span>
-                {% if match.player2_username == match.winner_username %}
-                    <img src="{{ match.p2_img }}" alt="{{ match.player2_username}}" class="img-match online">
-                {% else %}
-                    <img src="{{ match.p2_img }}" alt="{{ match.player2_username}}" class="img-match offline">
-                {% endif %}
-            </div>
-            <div class="match-info">{{ match.time_minutes }}m {{ match.time_seconds }}s</div>
-            <div class="match-winner">{{ match.winner_username }}</div>
-            <div class="match-elo">
-                {% if match.elo_player1 > 0 %}
-                    <span style="color: green;">{{ match.elo_player1 }}</span>
-                {% else %}
-                    <span style="color: red;">{{ match.elo_player1 }}</span>
-                {% endif %}
+    <div class="match-history" id="game-history-panel">
+        {% if user_data.matches %}
+            {% for match in user_data.matches %}
+            <div class="match">
+                <div class="player-info img-box-match">
+                    {% if match.player1_username == match.winner_username %}
+                        <img src="{{ match.p1_img }}" alt="{{ match.player1_username}}" class="img-match online">
+                    {% else %}
+                        <img src="{{ match.p1_img }}" alt="{{ match.player1_username}}" class="img-match offline">
+                    {% endif %}
                     <span class="split-match">/</span>
-                {% if match.elo_player2 > 0 %}
-                    <span style="color: green;">+{{ match.elo_player2 }}</span>
-                {% else %}
-                    <span style="color: red;">{{ match.elo_player2 }}</span>
-                {% endif %}
+                    {% if match.player2_username == match.winner_username %}
+                        <img src="{{ match.p2_img }}" alt="{{ match.player2_username}}" class="img-match online">
+                    {% else %}
+                        <img src="{{ match.p2_img }}" alt="{{ match.player2_username}}" class="img-match offline">
+                    {% endif %}
+                </div>
+                <div class="match-info">{{ match.time_minutes }}m {{ match.time_seconds }}s</div>
+                <div class="match-winner">{{ match.winner_username }}</div>
+                <div class="match-elo">
+                    {% if match.elo_player1 > 0 %}
+                        <span style="color: green;">+{{ match.elo_player1 }}</span>
+                    {% else %}
+                        <span style="color: red;">{{ match.elo_player1 }}</span>
+                    {% endif %}
+                        <span class="split-match">/</span>
+                    {% if match.elo_player2 > 0 %}
+                        <span style="color: green;">+{{ match.elo_player2 }}</span>
+                    {% else %}
+                        <span style="color: red;">{{ match.elo_player2 }}</span>
+                    {% endif %}
+                </div>
             </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="progress-button" style="{% if not user_data.matches %}display: none;{% endif %}" id="progress-button">
+        {% if user_data.matches %}
+            {% if not user_data.visited %}
+                <a id="progress-link" hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn">Show My Progress</a>
+            {% else %}
+                <a hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn" disable>Show His Progress</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if not user_data.matches %}
+        <div class="no-match" id="no-match">
+            <p>No matches played yet</p>
         </div>
-        {% endfor %}
-    </div>
-    <div class="progress-button">
-        {% if not user_data.visited %}
-        <a hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn">{% trans "Show My Progress" %}</a>
-        {% else %}
-        <a hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn" disable>{% trans "Show His Progress" %}</a>
-        {% endif %}
-    </div>
-    {% else %}
-    <div class="no-match">
-        {% if not user_data.visited %}
-        <p>{% trans "Vous n'avez aucun match joué pour le moment"%}</p>
-        <a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" id="btn-play">{% trans "Jouer"%}</a>
-        {% else %}
-        <p>{% trans "N'as encore aucun match joué pour le moment"%}</p>
-        <a hx-get="/game/game" hx-target="#main-content" hx-push-url="true" href="/game/game/" id="btn-play">{% trans "Play with"%}</a>
-        {% endif %}
-    </div>
     {% endif %}
 </div>
 {% endblock %}

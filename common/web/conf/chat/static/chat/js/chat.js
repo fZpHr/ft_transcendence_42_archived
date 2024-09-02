@@ -61,37 +61,42 @@ function handlersInviteResp(contactId) {
 
 
 function handlersGameInvite(contactId, wsChat) {
-    let inviteBtn = document.getElementById('invite-btn');
-    inviteBtn.addEventListener('click', async () => {
-        let resp = await fetch(`/api/sendInvite/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contactId: contactId,
-            }),
+    try {
+        let inviteBtn = document.getElementById('invite-btn');
+    
+        inviteBtn.addEventListener('click', async () => {
+            let resp = await fetch(`/api/sendInvite/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contactId: contactId,
+                }),
+            });
+            resp = await resp.json();
+            let message = 'Game invite';
+            sendWebSocketMessage(message, userId, contactId , wsChat);
+            removeGameInvites();
+            let chatMessages = document.getElementById('chat-messages');
+            var msgDiv = document.createElement('div');
+            msgDiv.className = 'message';
+            msgDiv.classList.add('my-message');
+            msgDiv.classList.add('game-invite');
+            let gameDiv = document.createElement('div');
+            gameDiv.className = 'game-invite-head';
+            gameDiv.innerHTML = '<img src="https://d1tq3fcx54x7ou.cloudfront.net/uploads/store/tenant_161/download/366/image/large-041f064dd94c96b097973e5d41a9c45f.jpg" alt="game-inv-img">';
+            msgDiv.appendChild(gameDiv);
+            let chooseGamesDiv = document.createElement('div');
+            chooseGamesDiv.className = 'choose-games';
+            chooseGamesDiv.innerHTML += '<span>Pending</span>';
+            msgDiv.appendChild(chooseGamesDiv);
+            chatMessages.appendChild(msgDiv);
         });
-        resp = await resp.json();
-        let message = 'Game invite';
-        sendWebSocketMessage(message, userId, contactId , wsChat);
-        removeGameInvites();
-        let chatMessages = document.getElementById('chat-messages');
-        var msgDiv = document.createElement('div');
-        msgDiv.className = 'message';
-        msgDiv.classList.add('my-message');
-        msgDiv.classList.add('game-invite');
-        let gameDiv = document.createElement('div');
-        gameDiv.className = 'game-invite-head';
-        gameDiv.innerHTML = '<img src="https://d1tq3fcx54x7ou.cloudfront.net/uploads/store/tenant_161/download/366/image/large-041f064dd94c96b097973e5d41a9c45f.jpg" alt="game-inv-img">';
-        msgDiv.appendChild(gameDiv);
-        let chooseGamesDiv = document.createElement('div');
-        chooseGamesDiv.className = 'choose-games';
-        chooseGamesDiv.innerHTML += '<span>Pending</span>';
-        msgDiv.appendChild(chooseGamesDiv);
-        chatMessages.appendChild(msgDiv);
-    });
+    } catch (error) {
+        console.error('Failed to handlersGameInvite:', error);
+    }
 }
 
 // ============================== CHAT utils ==============================
@@ -292,6 +297,8 @@ async function handleCloseChatChanel(contactId) {
         const backBtn = document.getElementById('back-btn');
         backBtn.addEventListener('click', async function () {
             await APIclearNotifChatFor(contactId);
+            console.log('click');
+            wsChat.close();
             toggleChatMenu(contactId);
         });
     } catch (error) {
@@ -305,7 +312,6 @@ async function handlersContactClick() {
         document.querySelectorAll('.contact').forEach(contact => {
             contact.addEventListener('click', async(event) => {
                 let contactId = event.target.closest('.contact').getAttribute('data-contact-id');
-                console.log('ici contactId:', contactId);
                 APIclearNotifChatFor(contactId);
                 toggleChanelChat(contactId);
             });

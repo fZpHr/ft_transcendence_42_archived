@@ -1,13 +1,5 @@
-{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "newGame" %}{% endblock %}
-
-{% block custom_css %}
-<link rel="stylesheet" type="text/css" href="{% static '/connect4/css/connect4.css' %}">
-{% endblock %}
-
-{% block content %}
 <div id="player-info">
     <div id="player1-info">
         <img id="player1-img" src="">
@@ -19,7 +11,7 @@
         <p id="player2-name"></p>
     </div>
     <div id="timer">30</div>
-</div>
+</div> 
 <div id="game-wrapper">
     <h3 id="current-player">
     </h3>
@@ -35,8 +27,4 @@
         <button id="cancel">Menu principal</button>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-    <script src="{% static '/connect4/js/connect4.js' %}"></script>
-{% endblock %}
+<script src="{% static '/connect4/js/connect4.js' %}"></script>

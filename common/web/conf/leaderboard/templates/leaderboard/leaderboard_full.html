@@ -4,8 +4,7 @@
 {% load static %}
 
 {% block title %}
-{% trans 'Leaderboard' %}
-{% endblock %}
+Leaderboard{% endblock %}
 
 {% block content %}
 
@@ -21,7 +20,7 @@
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.1.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.1.eloPong }}</p>
+                        <p>Elo: {{ leaderboard.1.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -36,7 +35,7 @@
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.0.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.0.eloPong }}</p>
+                        <p>Elo: {{ leaderboard.0.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -51,7 +50,7 @@
                     </div>
                     <div class="data-podium">
                         <h2>{% trans leaderboard.2.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboard.2.eloPong }}</p>
+                        <p>Elo: {{ leaderboard.2.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -62,13 +61,13 @@
             <div class="body-leaderboard head">
                 <div class="user">
                     <div class="rank">
-                        <p>{% trans 'Rank' %}</p>
+                        <p>Rank</p>
                     </div>
                     <div class="username">
-                        <p>{% trans 'Username' %}</p>
+                        <p>Username</p>
                     </div>
                     <div class="elo">
-                        <p>{% trans 'Elo' %}</p>
+                        <p>Elo</p>
                     </div>
                 </div>
             </div>

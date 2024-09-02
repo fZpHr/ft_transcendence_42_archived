@@ -64,8 +64,8 @@ def ranked(request):
 @login_required
 def connect4(request):
     if request.htmx:
-        return render(request, "ranked/connect4.html")
-    return render(request, "ranked/connect4_full.html")
+        return render(request, "connect4/connect4.html")
+    return render(request, "connect4/connect4_full.html")
 
 @login_required
 def pong3D(request):
@@ -152,10 +152,6 @@ def pongTournamentLobby(request):
                 if img_path.startswith('profile_pics/'):
                     player.img = '/media/' + img_path
         ia_players = lobby.ai_players.all()
-        logger.info("==============> ", ia_players)
-        logger.info("==============> ", players)
-        logger.info("==============> ", lobby)
-        logger.info("==============> ", playerId)
         if request.htmx:
             logger.info("htmx")
             return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
@@ -177,13 +173,27 @@ def pongTournamentLobby(request):
 @login_required
 def pongTournamentGame(request):
     try:
-        # logger.info('coucou mec')
-        logger.info("==============> ", request.GET)
         gameId = request.GET.get('gameId', 'default_value')
-        logger.info("==============> ", gameId)
-        # playerId = request.user.username
-        # playerId = Player.objects.get(username=playerId).id
-        return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0})
+        logger.info("==============> %s", gameId)
+        game = Game_Tournament.objects.get(id=gameId)
+        logger.info("==============> %s", game)
+        participantsPlayer = game.players.all()
+        participantsAI = game.ai_players.all()
+        participants = []
+        for player in participantsPlayer:
+            participants.append({
+                'id': player.id,
+                'username': player.username,
+                'img': player.img
+            })
+        for player in participantsAI:
+            participants.append({
+                'id': '-1',
+                'username': 'ia',
+                'img': 'ia'
+            })
+
+        return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0, 'game': game, 'participants': participants})
     except Exception as e:
         logger.info(e)
         return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})

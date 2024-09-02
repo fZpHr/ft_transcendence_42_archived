@@ -52,6 +52,9 @@
     background-color: var(--to-teal-5-rgba);
 }
 
+#profil-content .select-game-history-option.active {
+    background-color: var(--to-teal-5-rgba);
+}
 
 #profil-content .match-legend {
     display: flex;

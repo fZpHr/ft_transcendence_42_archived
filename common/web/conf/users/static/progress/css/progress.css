@@ -1,14 +1,16 @@
 .warp-progress {
     background-color: var(--to-teal-2-rgba);
 	width: 100vw;
-	height: 100vh;
+	min-height: 100vh;
+    height: fit-content;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 }
 
 #progress-content .aside-stats {
-	width: 15%;
+	width: 20%;
+    overflow: hidden;
     background-color: var(--to-teal-2-rgba);
 	height: fit-content;
     display: flex;
@@ -23,6 +25,7 @@
 
 #progress-content .aside-stats:hover, #progress-content .warp-stats:hover , #progress-content .aside-profil:hover {
     transform: scale(1.02);
+
 }
 
 #progress-content .warp-burger-menus {
@@ -47,7 +50,7 @@
 
 
 #progress-content .warp-stats {
-	width: 60%;
+	width: 50%;
 	height: 80vh;
     margin-top: 10vh;
 	display: flex;
@@ -68,6 +71,7 @@
                 3px 0px 5px rgba(0, 0, 0, 0.2), 
                 -3px 0px 5px rgba(0, 0, 0, 0.2);
     pointer-events: none;
+    overflow: hidden;
 }
 
 #progress-content .game-history {
@@ -154,31 +158,10 @@
     padding: 5px;
 }
 
-#progress-content .player-info,
-#progress-content .match-info,
-#progress-content .match-winner,
-#progress-content .match-elo {
-    font-size: 1rem;
-    color: var(--text-color);
-}
-
-#progress-content .match-elo {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    font-size: 0.9rem;
-}
-
-#progress-content .match-elo div {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-}
-
 #progress-content .progress-chart {
     display: flex;
     align-items: flex-end;
-    width: 90%;
+    width: 100%;
     height: 90%;
     margin: auto;
     display: flex;
@@ -228,7 +211,8 @@
 }
 
 #progress-content .aside-profil {
-	width: 15%;
+	width: 20%;
+    overflow: hidden;
     background-color: var(--to-teal-2-rgba);
 	height: fit-content;
     display: flex;
@@ -292,3 +276,302 @@
     color: var(--to-teal-3-rgba);
     background-color: var(--text-color);
 }
+
+#progress-content .box-skill {
+    width: 50vw;
+    padding: 20px;
+    margin-top: -60px;
+    background-color: var(--to-teal-2-rgba);
+    box-sizing: border-box;
+    border-radius: 10px;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#progress-content .box-skill span.title {
+    width: 100%;
+    margin-top: 0;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--text-color);
+    padding-bottom: 10px;
+}
+
+#progress-content .select-game-history {
+    width: 70%;
+    margin: auto;
+    height: 60px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#progress-content .select-game-history-option {
+    background-color: var(--to-teal-3-rgba);
+    padding: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+#progress-content .select-game-history-option:hover {
+    background-color: var(--to-teal-5-rgba);
+}
+
+#progress-content .select-game-history-option.active {
+    background-color: var(--to-teal-5-rgba);
+}
+
+#progress-content .match-legend {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 1rem;
+    color: var(--to-teal-5-rgba);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#progress-content .match-legend .legend-item {
+    flex: 1;
+}
+
+#progress-content .match-history {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+#progress-content .match {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--to-teal-3-rgba);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-wrap: wrap;
+}
+
+#progress-content .match:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+#progress-content .match>div {
+    flex: 1;
+    text-align: center;
+    padding: 5px;
+}
+
+#progress-content .player-info,
+#progress-content .match-info,
+#progress-content .match-winner,
+#progress-content .match-elo {
+    font-size: 1rem;
+}
+
+#progress-content .match-elo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+#progress-content .match-elo div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+#progress-content .img-box-match {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#progress-content .img-match {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#progress-content .progress-button {
+    background-color: var(--to-teal-1-rgba);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: ease-in-out 0.3s;
+}
+
+#progress-content .progress-button:hover {
+    padding: 15px 25px;
+}
+
+#progress-content .progress-button a {
+    text-decoration: none;
+    color: white;
+    width: 100%;
+    height: 100%;
+}
+
+#progress-content .progress-button a:hover {
+    text-decoration: none;
+    color: white;
+}
+
+#progress-content .no-match {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#btn-play {
+    background-color: var(--to-teal-3-rgba);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    text-decoration: none;
+    text-align: center;
+}
+
+#btn-play:hover {
+    color: var(--to-teal-3-rgba);
+    background-color: white;
+}
+
+@media screen and (max-width: 1200px) {
+    
+    .warp-progress {
+        flex-wrap: wrap;
+    }
+
+    #progress-content .aside-stats {
+        width: 45%;
+        margin-top: 10vh;
+    }
+
+    #progress-content .warp-stats {
+        width: 90%;
+        margin-top: 30px;
+        order: 3;
+    }
+    
+    #progress-content .aside-profil {
+        margin-top: 10vh;
+        width: 45%;
+        height: 50%;
+        order: 2;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .warp-progress {
+        flex-wrap: nowrap;
+        flex-direction: column;
+    }
+
+    #progress-content .game-graph {
+        display: none;
+    }
+
+    #progress-content .aside-stats {
+        width: 60%;
+        margin-top: 30px;
+        order: 2;
+    }
+
+    #progress-content .warp-stats {
+        width: 90%;
+        margin-top: 30px;
+        order: 3;
+        height: fit-content;
+    }
+    
+    #progress-content .aside-profil {
+        width: 60%;
+        order: 1;
+    }
+
+    #profile-username {
+        font-size: 1.75rem;
+    }
+
+    #progress-content .underline {
+        border-bottom: 1px solid var(--text-color);
+        font-size: 1.5rem;
+    }
+
+    .time {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    #progress-content .aside-stats {
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    #progress-content .warp-stats {
+        width: 100%;
+        margin-top: 30px;
+    }
+    
+    #progress-content .aside-profil {
+        width: 100%;
+    }
+
+    #profile-username {
+        font-size: 1.4rem;
+    }
+
+    #progress-content .match-legend  {
+        display: none;
+    }
+
+    #progress-content .split-match {
+        display: none;
+    }
+
+    #progress-content .match {
+        flex-direction: column;
+    }
+
+    #progress-content .img-box-match, #progress-content .match-elo {
+        width: 80%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+}
+

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Home" %}{%  endblock %}
+{% block title %}Home{%  endblock %}
 
 {% block custom_css %}
     <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"> -->
@@ -26,7 +26,7 @@
     <div class="home__containt">
         <div class="row-content">
             <div class="left-content fade-in">
-                <img src="{% static 'img/pong.png' %}" alt="{% trans 'pong png' %}">
+                <img src="{% static 'img/pong.png' %}" alt="pong png">
             </div>
             <div class="right-content">
                 <div class="list_gamemode">
@@ -125,13 +125,12 @@
 
             </div>
             <div class="right-content fade-in">
-                <span class="WAITING">WAIT IMG CONNECT4</span>
-                <!-- <img src="{% static 'ranked/img/connect4.png' %}" alt="{% trans 'ranked png' %}"> -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Connect4_Empty.PNG" alt="connect 4">
             </div>
         </div>
     </div>
-    <div class="home__containt custom_game" style="justify-content: center;">
-        <h1 style="color: white;">DEMO CUSTOM GAME</h1>
+    <div class="home__containt custom_game">
+        <img src="{% static 'img/pong.png' %}" alt="pong png">
     </div>
     <div class="home__containt card-presentation">
         <div class="card-presentation-title fade-in">
@@ -245,9 +244,5 @@
         </div>
     </div>  
 </div>
-{%  endblock %}
-
-
-{% block extra_scripts %}
-    <script src="{% static 'js/home.js' %}"></script>
+<script src="{% static 'js/home.js' %}"></script>
 {%  endblock %}

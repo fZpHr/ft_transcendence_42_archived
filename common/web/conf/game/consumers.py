@@ -34,7 +34,9 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                 'player2': None
             }
         if room_counts.get(self.room_group_name, 0) >= 2:
-            #maybe send a message to the user that the room is full
+            await self.send(text_data=json.dumps({
+                'type': 'roomFull'
+            }))
             return
 
         await self.channel_layer.group_add(
@@ -65,10 +67,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         logger.info("player : ")
         logger.info(str(player))
 
-        if room_counts.get(self.room_group_name, 0) != 2:
-            logger.info("Error: You are alone!")
-            return
-
         if text_data_json['type'] == "join":
             logger.info("JOIN called")
             roles = ['yellow', 'red']
@@ -77,7 +75,14 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                 role = random.choice(roles)
                 player_colors[player_id] = role
                 Connect4GameConsumer.games[self.room_name]['player1'] = {'player_id': player_id,'color': role}
-                return
+                await self.send(text_data=json.dumps({
+                    'type': 'roleGiving',
+                    'role': role,
+                    'playerTurn': Connect4GameConsumer.games[self.room_name]['playerTurn'],
+                    'board': Connect4GameConsumer.games[self.room_name]['board'],
+                    'playerInfo': PlayerSerializer(player).data,
+                    'opponentInfo': None
+                }))
             elif Connect4GameConsumer.games[self.room_name]['player2'] is None:
                 color = Connect4GameConsumer.games[self.room_name]['player1']['color']
                 role = 'yellow' if color == 'red' else 'red'
@@ -199,12 +204,15 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         player2 = Connect4GameConsumer.games[self.room_name]['player2']
         game = await sync_to_async(models.Game.objects.get)(UUID=gameid)
         player1DB = await sync_to_async(models.Player.objects.get)(id=player1['player_id'])
-        player2DB = await sync_to_async(models.Player.objects.get)(id=player2['player_id'])
+        if player2 is not None:
+            player2DB = await sync_to_async(models.Player.objects.get)(id=player2['player_id'])
+        else:
+            player2DB = await sync_to_async(lambda: game.player2)()
         if event['winner'] == player1['color']:
             player1DB.eloConnect4 += 10 * (1 - ((2 ** (player1DB.eloConnect4/ 100)) / ((2 ** (player1DB.eloConnect4/ 100)) + (2 ** (player2DB.eloConnect4/ 100)))))
             player2DB.eloConnect4 += 10 * (0 - ((2 ** (player2DB.eloConnect4/ 100)) / ((2 ** (player2DB.eloConnect4/ 100)) + (2 ** (player1DB.eloConnect4/ 100)))))
             game.winner = player1DB
-        elif event['winner'] == player2['color']:
+        else:
             player1DB.eloConnect4 += 10 * (0 - ((2 ** (player1DB.eloConnect4/ 100)) / ((2 ** (player1DB.eloConnect4/ 100)) + (2 ** (player2DB.eloConnect4/ 100)))))
             player2DB.eloConnect4 += 10 * (1 - ((2 ** (player2DB.eloConnect4/ 100)) / ((2 ** (player2DB.eloConnect4/ 100)) + (2 ** (player1DB.eloConnect4/ 100)))))
             game.winner = player2DB

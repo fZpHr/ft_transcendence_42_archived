@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from django.core.serializers.json import DjangoJSONEncoder
 from asgiref.sync import sync_to_async
 
+import logging
+
+logger = logging.getLogger('print')
 
 class NotifConsumer(AsyncWebsocketConsumer):
     
@@ -18,10 +21,11 @@ class NotifConsumer(AsyncWebsocketConsumer):
             self.room_group_name = None
         
         async def connect(self):
-            self.room_name = self.scope['url_route']['kwargs']['room_name']
+            self.room_name = self.scope[
+                'url_route']['kwargs']['room_name']
             self.room_group_name = f'notif_{self.room_name}'
     
-            print(f"[WebSocket NOTIF] : Connecting to room {self.room_name}")
+            logger.info(f"[WebSocket NOTIF] : Connecting to room {self.room_name}")
     
             await self.channel_layer.group_add(
                 self.room_group_name,
@@ -29,10 +33,10 @@ class NotifConsumer(AsyncWebsocketConsumer):
             )
     
             await self.accept()
-            print(f"[WebSocket NOTIF] : Connection established for room {self.room_name}")
+            logger.info(f"[WebSocket NOTIF] : Connection established for room {self.room_name}")
     
         async def disconnect(self, close_code):
-            print(f"[WebSocket NOTIF] : Disconnecting from room {self.room_name} with close code {close_code}")
+            logger.info(f"[WebSocket NOTIF] : Disconnecting from room {self.room_name} with close code {close_code}")
             await self.channel_layer.group_discard(
                 self.room_group_name,
                 self.channel_name
@@ -45,7 +49,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
             link = text_data_json['link']
             notifType = text_data_json['notifType']
             userDestination = text_data_json['userDestination']
-            print(f"[WebSocket NOTIF] : Received message: {ID_Game} in room {self.room_name}")
+            logger.info(f"[WebSocket NOTIF] : Received message: {ID_Game} in room {self.room_name}")
 
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -60,7 +64,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
             )
 
         async def notif_message(self, event):
-            print(f"[WebSocket NOTIF] : Sending message: to room {self.room_name}")
+            logger.info(f"[WebSocket NOTIF] : Sending message: to room {self.room_name}")
 
             await self.send(text_data=json.dumps({
                 'notifType': event['notifType'],
@@ -82,7 +86,7 @@ class SocialConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'social_{self.room_name}'
 
-        print(f"[WebSocket SOCIAL] : Connecting to room {self.room_name}")
+        logger.info(f"[WebSocket SOCIAL] : Connecting to room {self.room_name}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -90,10 +94,10 @@ class SocialConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        print(f"[WebSocket SOCIAL] : Connection established for room {self.room_name}")
+        logger.info(f"[WebSocket SOCIAL] : Connection established for room {self.room_name}")
 
     async def disconnect(self, close_code):
-        print(f"[WebSocket SOCIAL] : Disconnecting from room {self.room_name} with close code {close_code}")
+        logger.info(f"[WebSocket SOCIAL] : Disconnecting from room {self.room_name} with close code {close_code}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -103,7 +107,7 @@ class SocialConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         updateId = text_data_json['updateId']
         senderId = text_data_json['senderId']
-        print(f"[WebSocket SOCIAL] : Received updateId: {updateId} in room {self.room_name}")
+        logger.info(f"[WebSocket SOCIAL] : Received updateId: {updateId} in room {self.room_name}")
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -117,7 +121,7 @@ class SocialConsumer(AsyncWebsocketConsumer):
     async def social_updateId(self, event):
         updateId = event['updateId']
         senderId = event['senderId']
-        print(f"[WebSocket SOCIAL] : Sending updateId: {updateId} to room {self.room_name}")
+        logger.info(f"[WebSocket SOCIAL] : Sending updateId: {updateId} to room {self.room_name}")
 
         await self.send(text_data=json.dumps({
             'updateId': updateId,
@@ -135,7 +139,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
 
-        print(f"[WebSocket CHAT] : Connecting to room {self.room_name}")
+        logger.info(f"[WebSocket CHAT] : Connecting to room {self.room_name}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -143,10 +147,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        print(f"[WebSocket CHAT] : Connection established for room {self.room_name}")
+        logger.info(f"[WebSocket CHAT] : Connection established for room {self.room_name}")
 
     async def disconnect(self, close_code):
-        print(f"[WebSocket CHAT] : Disconnecting from room {self.room_name} with close code {close_code}")
+        logger.info(f"[WebSocket CHAT] : Disconnecting from room {self.room_name} with close code {close_code}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -157,7 +161,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         senderId = text_data_json['senderId']
         contactId = text_data_json['contactId']
-        print(f"[WebSocket CHAT] : Received message: {message} in room {self.room_name}")
+        logger.info(f"[WebSocket CHAT] : Received message: {message} in room {self.room_name}")
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -173,7 +177,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         senderId = event['senderId']
         contactId = event['contactId']
-        print(f"[WebSocket CHAT] : Sending message: {message} to room {self.room_name}")
+        logger.info(f"[WebSocket CHAT] : Sending message: {message} to room {self.room_name}")
 
         await self.send(text_data=json.dumps({
             'message': message,

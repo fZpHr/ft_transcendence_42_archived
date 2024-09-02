@@ -6,12 +6,12 @@
 
 async function updateAllNotif() {
     try {
-        // globalNotif = await APIgetGlobalNotif(userId);
-        // chatNotif = await getChatNotif(globalNotif);
-        // socialNotif = await getSocialNotif(globalNotif);
-        // nbrChatNotif = await APIgetNbrChatNotif(userId);
-        // nbrSocialNotif = await APIgetNbrSocialNotif(userId);
-        // console.log('NOtif updated');
+        globalNotif = await APIgetGlobalNotif(userId);
+        chatNotif = await getChatNotif(globalNotif);
+        socialNotif = await getSocialNotif(globalNotif);
+        nbrChatNotif = await APIgetNbrChatNotif(userId);
+        nbrSocialNotif = await APIgetNbrSocialNotif(userId);
+        console.log('NOtif updated');
     } catch (error) {
         console.error('Failed to updateAllNotif', error);
     }

@@ -1,7 +1,8 @@
 const path = require('path');
 
 module.exports = {
-entry: './socket.js',
+  mode: 'development',
+  entry: './socket.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),

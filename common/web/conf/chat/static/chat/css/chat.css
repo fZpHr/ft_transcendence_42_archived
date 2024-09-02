@@ -11,6 +11,10 @@ textarea:active {
     border: none;
 }
 
+#chat {
+    z-index: 10000;
+}
+
 #chat-btn {
     background-color: var(--to-teal-3-rgba);
     color: #fff;

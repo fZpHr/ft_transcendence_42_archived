@@ -130,7 +130,7 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
         currentStartY += (canvasHeight / splitHeight);
         currentCanvasWidth -= (canvasWidth / splitWidth);
     }
-}
+} 
 
 async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jumpHeight, nbrParticipants, directionArrow, canvasWidth, splitWidth) {
     try {

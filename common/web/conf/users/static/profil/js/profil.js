@@ -1,3 +1,4 @@
+
 // document.addEventListener('DOMContentLoaded', async function () {
 function loadProfile() {
 	handlerUpdatePP();
@@ -5,6 +6,7 @@ function loadProfile() {
 	toggleBackPanel();
 	toggleBackPasswordPanel();
 	toggleAllPasswords();
+	toggleShowStats();
 };
 // });
 
@@ -215,4 +217,103 @@ async function toggleAllPasswords() {
     }
 }
 
+async function toggleShowStats() {
+	try {
+		let statsOptions = document.querySelectorAll('.select-game-history-option');
+		statsOptions.forEach(option => {
+			option.addEventListener('click', function () {
+				statsOptions.forEach(option => {
+					option.classList.remove('active');
+				});
+				option.classList.add('active');
+				let statsPanel = document.getElementById('game-history-panel');
+				statsPanel.innerHTML = '';
+				let type = option.getAttribute('data-type');
+				loadStats(type);
+			});
+		});
+	} catch (e) {
+		console.error(e);
+	}
+}
+
 loadProfile();
+
+
+async function innerNoGames() {
+	let statsPanel = document.getElementById('game-history-panel');
+	statsPanel.innerHTML = `
+		<div class="no-match">
+			<p>No matches played yet</p>
+		</div>
+	`;
+}
+
+async function innerStats(games) {
+	try {
+		let statsPanel = document.getElementById('game-history-panel');
+		if (games.length == 0) {
+			innerNoGames();
+			return;
+		}
+
+		for (const data of games) {
+			console.log(data);
+			let game = document.createElement('div');
+			game.classList.add('match');
+			game.innerHTML = `
+				<div class="player-info img-box-match">
+					<img src="${data.p1_img}" alt=" ${data.player1_username}" class="img-match ${data.player1_username == data.winner_username ? 'online' : 'offline'}">
+					<span class="split-match">/</span>
+					<img src="${data.p2_img}" alt=" ${data.player2_username}" class="img-match ${data.player2_username == data.winner_username ? 'online' : 'offline'}">
+				</div>
+				<div class="match-info">${ data.time_minutes }m ${ data.time_seconds }s</div>
+				<div class="match-winner">${ data.winner_username }</div>
+				<div class="match-elo">
+					<span style="color: ${data.elo_player1 > 0 ? 'green' : 'red'};">${data.elo_player1}</span>
+					<span class="split-match">/</span>
+					<span style="color: ${data.elo_player2 > 0 ? 'green' : 'red'};">${data.elo_player2}</span>
+				</div>
+			`;
+			statsPanel.appendChild(game);
+		}
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+async function innerShowProgress(games, type) {
+	try {
+		let progressButton = document.getElementById('progress-button');
+		console.log(progressButton);
+		if (games.length == 0) { 
+			progressButton.innerHTML = ``;
+			progressButton.style.display = 'none';
+			return;
+		}
+		progressButton.style.display = 'block';
+        let href = (type === 'connect4' ? '/progress/connect4' : '/progress/pong');
+		console.log(href);
+		progressButton.innerHTML = `<a id="progress-link" hx-get="${href}" hx-target="#main-content" hx-push-url="true" href="${href}" class="btn">Show My Progress</a>`
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+async function loadStats(type) {
+	try {
+		let statsPanel = document.getElementById('game-history-panel');
+		let games = [];
+		if (type == 'connect4')
+			games = await APIgetConnect4GameForUser(user.id);
+		else
+			games = await APIgetPongGameForUser(user.id);
+		let noGames = document.querySelector('.no-match');
+		if (noGames)
+			noGames.remove();
+		innerStats(games.match_data);
+		innerShowProgress(games.match_data, type);
+	} catch (e) {
+		console.error(e);
+	}
+}

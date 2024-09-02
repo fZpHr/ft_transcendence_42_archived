@@ -3,13 +3,13 @@
 
 // ============================== MAIN ==============================
 
-let user;
-let userId;
-let globalNotif;
-let chatNotif;
-let socialNotif;
-let nbrChatNotif;
-let nbrSocialNotif;
+var user;
+var userId;
+var globalNotif;
+var chatNotif;
+var socialNotif;
+var nbrChatNotif;
+var nbrSocialNotif;
 
 document.addEventListener('DOMContentLoaded', async function () {
     user = await APIgetCurrentUser();

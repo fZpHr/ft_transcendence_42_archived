@@ -107,6 +107,20 @@ async function APIclearNotifChatFor(userId) {
 	});
 }
 
+async function APIgetConnect4GameForUser(userId) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/getConnect4GameForUser?userId=${userId}`);
+		resolve(game);
+	});
+}
+
+async function APIgetPongGameForUser(userId) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/getPongGameForUser?userId=${userId}`);
+		resolve(game);
+	});
+}
+
 
 function APIupdateSocialStatus(socialUserId, friendStatus) {
     return fetch("/api/updateSocialStatus/", {

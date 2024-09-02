@@ -100,10 +100,6 @@ async function toggleSubmitForm() {
                         if (result.success) {
                             window.location.href = result.redirect_url || '/';
                         } else {
-                            console.log(event.errorBox);
-                            // error = `{% trans "${result.error}" %}`
-                            const error = gettext(result.error);
-                            console.log(error);
                             event.errorBox.innerHTML = error;
                             event.errorBox.style.display = 'block';
                         }
@@ -207,7 +203,6 @@ async function toggleShowPasswords() {
 async function checkIfInputIsFiled(input) {
     let label = input.nextElementSibling;
     let validIndicator = input.parentElement.querySelector('.valid-indicator');
-    console.log(input.value);
     if (input.value) {
         label.classList.add('filled');
         validIndicator.style.opacity = '1';

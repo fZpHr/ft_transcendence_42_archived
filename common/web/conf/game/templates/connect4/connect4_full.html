@@ -1,5 +1,9 @@
+{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% block title %}newGame{% endblock %}
+
+{% block content %}
 <div id="player-info">
     <div id="player1-info">
         <img id="player1-img" src="">
@@ -27,4 +31,7 @@
         <button id="cancel">Menu principal</button>
     </div>
 </div>
-<script src="{% static '/connect4/js/connect4.js' %}"></script>
+{% block extra_scripts %}
+    <script src="{% static '/connect4/js/connect4.js' %}"></script>
+{% endblock %}
+{% endblock %}

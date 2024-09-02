@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Home Game" %}{% endblock %}
+{% block title %}Home Game{% endblock %}
 
 {% block content %}
 <div id="game-home-content" class="home-game-wrapper">
@@ -23,12 +23,6 @@
                 <div class="select-option" id="pong-custom-btn" tabindex="5" href="/game/pong/custom" hx-get="/game/pong/custom" hx-target="#main-content" hx-push-url="true">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
-                <!-- <div class="select-option" id="pong-manda-btn" tabindex="4" onclick="window.location.href='/game/pong/local'">
-                    <i class="fas fa-house "></i>
-                </div>
-                <div class="select-option" id="pong-custom-btn" tabindex="5" onclick="window.location.href='/game/pong/custom'">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                </div> -->
             </div>
         </div>
     </div>
@@ -51,13 +45,8 @@
     <div class="right-game">
         <img src="{% static 'home/img/connect4-img.png' %}" alt="connect4 img">
     </div>
-    <!-- <div class="circle"></div>
     <div class="circle-select"><div class="circle-part"></div></div>
     <div class="circle-select-2"><div class="circle-part-2"></div></div>
-    <div class="left-bounth"><div class="left-bounth-part"></div></div>
-    <div class="right-bounth"><div class="right-bounth-part"></div></div> -->
+    <script src="{% static 'home/js/bundle.js' %}"></script>
 </div>
-{% endblock %}
-{% block extra_scripts %}
-<script type="module" src="{% static 'home/js/home.js' %}"></script>
 {% endblock %}

@@ -26,11 +26,8 @@ from api.login_required import login_required
 @login_required
 def getHistoryGame(request):
     try:
-        print("getHistoryGame")
         user = request.user
-        print("user [", user, "]")
         player = Player.objects.get(username=user)
-        print("player [", player, "]")
         games = Game.objects.filter(player1=player) | Game.objects.filter(player2=player)
         games = games.order_by('-created_at')
         serialized_games = serializers.serialize('json', games)
@@ -191,7 +188,6 @@ def decompositionProduitFactorPremier(n):
 
 def getNbrGame(nbrParticipants, DFP):
     if not DFP:
-        print('DFP is empty')
         return 0
 
     nbrGame = 0
@@ -203,8 +199,6 @@ def getNbrGame(nbrParticipants, DFP):
     return int(nbrGame)
 
 def makeMatchMakingTournament(lobby, UUIDTournament):
-    print('makeMatchMakingTournament')
-    print(UUIDTournament)
 
     participants = getAllParticipants(lobby)
     nbrParticipants = len(participants)
@@ -212,11 +206,6 @@ def makeMatchMakingTournament(lobby, UUIDTournament):
     nbrGame = getNbrGame(nbrParticipants, DFP)
     nbrFirstGame = reduce(lambda x, y: x * y, DFP[:-1])
     nbrParticipantsForFirstGame = nbrParticipants // nbrFirstGame
-    print('nbrParticipants', nbrParticipants)
-    print('DFP = > [', DFP, ']')
-    print('nbrGame = >', nbrGame)
-    print('nbrFirstGame = >', nbrFirstGame)
-    print('nbrParticipantsForFirstGame = >', nbrParticipantsForFirstGame)
 
     for i in range(nbrFirstGame):
         participantsForGame = participants[i*nbrParticipantsForFirstGame:(i+1)*nbrParticipantsForFirstGame]
@@ -251,7 +240,6 @@ def lockLobby(request):
         if Game_Tournament.objects.filter(UUID_TOURNAMENT__UUID_LOBBY=lobby).exists():
             return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
 
-        print('===========================================')
         Tournament.objects.create(UUID_LOBBY=lobby)
         tournament = Tournament.objects.get(UUID_LOBBY=lobby)
         makeMatchMakingTournament(lobby, tournament.UUID)
@@ -318,22 +306,76 @@ def getTournamentInfo(request):
 # ============================================ GAME MANDA ============================================
 # ===============================================================================================
 
+import logging
 
-@api_view(['POST'])
+logger = logging.getLogger('print')
+
+
+@api_view(['GET'])
 @login_required
-def logUserForPlay(request):
+def getPongGameForUser(request):
     try:
         user = request.user
-        mail = request.POST.get("email")
-        if user.email == mail:
-            return JsonResponse({'success': False, 'error': 'Its your email'})
-        password = request.POST.get("pass")
-        player = Player.objects.get(mail=mail)
-        user = authenticate(request, username=player.username, password=password)
-        if user is not None:
-            return JsonResponse({'success': True, 'username': player.username, 'img': str(player.img),
-                                 'id': player.id, 'eloPong': player.eloPong, 'eloConnect4': player.eloConnect4})
-        else:
-            return JsonResponse({'success': False, 'error': 'Invalid email or password'})
+        player = Player.objects.get(username=user)
+        games = (Game.objects.filter(player1=player, finish=True, type="pong") | Game.objects.filter(player2=player, finish=True, type="pong"))
+        games = games.order_by('-created_at')
+        
+        match_data_list = []
+        for game in games:
+            logger.info(game.type)
+            game.player1.img.name = '/media/' + game.player1.img.name if game.player1.img.name.startswith("profile_pics/") else game.player1.img.name
+            game.player2.img.name = '/media/' + game.player2.img.name if game.player2.img.name.startswith("profile_pics/") else game.player2.img.name
+            total_seconds = game.time
+            minutes, seconds = divmod(total_seconds, 60)
+            match_data = {
+                'player1_username': game.player1.username,
+                'player2_username': game.player2.username,
+                'p1_img': game.player1.img.name,
+                'p2_img': game.player2.img.name,
+                'time_minutes': minutes,
+                'time_seconds': seconds,
+                'winner_username': game.winner.username,
+                'elo_player1': game.elo_after_player1 - game.elo_before_player1,
+                'elo_player2': game.elo_after_player2 - game.elo_before_player2,
+            }
+            match_data_list.append(match_data)
+        return Response({"match_data": match_data_list}, status=200)
     except Player.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Invalid email or password'})
+        return Response({"error": "Player not found"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+@api_view(['GET'])
+@login_required
+def getConnect4GameForUser(request):
+    try:
+        user = request.user
+        player = Player.objects.get(username=user)
+        games = (Game.objects.filter(player1=player, finish=True, type="connect4") | Game.objects.filter(player2=player, finish=True, type="connect4"))
+        games = games.order_by('-created_at')
+        
+        match_data_list = []
+        for game in games:
+            logger.info(game.UUID)
+            logger.info(game.type)
+            game.player1.img.name = '/media/' + game.player1.img.name if game.player1.img.name.startswith("profile_pics/") else game.player1.img.name
+            game.player2.img.name = '/media/' + game.player2.img.name if game.player2.img.name.startswith("profile_pics/") else game.player2.img.name
+            total_seconds = game.time
+            minutes, seconds = divmod(total_seconds, 60)
+            match_data = {
+                'player1_username': game.player1.username,
+                'player2_username': game.player2.username,
+                'p1_img': game.player1.img.name,
+                'p2_img': game.player2.img.name,
+                'time_minutes': minutes,
+                'time_seconds': seconds,
+                'winner_username': game.winner.username,
+                'elo_player1': game.elo_after_player1 - game.elo_before_player1,
+                'elo_player2': game.elo_after_player2 - game.elo_before_player2,
+            }
+            match_data_list.append(match_data)
+        return Response({"match_data": match_data_list}, status=200)
+    except Player.DoesNotExist:
+        return Response({"error": "Player not found"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)

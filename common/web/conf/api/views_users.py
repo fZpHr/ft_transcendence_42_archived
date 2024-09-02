@@ -126,7 +126,6 @@ def logout(request):
 @login_required
 @api_view(['POST'])
 def update_img(request):
-    print(request.FILES)
     if request.method == 'POST' and request.FILES.get('avatar'):
         avatar = request.FILES['avatar']
         user = request.user
@@ -199,14 +198,29 @@ def updatePassword(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
+
+# =================================================================================================
+
+import logging
+
+logger = logging.getLogger('print')
+
 @api_view(['GET'])
 @login_required
 def getNumberOfGames(request):
     try:
+
         id = request.query_params["user"]
+        typeGame = request.query_params["type"]
+        logger.info(f"=========> DEBOG FOR PLAYER {id}")
+        logger.info(f"=========>=========>Type: {typeGame}")
+
+
         player = Player.objects.get(id=id)
-        games = Game.objects.filter(player1=player) | Game.objects.filter(player2=player)
+        games = (Game.objects.filter(player1=player, finish=True, type=typeGame) | Game.objects.filter(player2=player, finish=True, type=typeGame))
+        logger.info(f"=========>=========>Games: {games}")
         games_count = games.count()
+        logger.info(f"=========>=========>Games count: {games_count}")
         return Response({'value': games_count}, status=200)
     except Player.DoesNotExist:
         return Response({"error": "Player not found"}, status=404)
@@ -218,32 +232,15 @@ def getNumberOfGames(request):
 def getCurrentElo(request):
     try:
         id = request.query_params["user"]
+        typeGame = request.query_params["type"]
+
         player = Player.objects.get(id=id)
-        return Response({'valuePong': player.eloPong, 'valueConnect4': player.eloConnect4}, status=200)
-    except Player.DoesNotExist:
-        return Response({"error": "Player not found"}, status=404)
-    except Exception as e:
-        return Response({"error": str(e)}, status=500)
-    
-@api_view(['GET'])
-@login_required
-def getMaxElo(request):
-    try:
-        id = request.query_params["user"]
-        player = Player.objects.get(id=id)
-        games = Game.objects.filter(player1=player) | Game.objects.filter(player2=player)
-        max_elo = games.aggregate(Max('elo_after_player1'), Max('elo_after_player2'))
-        return Response({'value': max(max_elo['elo_after_player1__max'], max_elo['elo_after_player2__max'])}, status=200)
-    except Player.DoesNotExist:
-        return Response({"error": "Player not found"}, status=404)
-    except Exception as e:
-        return Response({"error": str(e)}, status=500)
-    
-@api_view(['GET'])
-@login_required
-def getTournamentCount(request):
-    try:
-        return Response({'value': 0}, status=200)
+        if typeGame == "pong":
+            return Response({'value': player.eloPong}, status=200)
+        elif typeGame == "connect4":
+            return Response({'value': player.eloConnect4}, status=200)
+        else:
+            return Response({'value': 0}, status=200)
     except Player.DoesNotExist:
         return Response({"error": "Player not found"}, status=404)
     except Exception as e:
@@ -251,11 +248,29 @@ def getTournamentCount(request):
 
 @api_view(['GET'])
 @login_required
+def getMaxElo(request):
+    try:
+        id = request.query_params["user"]
+        typeGame = request.query_params["type"]
+        player = Player.objects.get(id=id)
+
+        games = (Game.objects.filter(player1=player, finish=True, type=typeGame) | Game.objects.filter(player2=player, finish=True, type=typeGame))
+        max_elo = games.aggregate(Max('elo_after_player1'), Max('elo_after_player2'))
+        return Response({'value': max(max_elo['elo_after_player1__max'], max_elo['elo_after_player2__max'])}, status=200)
+    except Player.DoesNotExist:
+        return Response({"error": "Player not found"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+    
+
+@api_view(['GET'])
+@login_required
 def getAvgGameTime(request):
     try:
         id = request.query_params["user"]
+        typeGame = request.query_params["type"]
         player = Player.objects.get(id=id)
-        games = Game.objects.filter(Q(player1=player) | Q(player2=player))
+        games = (Game.objects.filter(player1=player, finish=True, type=typeGame) | Game.objects.filter(player2=player, finish=True, type=typeGame))
         total_time = games.aggregate(
             total_time=Sum('time', output_field=IntegerField())
         )['total_time']
@@ -281,8 +296,9 @@ def getAvgGameTime(request):
 def getMaxWinStreak(request):
     try:
         id = request.query_params["user"]
+        typeGame = request.query_params["type"]
         player = Player.objects.get(id=id)
-        games = Game.objects.filter(Q(player1=player) | Q(player2=player))
+        games = (Game.objects.filter(player1=player, finish=True, type=typeGame) | Game.objects.filter(player2=player, finish=True, type=typeGame))
         win_streak = 0
         max_win_streak = 0
         for game in games:
@@ -303,8 +319,9 @@ def getMaxWinStreak(request):
 def getWinrate(request):
     try:
         user_id = request.query_params.get('user')
+        typeGame = request.query_params["type"]
         player = Player.objects.get(id=user_id)
-        games = Game.objects.filter(Q(player1=player) | Q(player2=player))
+        games = (Game.objects.filter(player1=player, finish=True, type=typeGame) | Game.objects.filter(player2=player, finish=True, type=typeGame))
         
         wins = games.filter(winner=player).count()
         total_games = games.count()
@@ -322,8 +339,10 @@ def getWinrate(request):
 def lastGameIsWin(request):
     try:
         user_id = request.query_params.get('user')
+        typeGame = request.query_params["type"]
         player = Player.objects.get(id=user_id)
-        games = Game.objects.filter(Q(player1=player) | Q(player2=player)).order_by('-created_at')
+        games = (Game.objects.filter(player1=player, finish=True, type=typeGame) | Game.objects.filter(player2=player, finish=True, type=typeGame))
+        games.order_by('-created_at')
         if games.count() == 0:
             return JsonResponse({'value': False}, status=200)
         last_game = games[0]
@@ -339,24 +358,26 @@ def lastGameIsWin(request):
 @login_required
 def getPlayerGameData(request):
     try:
-        print("Getting player game data")
-        player_id = request.query_params.get('user')
-        print(player_id)
-        games = Game.objects.filter(Q(player1_id=player_id) | Q(player2_id=player_id)).order_by('-created_at')[:10]
+        user_id = request.query_params.get('user')
+        player = Player.objects.get(id=user_id)
+        typeGame = request.query_params["type"]
+
+        games = (Game.objects.filter(player1=player, finish=True, type=typeGame) | Game.objects.filter(player2=player, finish=True, type=typeGame))
+        games.order_by('-created_at').reverse()
 
         data = []
         for game in games:
             game_data = {
                 'player1': game.player1.username,
                 'player2': game.player2.username,
-                'time': f"{game.time // 60}:{game.time % 60:02d}",  # Format MM:SS
+                'time': f"{game.time // 60}:{game.time % 60:02d}",
                 'winner': game.winner.username,
                 'elo_before_player1': game.elo_before_player1,
                 'elo_before_player2': game.elo_before_player2,
                 'elo_after_player1': game.elo_after_player1,
                 'elo_after_player2': game.elo_after_player2,
                 'date': game.created_at.strftime('%Y-%m-%d'),
-                'elo_after': game.elo_after_player1 if game.player1_id == player_id else game.elo_after_player2
+                'elo_after': game.elo_after_player1 if game.player1_id == user_id else game.elo_after_player2
             }
             data.append(game_data)
 
