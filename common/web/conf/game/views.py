@@ -69,7 +69,9 @@ def connect4(request):
 
 @login_required
 def pong3D(request):
-    return render(request, "pong3D/pong3D.html")
+	if request.htmx:
+		return render(request, "pong3D/pong3D.html")
+	return render(request, "pong3D/pong3D_full.html")
 
 @login_required
 def gameHome(request):
@@ -130,7 +132,9 @@ def pongPrivGame(request):
     # }
     # logger.info(data)
     # return render(request, "pongPrivGame/pongPrivGame.html", data)
-    return render(request, "pongPrivGame/pongPrivGame.html")
+	if request.htmx:
+		return render(request, "pongPrivGame/pongPrivGame.html")
+	return render(request, "pongPrivGame/pongPrivGame_full.html")
 
 @login_required
 def pongTournament(request):

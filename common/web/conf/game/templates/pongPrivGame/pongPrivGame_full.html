@@ -1,6 +1,13 @@
+{% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% block title %}pongPrivGame{% endblock %}
+
+{% block custom_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'pongPrivGame/css/pongPrivGame.css' %}">
+{% endblock %}
+
+{% block content %}
 <div class="pongPrivGame-wrapper" id="container-pong3D">
 	<div class="video-background">
 		<video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
@@ -34,6 +41,9 @@
         </div>
 	</section>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
 <script type="importmap">
 	{
 		"imports": {
@@ -51,4 +61,8 @@
 		}
 	}
 </script>
-<script src="{% static 'pongPrivGame/js/bundle.js' %}"></script>
+<script type="module" src="{% static 'pongPrivGame/js/bundle.js' %}"></script>
+<!-- <script src="{% static 'pongPrivGame/js/pongPrivGame-WebSocket.js' %}"></script>
+<script src="{% static 'pongPrivGame/js/pongPrivGame-WS-action.js' %}"></script> -->
+<!-- <script type="module" src="{% static 'pongPrivGame/js/pongPrivGame.js' %}"></script> -->
+{% endblock %}
