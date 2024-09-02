@@ -100,7 +100,7 @@ async function connectLobbySocket(roomName) {
         };
         
         wsLobby.onclose = function (e) {
-            console.log('[WebSocket] => Connection closed:', e);
+            console.error('[WebSocket] => Connection closed:', e);
         };
 
         wsLobby.onerror = function (error) {

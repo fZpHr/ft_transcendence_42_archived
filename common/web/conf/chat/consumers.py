@@ -21,7 +21,8 @@ class NotifConsumer(AsyncWebsocketConsumer):
             self.room_group_name = None
         
         async def connect(self):
-            self.room_name = self.scope['url_route']['kwargs']['room_name']
+            self.room_name = self.scope[
+                'url_route']['kwargs']['room_name']
             self.room_group_name = f'notif_{self.room_name}'
     
             logger.info(f"[WebSocket NOTIF] : Connecting to room {self.room_name}")

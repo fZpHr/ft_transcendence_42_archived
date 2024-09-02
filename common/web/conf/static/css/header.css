@@ -18,6 +18,13 @@ header {
     background-color: var(--to-teal-1-rgba);
 }
 
+#navbarNav {
+    background-color: var(--to-teal-1-rgba);
+    width: 100%;
+    margin: auto;
+
+}
+
 #navbar button {
     background: transparent;
     border: none;
@@ -133,6 +140,11 @@ header {
     #navbar {
         width: 100%;
     }
+    
+    #navbarNav {
+        width: 100%;
+        padding: 20px;
+    }
 
     .navbar-brand {
         font-size: 1.2rem;
@@ -149,4 +161,5 @@ header {
     .dropdown-item {
         width: 100%;
     }
+
 }

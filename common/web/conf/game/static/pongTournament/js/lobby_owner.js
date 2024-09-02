@@ -59,7 +59,7 @@ async function sendWsNotifAtUser(userId) {
                 'ID_Game': 'null',
                 'userDestination': userId,
                 'UUID_Tournament': lobbyUUID,
-                'link': '/game/lobby/?lobby_id='+lobbyUUID,
+                'link': '/game/pong/tournament/lobby/?lobby_id='+lobbyUUID,
             }));
             setTimeout(() => {
                 wsNotif.close();
@@ -291,10 +291,10 @@ function handlersLockLobby() {
         let lockLobby = document.getElementById('lock-lobby');
         lockLobby.addEventListener('click', async function () {
             let NbrPlayer = document.getElementsByClassName('player-present').length;
-            if (NbrPlayer % 2 !== 0 || NbrPlayer < 4) {
-                console.log('You need to add more player');
+            if (NbrPlayer < 4 || (NbrPlayer & (NbrPlayer - 1)) !== 0) {
+                console.log('You need to add more players');
                 return;
-            }
+            }            
             let NbrPlayerReady = document.getElementsByClassName('waiting-player').length;
             if (NbrPlayerReady != NbrPlayer) {
                 sendNotifAtUserNotReady();
@@ -334,7 +334,6 @@ function handlersLockLobby() {
             // await sleep(10000);
             // redirect to tournament
             // redirectionManager(tournamentINfo);
-            // redirectionManager(null);
         });
     } catch (error) {
         console.error('Failed to handlersLockLobby', error);

@@ -34,7 +34,7 @@ function updateGameInfo(data)
             history.pushState({}, '', `game/${data.game_type}?id=${data.game_id}`);
         });
       }
-    }, 5000);
+    }, 5000); // FOR RESPONSIVE awef
 }
 
 let timerInterval;
