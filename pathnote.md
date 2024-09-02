@@ -20,6 +20,10 @@ ________________________________BUG________________________________
     - progress (depuis profil)
     - tournoie (join lobby + join game + return lobby)
     - visitedProfil (chat)
+
+========================= Connect4 ==========================
+    - partie non lancer si user change die page
+
 ________________________________A FAIRE________________________________
 
 ========================== VIEW RESPONSIVE ==========================
@@ -35,7 +39,6 @@ ________________________________A FAIRE________________________________
     - REMOTE
     - Tournoie
     - connecter Ranked pong
-    - IA connect4 ?
 
 
 ==================================================================================
