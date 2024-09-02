@@ -1,6 +1,7 @@
 
-// document.addEventListener('DOMContentLoaded', async function () {
-function loadProfile() {
+
+async function loadProfile() {
+
 	handlerUpdatePP();
 	handlerUpdateData();
 	toggleBackPanel();
@@ -8,7 +9,6 @@ function loadProfile() {
 	toggleAllPasswords();
 	toggleShowStats();
 };
-// });
 
 
 // ===================== Profile utils =====================
@@ -193,27 +193,24 @@ async function toggleEditPanel() {
 
 async function toggleAllPasswords() {
     try {
-        // Sélectionne tous les boutons pour basculer la visibilité du mot de passe
         let toggleButtons = document.querySelectorAll('.toggle-password');
         
         toggleButtons.forEach(button => {
             button.addEventListener('click', function () {
-                // Détermine l'ID du champ de mot de passe associé
                 let passwordFieldId = button.id.replace('toggle-', '');
                 let passwordField = document.getElementById(passwordFieldId);
                 
-                // Bascule le type de l'input et l'icône
                 if (passwordField.type === 'password') {
                     passwordField.type = 'text';
-                    button.innerHTML = '<i class="fa-solid fa-eye"></i>'; // Change l'icône pour "oeil ouvert"
+                    button.innerHTML = '<i class="fa-solid fa-eye"></i>';
                 } else {
                     passwordField.type = 'password';
-                    button.innerHTML = '<i class="fa-solid fa-eye-slash"></i>'; // Change l'icône pour "oeil barré"
+                    button.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
                 }
             });
         });
     } catch (e) {
-        console.error(e); // Affiche l'erreur dans la console si nécessaire
+        console.error(e);
     }
 }
 
@@ -229,6 +226,7 @@ async function toggleShowStats() {
 				let statsPanel = document.getElementById('game-history-panel');
 				statsPanel.innerHTML = '';
 				let type = option.getAttribute('data-type');
+				
 				loadStats(type);
 			});
 		});
@@ -304,10 +302,13 @@ async function loadStats(type) {
 	try {
 		let statsPanel = document.getElementById('game-history-panel');
 		let games = [];
+		console.log('debog' + document.getElementById('id-profil'));
+		let currentUser = document.getElementById('id-profil').getAttribute('data-user');
+		console.log(currentUser);
 		if (type == 'connect4')
-			games = await APIgetConnect4GameForUser(user.id);
+			games = await APIgetConnect4GameForUser(currentUser);
 		else
-			games = await APIgetPongGameForUser(user.id);
+			games = await APIgetPongGameForUser(currentUser);
 		let noGames = document.querySelector('.no-match');
 		if (noGames)
 			noGames.remove();

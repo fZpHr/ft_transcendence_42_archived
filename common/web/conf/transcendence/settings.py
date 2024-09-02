@@ -120,14 +120,6 @@ WSGI_APPLICATION = 'transcendence.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'transcendence',
-    #     'USER': 'ben',
-    #     'PASSWORD': 'trans_passowrd',
-    #     'HOST': 'clesucre.fr',
-    #     'PORT': '3306',
-    # },
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',

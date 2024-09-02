@@ -315,8 +315,8 @@ logger = logging.getLogger('print')
 @login_required
 def getPongGameForUser(request):
     try:
-        user = request.user
-        player = Player.objects.get(username=user)
+        userId = request.GET.get('userId')
+        player = Player.objects.get(id=userId)
         games = (Game.objects.filter(player1=player, finish=True, type="pong") | Game.objects.filter(player2=player, finish=True, type="pong"))
         games = games.order_by('-created_at')
         
@@ -349,8 +349,8 @@ def getPongGameForUser(request):
 @login_required
 def getConnect4GameForUser(request):
     try:
-        user = request.user
-        player = Player.objects.get(username=user)
+        userId = request.GET.get('userId')
+        player = Player.objects.get(id=userId)
         games = (Game.objects.filter(player1=player, finish=True, type="connect4") | Game.objects.filter(player2=player, finish=True, type="connect4"))
         games = games.order_by('-created_at')
         

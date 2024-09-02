@@ -56,7 +56,7 @@ class Game(models.Model):
 
 class GameInvitation(models.Model):
     id = models.AutoField(primary_key=True)
-    game_id = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='game', default=-1)
+    game_id = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='game', to_field='UUID', default=-1)
     player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player1_invitations')
     player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player2_invitations')
     status = models.IntegerField(default=0)

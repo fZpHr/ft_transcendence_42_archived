@@ -4,7 +4,7 @@
 
 {% block box-profil %}
 <div class="box-profil">
-    <div class="avatars"> 
+    <div class="avatars" id="id-profil" data-user="{{ user_data.playerId }}">
         {% if user_data.is42 %}
             <img src="{{ user_data.avatar_url.name }}" alt=" Avatar" id="profile-avatar">
         {% else %}

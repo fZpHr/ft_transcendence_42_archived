@@ -79,6 +79,10 @@ def getMessages(request):
     except Exception as e:
         return Response({"message": str(e)}, status=500)
 
+import logging
+
+logger = logging.getLogger('print')
+
 @csrf_exempt
 @api_view(['POST'])
 @login_required
@@ -86,14 +90,19 @@ def sendInvite(request):
     try:        
         id = request.data.get('contactId')
         user = request.user
+
         player = Player.objects.get(username=user)
+        logger.info(f"player: {player}")
         friend = Player.objects.get(id=id)
+        logger.info(f"friend: {friend}")
         if GameInvitation.objects.filter(player1=player, player2=friend).exists():
+            logger.info("GameInvitation exists")
             gameid = GameInvitation.objects.get(player1=player, player2=friend).game_id.id
             if Game.objects.filter(id=gameid).exists():
                 Game.objects.filter(id=gameid).delete()
             GameInvitation.objects.filter(player1=player, player2=friend).delete()
         if GameInvitation.objects.filter(player1=friend, player2=player).exists():
+            logger.info("GameInvitation exists")
             gameid = GameInvitation.objects.get(player1=friend, player2=player).game_id.id
             if Game.objects.filter(id=gameid).exists():
                 Game.objects.filter(id=gameid).delete()
@@ -108,9 +117,13 @@ def sendInvite(request):
             finish=False,
             type='pongPv',
         )
+        logger.info(f"Game created with id {newGamePriv}")
         newGamePriv.save()
+        logger.info(f"Game saved with id {newGamePriv}")
         GameInvitation.objects.create(player1=player, player2=friend, status=0, game_id=newGamePriv)
+        logger.info(f"GameInvitation created 1 with id {newGamePriv}")
         GameInvitation.objects.create(player1=friend, player2=player, status=1, game_id=newGamePriv)
+        logger.info(f"GameInvitation created 2 with id {newGamePriv}")
         if Notification.objects.filter(sender=player, recipient=friend, type=2).exists():
             Notification.objects.filter(sender=player, recipient=friend, type=2).delete()
         Notification.objects.create(sender=player, type=2, recipient=friend, content=f"tournament invitation from {player.username}")
