@@ -138,4 +138,14 @@ function createSocket(gameType) {
     clearInterval(loadingText);
   }, {once: true});
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  htmx.ajax('GET', '/game/game/', {
+    target: '#main-content', // The target element to update
+    swap: 'innerHTML', // How to swap the content
+  }).then(response => {
+    history.pushState({}, '', '/game/game/');
+  });
+});
+
 export { createSocket };
