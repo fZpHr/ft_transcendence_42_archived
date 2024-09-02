@@ -97,15 +97,15 @@ def sendInvite(request):
         logger.info(f"friend: {friend}")
         if GameInvitation.objects.filter(player1=player, player2=friend).exists():
             logger.info("GameInvitation exists")
-            gameid = GameInvitation.objects.get(player1=player, player2=friend).game_id.id
-            if Game.objects.filter(id=gameid).exists():
-                Game.objects.filter(id=gameid).delete()
+            gameid = GameInvitation.objects.get(player1=player, player2=friend).game_id.UUID
+            if Game.objects.filter(UUID=gameid).exists():
+                Game.objects.filter(UUID=gameid).delete()
             GameInvitation.objects.filter(player1=player, player2=friend).delete()
         if GameInvitation.objects.filter(player1=friend, player2=player).exists():
             logger.info("GameInvitation exists")
-            gameid = GameInvitation.objects.get(player1=friend, player2=player).game_id.id
-            if Game.objects.filter(id=gameid).exists():
-                Game.objects.filter(id=gameid).delete()
+            gameid = GameInvitation.objects.get(player1=friend, player2=player).game_id.UUID
+            if Game.objects.filter(UUID=gameid).exists():
+                Game.objects.filter(UUID=gameid).delete()
             GameInvitation.objects.filter(player1=friend, player2=player).delete()
         newGamePriv = Game.objects.create(
             player1=player,
@@ -117,13 +117,13 @@ def sendInvite(request):
             finish=False,
             type='pongPv',
         )
-        logger.info(f"Game created with id {newGamePriv}")
+        logger.info(f"Game created with id {newGamePriv.UUID}")
         newGamePriv.save()
-        logger.info(f"Game saved with id {newGamePriv}")
+        logger.info(f"Game saved with id {newGamePriv.UUID}")
         GameInvitation.objects.create(player1=player, player2=friend, status=0, game_id=newGamePriv)
-        logger.info(f"GameInvitation created 1 with id {newGamePriv}")
+        logger.info(f"GameInvitation created 1 with id {newGamePriv.UUID}")
         GameInvitation.objects.create(player1=friend, player2=player, status=1, game_id=newGamePriv)
-        logger.info(f"GameInvitation created 2 with id {newGamePriv}")
+        logger.info(f"GameInvitation created 2 with id {newGamePriv.UUID}")
         if Notification.objects.filter(sender=player, recipient=friend, type=2).exists():
             Notification.objects.filter(sender=player, recipient=friend, type=2).delete()
         Notification.objects.create(sender=player, type=2, recipient=friend, content=f"tournament invitation from {player.username}")

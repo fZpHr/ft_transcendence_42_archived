@@ -50,13 +50,13 @@ class Game(models.Model):
     player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player2')
     elo_before_player1 = models.IntegerField()
     elo_before_player2 = models.IntegerField()
-    elo_after_player1 = models.IntegerField(null=True)
+    elo_after_player1 = models.IntegerField(null=True) 
     elo_after_player2 = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class GameInvitation(models.Model):
     id = models.AutoField(primary_key=True)
-    game_id = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='game', to_field='UUID', default=-1)
+    game_id = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='game', to_field='UUID')
     player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player1_invitations')
     player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player2_invitations')
     status = models.IntegerField(default=0)
