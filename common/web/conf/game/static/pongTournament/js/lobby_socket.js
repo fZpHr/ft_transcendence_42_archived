@@ -184,7 +184,12 @@ async function redirect(data) {
         console.log('[WS-G]=> (' + data.message + ')');
         console.log('redirecting');
         console.log(data.message);
-        window.location.href = data.message;
+        htmx.ajax('GET', data.message, {
+            target: '#main-content', // The target element to update
+            swap: 'innerHTML', // How to swap the content
+        }).then(response => {
+            history.pushState({}, '', data.message);
+        });
 
     } catch (error) {
         console.error(error);

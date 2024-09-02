@@ -25,12 +25,10 @@ function updateGameInfo(data)
     setTimeout(() => {
       const timerText = document.getElementById("timer-text");
       if (timerText.style.display === "flex") {
-        // window.location.href = `https://` + window.location.host + `/game/${data.game_type}?id=${data.game_id}`;
         htmx.ajax('GET', `/game/${data.game_type}?id=${data.game_id}`, {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
           }).then(response => {
-            console.log("Redirected to game page", response);
             history.pushState({}, '', `game/${data.game_type}?id=${data.game_id}`);
         });
       }

@@ -19,7 +19,12 @@ async function handlerRedirectOnClick(Notifitems) {
                 console.log('redirectBtn clicked');
                 let link = item.getAttribute('data-value');
                 console.log('link', link);
-                window.location.href = link;
+                htmx.ajax('GET', link, {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', link);
+                });
             });
         }
     } catch (error) {

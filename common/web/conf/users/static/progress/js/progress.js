@@ -95,6 +95,19 @@ async function toggleMenuStats() {
 				<img src="${user.img}" alt="Profile picture" class="profile-picture">
 			</a>
 		`;
+		const anchors = imgDiv.querySelectorAll('a');
+		anchors.forEach(anchor => {
+			anchor.addEventListener('click', async (event) => {
+				event.preventDefault();
+				let href = event.currentTarget.href;
+				htmx.ajax('GET', href, {
+					target: '#main-content', // The target element to update
+					swap: 'innerHTML', // How to swap the content
+				}).then(response => {
+					history.pushState({}, '', href);
+				});
+			});
+		});
 	}
 
 	fetchAndUpdate(endpoints.numberOfGames, 'games-count');

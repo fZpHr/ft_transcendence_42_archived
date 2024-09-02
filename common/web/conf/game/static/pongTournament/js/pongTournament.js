@@ -70,7 +70,12 @@ function pongTournament() {
             allLobby[i].addEventListener('click', async function () {
                 let lobbyId = allLobby[i].children[0].id;
                 console.log(lobbyId);
-                window.location.href = `/game/pong/tournament/lobby?lobby_id=${lobbyId}`;
+                htmx.ajax('GET', `/game/pong/tournament/lobby?lobby_id=${lobbyId}`, {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', `/game/pong/tournament/lobby?lobby_id=${lobbyId}`);
+                });
             });
             AllLobby.add(allLobby[i].children[0].id);
         }

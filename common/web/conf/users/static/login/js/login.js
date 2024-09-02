@@ -98,7 +98,12 @@ async function toggleSubmitForm() {
                             errorElement.style.display = 'none';
                         }
                         if (result.success) {
-                            window.location.href = result.redirect_url || '/';
+                            htmx.ajax('GET', result.redirect_url || '/', {
+                                target: '#main-content', // The target element to update
+                                swap: 'innerHTML', // How to swap the content
+                            }).then(response => {
+                                history.pushState({}, '', result.redirect_url || '/');
+                            });
                         } else {
                             event.errorBox.innerHTML = error;
                             event.errorBox.style.display = 'block';

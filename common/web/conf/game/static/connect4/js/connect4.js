@@ -58,7 +58,6 @@ connect4WebSocket.onmessage = async function(e) {
                 target: '#main-content', // The target element to update
                 swap: 'innerHTML', // How to swap the content
             }).then(response => {
-                console.log("Redirected to game page", response);
                 history.pushState({}, '', '/game/game/');
             });
             break;

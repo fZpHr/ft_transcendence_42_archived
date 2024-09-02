@@ -146,6 +146,19 @@ async function innerSocialPannel() {
                 </div>
             </div>
         `;
+        const anchors = document.getElementById("social-header").querySelectorAll('a');
+        anchors.forEach(anchor => {
+            anchor.addEventListener('click', async (event) => {
+                event.preventDefault();
+                let href = event.currentTarget.href;
+                htmx.ajax('GET', href, {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', href);
+                });
+            });
+        });
     } catch (error) {
         console.error('Failed to innerSocialMenus', error);
     }
@@ -170,6 +183,20 @@ async function innerSocialUser(socialUsers) {
                 </div>
             </div>
         `).join('');
+        const anchors = userContainer.querySelectorAll('a');
+        anchors.forEach(anchor => {
+            anchor.addEventListener('click', async (event) => {
+                event.preventDefault();
+                console.log(event.currentTarget.href);
+                let href = event.currentTarget.href;
+                htmx.ajax('GET', href, {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', href);
+                });
+            });
+        });
     } catch (error) {
         console.error('Failed to innerSocialUser', error);
     }

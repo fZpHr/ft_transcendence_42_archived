@@ -44,7 +44,12 @@ function handlersInviteResp(contactId) {
                 let msg = status === 2 ? 'Game accepted' : 'Game declined';
                 sendWebSocketMessage(msg, userId, contactId, wsChat);
             } else if (event.target.classList.contains('btn-join')) {
-                window.location.href = '/game/pong/privGame/?opponent=' + contactId;
+                htmx.ajax('GET', '/game/pong/privGame/?opponent=' + contactId, {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', '/game/pong/privGame/?opponent=' + contactId);
+                });
             }
         });
     } catch (error) {
@@ -188,6 +193,19 @@ async function innerChatUsers(chatUsers) {
                 </div>
             </div>
         `).join('');
+        const anchorTags = userChatContainer.querySelectorAll('a');
+        anchorTags.forEach(anchor => {
+            anchor.addEventListener('click', async (event) => {
+                event.preventDefault();
+                let href = event.currentTarget.href;
+                htmx.ajax('GET', href, {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', href);
+                });
+            });
+        });
     } catch (error) {
         console.error('Failed to innerChatUsers', error);
     }
@@ -226,6 +244,19 @@ async function innerChatChanel(contactId, contactUser) {
                 </div>
             </div>
         `;
+        const anchorTags = chatContainer.querySelectorAll('a');
+        anchorTags.forEach(anchor => {
+            anchor.addEventListener('click', async (event) => {
+                event.preventDefault();
+                let href = event.currentTarget.href;
+                htmx.ajax('GET', href, {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', href);
+                });
+            });
+        });
     } catch (error) {
         console.error('Failed to innerChatChanel', error);
     }
