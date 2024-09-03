@@ -120,10 +120,10 @@ def sendInvite(request):
         logger.info(f"Game created with id {newGamePriv.UUID}")
         newGamePriv.save()
         logger.info(f"Game saved with id {newGamePriv.UUID}")
-        GameInvitation.objects.create(player1=player, player2=friend, status=0, game_id=newGamePriv)
         logger.info(f"GameInvitation created 1 with id {newGamePriv.UUID}")
-        GameInvitation.objects.create(player1=friend, player2=player, status=1, game_id=newGamePriv)
+        GameInvitation.objects.create(player1=player, player2=friend, status=0, game_id=newGamePriv)
         logger.info(f"GameInvitation created 2 with id {newGamePriv.UUID}")
+        GameInvitation.objects.create(player1=friend, player2=player, status=1, game_id=newGamePriv)
         if Notification.objects.filter(sender=player, recipient=friend, type=2).exists():
             Notification.objects.filter(sender=player, recipient=friend, type=2).delete()
         Notification.objects.create(sender=player, type=2, recipient=friend, content=f"tournament invitation from {player.username}")
