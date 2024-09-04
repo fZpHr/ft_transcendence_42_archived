@@ -1,4 +1,4 @@
-import { startGame, movePaddles } from '../../pong3D/js/remote/pong3D.js';
+import { startGame, movePaddles, moveSphere } from '../../pong3D/js/remote/pong3D.js';
 import { Game } from '../../pong3D/js/remote/class/games.js';
 
 let p1Ready = false;
@@ -188,8 +188,13 @@ async function ready(data) {
 		let boxP2Status = document.getElementById('p2_status');
 		boxP2Status.innerHTML = 'Ready';
 		p2Ready = true;
+		// let msg = userId + ' | ready';
+		// sendToWsGame('ready', msg);
 		if (p1Ready && p2Ready) {
+			console.log("ready here")
 			startInstance();
+			let msg = userId + ' | start';
+			sendToWsGame('start', msg);
 		}
 	} catch (error) {
 		console.error(error);
@@ -240,7 +245,7 @@ async function move(data) {
 
 async function moveBall(data) {
 	try {
-		console.log('[WS-G]=>(' + data.message + ')');
+		moveSphere(game, parseFloat(data.message));
 	} catch (error) {
 		console.error(error);
 	}
@@ -270,14 +275,14 @@ async function toggleMakeReady() {
 			let readyGame = document.getElementById('ready-game');
 			readyGame.style.display = 'none';
 			p1Ready = true;
+			let msg = userId + ' | ready';
+			sendToWsGame('ready', msg);
 			if (p1Ready && p2Ready) {
 				console.log("cdc")
 				startInstance();
 				let msg = userId + ' | start';
 				sendToWsGame('start', msg);
 			}
-			let msg = userId + ' | ready';
-			sendToWsGame('ready', msg);
 		});
 	} catch (error) {
 		console.error(error);

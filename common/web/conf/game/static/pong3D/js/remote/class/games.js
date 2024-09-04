@@ -31,7 +31,7 @@ class Game {
     async init() {
         this.setScene();
         this.handleEvent();
-        // this.setScore(0, 0);
+        this.setScore(0, 0);
     }
 
     async setScene() {

@@ -11,12 +11,12 @@ class Plateau {
 	) {
 		this.groundRadius = mirorGeometry.radius;
 		this.geometry = new THREE.CircleGeometry(mirorGeometry.radius, mirorGeometry.segments);
-		this.groundMirror = new Reflector(this.geometry, {
-			clipBias: 0.003,
-			textureWidth: window.innerWidth * window.devicePixelRatio,
-			textureHeight: window.innerHeight * window.devicePixelRatio,
-			color: mirrorMaterial.color
-		});
+		// this.groundMirror = new Reflector(this.geometry, {
+		// 	clipBias: 0.003,
+		// 	textureWidth: window.innerWidth * window.devicePixelRatio,
+		// 	textureHeight: window.innerHeight * window.devicePixelRatio,
+		// 	color: mirrorMaterial.color
+		// });
 
 		this.plateauMaterial = new THREE.MeshPhysicalMaterial({
 			color: plateauMaterial.color, transparent: true, opacity: plateauMaterial.opacity, wireframe: false, side: THREE.FrontSide, roughness: 0.7, metalness: 0.7, clearcoat: 1.0,
@@ -37,10 +37,10 @@ class Plateau {
 
 	async init() {
 		this.plateau.position.y = 0;
-		this.groundMirror.position.y = 0;
+		// this.groundMirror.position.y = 0;
 		this.circle3D.position.y = 1;
 		this.plateau.rotateX(- Math.PI / 2);
-		this.groundMirror.rotateX(- Math.PI / 2);
+		// this.groundMirror.rotateX(- Math.PI / 2);
 		this.circle3D.rotateX(- Math.PI / 2);
 	}
 }
