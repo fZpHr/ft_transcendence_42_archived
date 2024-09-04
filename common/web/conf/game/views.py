@@ -108,7 +108,11 @@ def pongPrivGame(request):
         return render(request, "pongPrivGame/pongPrivGame.html", {"error": "Game not found"})
     player.img = player.img.name.startswith('profile_pics/') and '/media/' + player.img.name or player.img
     opponent.img = opponent.img.name.startswith('profile_pics/') and '/media/' + opponent.img.name or opponent.img
-    privGame = Game.objects.get(id=invitGame[0].game_id.id)
+    logger.info('DEBOG PRIVGAME')
+    logger.info(invitGame[0].game_id.UUID)
+    privGame = Game.objects.get(UUID=invitGame[0].game_id.UUID)
+    logger.info('DEBOG GET PRIVGAME')
+    logger.info(privGame)
     data = {
         'player' : {
             'id': player.id,
@@ -121,7 +125,7 @@ def pongPrivGame(request):
             'img': opponent.img,
         },
         'game': {
-            'id': privGame.id,
+            'id': privGame.UUID,
             'type': privGame.type,
             'finish': privGame.finish,
             'p1Id': privGame.player1.id,

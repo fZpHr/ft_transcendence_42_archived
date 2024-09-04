@@ -4,14 +4,14 @@
 <script>console.log("pongLocal.html loaded");</script>
 <script src="{% static 'pongLocal/js/bundle.js' %}"></script>
 <div class="pongLocal-wrapper" id="container-pong3D">
-    <div class="video-background">
-        <video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
-    </div>
-    <section class="play-box">
-        <div class="play-box__header"> 
+	<div class="video-background">
+		<video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
+	</div>
+	<section class="play-box" id="pongLocal">
+		<div class="play-box__header"> 
             <span>PONG Local</span>
-        </div>
-        <div class="play-box__content">
+		</div>
+		<div class="play-box__content">
             <div class="left-player player-box">
                 <div class="player-box__username">
                     <input type="text" placeholder="Player_1" id="player1_username" value="Player_1" maxlength="15" minlength="4">
@@ -57,5 +57,5 @@
             <button class="btn-custom-game" id="curstom-game"><i class="fa-solid fa-screwdriver-wrench"></i></button>
             <button class="btn-start-game" id="start-game">Start Game</button>
         </div>
-    </section>
+	</section>
 </div>

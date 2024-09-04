@@ -6,29 +6,27 @@ A FAIRE
 
 ________________________________BUG________________________________
 
-========================== CHAT ==========================
-    - invite Game (error js)
-
 ========================== STATS ==========================
-    - visited (les stats ne peuve pas etre vus par les autre user)
+    - visited (les stats ne peuve pas etre vus par les autre user) @bberkrou
 
+========================== PRIVGAME ==========================
+    - MaKE READY btn WS fonctionne pas @bberkrou
 
 ========================== SPA ==========================
-    - progress (depuis profil)
-    - tournoie (join lobby + join game + return lobby)
-    - visitedProfil (chat)
+    - progress (depuis profil) @bcaroll
+    - tournoie (join lobby + join game + return lobby) @bcaroll
+    - visitedProfil (chat) @bcaroll
 
 ========================= Connect4 ==========================
-    - partie non lancer si user change die page
+    - partie non lancer si user change die page @bcaroll @emile
 
 ________________________________A FAIRE________________________________
 
 ========================== VIEW RESPONSIVE ==========================
-    - CustomeGame
-    - PrivGamePong && LocalGamePOng
-    - tournoi 
-    - connect4
-    - Home (animation)
+    - Home (animation) @bberkrou
+    - tournoi @bberkrou
+    - connect4 @bberkrou
+    - CustomeGame @bberkrou
 
 ========================== PARTI A FAIRE ==========================
     - IA (Benoit)
@@ -49,12 +47,18 @@ ________________________________BUG________________________________
     - error msg quand lautre nest pas sur la conv
     - multiOpen = multienvoie (envoie plusieur message via ws)
     - visitedProfil (error view)
+    - invite Game (error js)
 
 
-________________________________A FAIRE________________________________
-    - Suppresssion MultiLangue
-    - GameStats
+
+========================== VIEW RESPONSIVE ==========================
+    - PrivGamePong && LocalGamePOng @bberkrou
+
 
 ========================== Ranked ==========================
     - F5 dans ranked (casse le fonctionnement et laffichage)
+
+========================== PARTI A FAIRE ==========================
+    - Suppresssion MultiLangue
+    - GameStats
     - 

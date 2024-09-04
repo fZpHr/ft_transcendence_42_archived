@@ -6,7 +6,7 @@
 {% block custom_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'pongPrivGame/css/pongPrivGame.css' %}">
 
-{% endblock %}
+{% endblock %} 
 
 {% block content %}
 <div class="pongPrivGame-wrapper" id="container-pong3D">
@@ -20,16 +20,28 @@
 		<div class="play-box__content">
             <div class="left-player box-player" id="first-player" data-id="{{ player.id }}">
                 <div class="player-box__username">
-                    <span class="username" id="player1_username">{{ player.username }}</span>
-                    <img src="{{ player.img }}" alt="pp">
-                    <span id="p1_status">Not ready</span>
+                    <div class="username">
+                        <span class="username" id="player1_username">{{ player.username }}</span>
+                    </div>
+                    <div class="img">
+                        <img src="{{ player.img }}" alt="pp">
+                    </div>
+                    <div class="status">
+                        <span id="p1_status">Not ready</span>
+                    </div>
                 </div>
             </div>
             <div class="right-player box-player" id="second-player" data-id="{{ opponent.id }}">
                 <div class="player-box__username notLog">
-                    <span class="username" id="player1_username">{{ opponent.username }}</span>
-                    <img src="{{ opponent.img }}" alt="pp">
-                    <span id="p2_status">Not ready</span>
+                    <div class="username">
+                        <span class="username" id="player1_username">{{ opponent.username }}</span>
+                    </div>
+                    <div class="img">
+                        <img src="{{ opponent.img }}" alt="pp">
+                    </div>
+                    <div class="status">
+                        <span id="p2_status">Not ready</span>
+                    </div>
                 </div>
                 <div id="loader-container">
                     <div class="loader"></div>

@@ -14,6 +14,7 @@
 
 .video-background {
 	z-index: 100;
+    display: none;
 }
 
 .video-background video {
@@ -93,8 +94,11 @@
     color: var(--text-color);
     padding: 5px;
     width: 80%;
+    font-size: 1rem;
     text-align: center;
     border-bottom: 1px solid var(--text-color);
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .player-box__username img {
@@ -102,6 +106,7 @@
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
+    margin-bottom: 20px;
 }
 
 .left-player {
@@ -114,6 +119,14 @@
     background-color: var(--to-teal-2-rgba);
     padding: 10px;
     position: relative;
+}
+
+#container-pong3D .player-box__username {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
 }
 
 /* footer of box */
@@ -165,6 +178,8 @@
 .btn-ready-game.active {
     display: block;
 }
+
+
 
 /* LOADING PART */
 
@@ -227,4 +242,99 @@
         box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 
         0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
     }
+}
+
+.username {
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width: 1400px)  {
+    #container-pong3D .play-box {
+        width: 50vw;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+    #container-pong3D .play-box {
+        width: 65vw;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #container-pong3D .play-box {
+        width: 90vw;
+    }
+
+    #container-pong3D .play-box__content {
+        flex-direction: column;
+    }
+
+    #first-player, #second-player {
+        width: 90%;
+        height: 45%;
+        overflow: hidden;
+    }
+
+    #container-pong3D .player-box__username {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+    }
+
+    #container-pong3D .player-box__username div.username {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        order: 2;
+        width: 60%;
+        height: 50%;
+    }
+
+    .player-box__username span.username {
+        font-size: 0.8rem;
+        padding: 0;
+    }
+
+    #container-pong3D .player-box__username div.img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        order: 1;
+        width: 40%;
+        height: 100%;
+    }
+    .player-box__username img {
+        width: 80px;
+        height: 80px;
+        margin: 0;
+    }
+
+    #container-pong3D .player-box__username div.status {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        order: 3;
+        width: 60%;
+        height: 50%;
+    }
+}
+
+
+@media screen and (max-width: 420px) {
+    #container-pong3D .play-box {
+        width: 95vw;
+    }
+
+    #container-pong3D .play-box__content {
+        flex-direction: column;
+    }
+
+    #first-player, #second-player {
+        width: 100%;
+        height: 45%;
+    }
+    
 }
