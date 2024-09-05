@@ -11,14 +11,16 @@ var socialNotif;
 var nbrChatNotif;
 var nbrSocialNotif;
 
-document.addEventListener('DOMContentLoaded', async function () {
+// document.addEventListener('DOMContentLoaded', async function () {
+async function loadMenus () {
     user = await APIgetCurrentUser();
     userId = user.id;
     await updateAllNotif();
     displayMenus();
     disableNotifMenus();
     document.getElementById('pre-menu-btn').addEventListener('click', toggleRadialMenu);
-});
+}
+// });
 
 // =============================== MENU INNER ================================
 
@@ -117,3 +119,5 @@ async function toggleRadialMenu() {
         console.error('Failed to toggleRadialMenu', error);
     }
 }
+
+loadMenus();
