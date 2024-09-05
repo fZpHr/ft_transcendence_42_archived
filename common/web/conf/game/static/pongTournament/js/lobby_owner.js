@@ -1,5 +1,5 @@
-let users;
-let lobbyUUID;
+var users;
+var lobbyUUID;
 var ws;
 
 document.addEventListener('DOMContentLoaded', async function () {

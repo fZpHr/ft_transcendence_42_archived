@@ -53,14 +53,10 @@
             </div>
             {% endfor %}
         {% endif %}
-    </div>
+    </div> 
     <div class="progress-button" style="{% if not user_data.matches %}display: none;{% endif %}" id="progress-button">
         {% if user_data.matches %}
-            {% if not user_data.visited %}
-                <a id="progress-link" hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn">Show My Progress</a>
-            {% else %}
-                <a hx-get="{% url 'progress' %}" hx-target="#main-content" hx-push-url="true" href="{% url 'progress' %}" class="btn" disable>Show His Progress</a>
-            {% endif %}
+            <a id="progress-link" hx-get="/progress/pong" hx-target="#main-content" hx-push-url="true" href="/progress/pong" class="btn">Show Progress</a>
         {% endif %}
     </div>
 
