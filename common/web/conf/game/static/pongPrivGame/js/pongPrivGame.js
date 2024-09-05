@@ -251,6 +251,7 @@ async function moveBall(data) {
 	}
 }
 
+
 // ================== TOGGLE MODAL ================== //
 
 async function toggleCustomGame() {

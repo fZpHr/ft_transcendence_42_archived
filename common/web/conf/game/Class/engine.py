@@ -42,6 +42,6 @@ class Engine:
                 continue
             logger.info("==================================================")
             await self.moveBall()
-            time.sleep(1 / 60)
+            time.sleep(1 / 25)
             # time.sleep(2)
             

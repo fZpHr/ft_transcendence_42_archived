@@ -84,7 +84,9 @@ class Ball {
 		}
 	}
 
-	async move() {
+	async move(x) {
+		this.ballDirection.x = x;
+		console.log(this.ballDirection);
 		this.group.position.add(this.ballDirection);
 	}
 

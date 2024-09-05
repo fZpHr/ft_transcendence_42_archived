@@ -295,7 +295,16 @@ async function movePaddles(game, id, type) {
 
 async function moveSphere(game, data) {
 	console.log(data, "moving ball");
-	game.ball.group.position.x = data;
+	for (let i = game.ball.group.position.x; i <= data; i += 0.01) {
+		game.ball.group.position.add({ x: i, y: 0, z: 0 });
+	}
+	// console.log(game.ball.group.position.x, "current position", data, "new position");
+	// for (let i = game.ball.group.position.x; i < data; i += 0.01) {
+	// 	console.log(i);
+	// 	game.ball.group.position.x += i;
+	// 	// game.ball.move(i);
+	// 	// game.checkCollision(game.floor);
+	// }
 }
 
 
