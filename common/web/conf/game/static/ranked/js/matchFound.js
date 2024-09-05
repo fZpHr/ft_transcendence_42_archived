@@ -14,6 +14,7 @@ function updatePlayerInfo(player, gameType, isOpponent = false)
 
 function updateGameInfo(data)
 {
+    console.log('ICI MON GRAND');
     updatePlayerInfo(data.player, data.game_type);
     updatePlayerInfo(data.opponent, data.game_type, true);
 
