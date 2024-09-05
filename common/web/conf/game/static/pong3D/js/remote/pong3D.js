@@ -8,7 +8,7 @@ import { Ball } from "./class/ball.js"
 import { Game } from './class/games.js'
 import { Player } from './class/player.js'
 import { wssGame as wssGameAI} from '../../../ia/js/ia.js';
-// import { wssGame } from '../../../pongPrivGame/js/pongPrivGame.js';
+import { wssGame } from '../../../pongPrivGame/js/pongPrivGame.js';
 
 async function sendToWsGame(eventType, msg) {
 	try {
@@ -20,8 +20,8 @@ async function sendToWsGame(eventType, msg) {
 		};
 		if (wssGameAI && wssGameAI.readyState === WebSocket.OPEN)
 			wssGameAI.send(JSON.stringify(data));
-		// if (wssGame && wssGame.readyState === WebSocket.OPEN)
-		// 	wssGame.send(JSON.stringify(data));
+		if (wssGame && wssGame.readyState === WebSocket.OPEN)
+			wssGame.send(JSON.stringify(data));
 	} catch (error) {
 		console.error(error);
 	}

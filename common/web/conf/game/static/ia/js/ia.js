@@ -9,6 +9,10 @@ let game;
 let wssGame = null;
 
 async function domLoadedAI() {
+	const searchParams = new URLSearchParams(window.location.search);
+	let gameId = searchParams.get('id'); // This will be '17' for your example URL
+	if (gameId !== null)
+		return;
 	let inter = setInterval(async () => {
 		if (userId !== undefined) {
 			p1Id = userId;

@@ -292,6 +292,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         except:
             if not self.room_name:
                 logger.info("[WebSocket GAME] : No room name provided")
+            self.room_name = random.randint(1, 1000)
+            self.room_group_name = f'game_{self.room_name}'
 
         logger.info(f"[WebSocket GAME] : Connecting to room {self.room_name}")
         await self.channel_layer.group_add(
@@ -316,6 +318,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         logger.info(f"[WebSocket GAME] : Received message: {message} in room {self.room_name}")
 
+        if message == "ping":
+            return
         command = message.split(" | ")[1]
         logger.info(command)
         if command == "start":

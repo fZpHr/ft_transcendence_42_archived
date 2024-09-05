@@ -12,6 +12,8 @@ let game;
 async function domLoaded() {
 	const searchParams = new URLSearchParams(window.location.search);
 	let gameId = searchParams.get('id'); // This will be '17' for your example URL
+	if (gameId === null)
+		return;
 
 	let inter = setInterval(async () => {
 		if (userId !== undefined) {
