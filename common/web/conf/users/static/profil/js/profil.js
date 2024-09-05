@@ -293,6 +293,17 @@ async function innerShowProgress(games, type) {
         let href = (type === 'connect4' ? '/progress/connect4' : '/progress/pong');
 		console.log(href);
 		progressButton.innerHTML = `<a id="progress-link" hx-get="${href}" hx-target="#main-content" hx-push-url="true" href="${href}" class="btn">Show My Progress</a>`
+		let progressLink = document.getElementById('progress-link');
+		progressLink.addEventListener('click', async (e) => {
+			e.preventDefault();
+			let href = e.currentTarget.href;
+			htmx.ajax('GET', href, {
+				target: '#main-content', // The target element to update
+				swap: 'innerHTML', // How to swap the content
+			}).then(response => {
+				history.pushState({}, '', href);
+			});
+		});
 	} catch (e) {
 		console.error(e);
 	}
