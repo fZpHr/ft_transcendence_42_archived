@@ -11,10 +11,10 @@ let wssGame = null;
 async function domLoadedAI() {
 	let inter = setInterval(async () => {
 		if (userId !== undefined) {
+			p1Id = userId;
 			clearInterval(inter);
 			toggleCustomGameIA();
 			toggleMakeReadyIA();
-			console.log(p1Id, pIaId)
 			await connectWsGameIA();
 		}
 		console.log("userid :" + userId)
@@ -55,6 +55,7 @@ async function setUserToLogout() {
 
 async function handleWsGameMessage(data) {
 	try {
+		console.log("handleWsGameMessage" + JSON.stringify(data, null, 2))
 		if (data.userId === userId) {
 			return;
 		}
@@ -227,7 +228,7 @@ async function startInstanceAI() {
 		box.innerHTML = '';
 		gameStart = true;
 		game = new Game();
-		startGame([{ id: p1Id }, { id: p1Id }], game, { userId });
+		startGame([{ id: userId }, { id: -1 }], game, { userId });
 		// toggleMovePlayer(userId);
 	} catch (error) {
 		console.error(error);

@@ -8,19 +8,20 @@ import { Ball } from "./class/ball.js"
 import { Game } from './class/games.js'
 import { Player } from './class/player.js'
 import { wssGame as wssGameAI} from '../../../ia/js/ia.js';
-import { wssGame } from '../../../pong3D/js/remote/pong3D.js';
+// import { wssGame } from '../../../pongPrivGame/js/pongPrivGame.js';
 
 async function sendToWsGame(eventType, msg) {
 	try {
+		console.log('[WS-G]=>(' + msg + ')');
 		let data = {
 			"userId": userId,
 			"eventType": eventType,
 			"message": msg
 		};
-		if (wssGameAI.readyState === WebSocket.OPEN)
+		if (wssGameAI && wssGameAI.readyState === WebSocket.OPEN)
 			wssGameAI.send(JSON.stringify(data));
-		if (wssGame.readyState === WebSocket.OPEN)
-			wssGame.send(JSON.stringify(data));
+		// if (wssGame && wssGame.readyState === WebSocket.OPEN)
+		// 	wssGame.send(JSON.stringify(data));
 	} catch (error) {
 		console.error(error);
 	}
@@ -232,6 +233,7 @@ async function startGame(players, game, { up, down, userId }) {
 	}
 	window.addEventListener('resize', onWindowResize());
 	async function toggleMovePlayer(userId) {
+
 		try {
 			document.addEventListener('keydown', function (event) {
 				if (event.key === 'w' || event.key === 'W') {
@@ -298,6 +300,7 @@ async function startGame(players, game, { up, down, userId }) {
 
 async function movePaddles(game, id, type) {
 	for (const data of game.players) {
+		console.log(data, id);
 		if (data.id == id) {
 			if (data.paddle.paddle3D.rotation.z < 0) {
 				if (type == 'up' && (data.group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
