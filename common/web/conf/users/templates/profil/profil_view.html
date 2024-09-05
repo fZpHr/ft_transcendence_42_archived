@@ -33,44 +33,47 @@
 			</li>
         </ul>
         `;
-		document.getElementById('chat').innerHTML = `
-		<link rel="stylesheet" type="text/css" href="{% static 'chat/css/chat.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'social/css/social.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'menus/css/menu.css' %}">
-		<div id="pannel">
-		</div>
-		<div id="pre-menu">
-			<div id="radial-menu">
+		if (document.getElementById('chat') == null) {
+			document.getElementById('chat').innerHTML = `
+			<link rel="stylesheet" type="text/css" href="{% static 'chat/css/chat.css' %}">
+			<link rel="stylesheet" type="text/css" href="{% static 'social/css/social.css' %}">
+			<link rel="stylesheet" type="text/css" href="{% static 'menus/css/menu.css' %}">
+			<div id="pannel">
 			</div>
-
-			<div id="pre-menu-btn">
-				<i class="fa-solid fa-bars"></i>
-			</div>
-			<div id="global-notif">
-				<div id="box-gl-notif" class="notif notif-count active">
-					<span id="gl-notif-nbr"></span>
+			<div id="pre-menu">
+				<div id="radial-menu">
+				</div>
+	
+				<div id="pre-menu-btn">
+					<i class="fa-solid fa-bars"></i>
+				</div>
+				<div id="global-notif">
+					<div id="box-gl-notif" class="notif notif-count active">
+						<span id="gl-notif-nbr"></span>
+					</div>
 				</div>
 			</div>
-		</div>
-		`;
-
-		    // Function to dynamically load scripts
-		function loadScript(src) {
-			var script = document.createElement('script');
-			script.src = src;
-			document.getElementById('chat').appendChild(script);
+			`;
+	
+				// Function to dynamically load scripts
+			function loadScript(src) {
+				var script = document.createElement('script');
+				script.src = src;
+				document.getElementById('chat').appendChild(script);
+			}
+	
+			// Load the scripts dynamically
+			loadScript("{% static 'utils/js/api.js' %}");
+			loadScript("{% static 'utils/js/notif.js' %}");
+			loadScript("{% static 'utils/js/websocket.js' %}");
+			loadScript("{% static 'utils/js/cookie.js' %}");
+			loadScript("{% static 'menus/js/menus.js' %}");
+			loadScript("{% static 'social/js/social_websocket.js' %}");
+			loadScript("{% static 'social/js/social.js' %}");
+			loadScript("{% static 'chat/js/chat.js' %}");
+			
+			htmx.process(document.getElementById('chat'));
 		}
-
-		// Load the scripts dynamically
-		loadScript("{% static 'utils/js/api.js' %}");
-		loadScript("{% static 'utils/js/notif.js' %}");
-		loadScript("{% static 'utils/js/websocket.js' %}");
-		loadScript("{% static 'utils/js/cookie.js' %}");
-		loadScript("{% static 'menus/js/menus.js' %}");
-		loadScript("{% static 'social/js/social_websocket.js' %}");
-		loadScript("{% static 'social/js/social.js' %}");
-		loadScript("{% static 'chat/js/chat.js' %}");
         htmx.process(document.getElementById('navbarNav'));
-		htmx.process(document.getElementById('chat'));
     </script>
 </div>
