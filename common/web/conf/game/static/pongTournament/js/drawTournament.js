@@ -134,6 +134,7 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
 
 async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jumpHeight, nbrParticipants, directionArrow, canvasWidth, splitWidth) {
     try {
+        console.log('drawGame', game);
         let firstPoints = jumpHeight + (ystep / 2);
         let lastPoints = firstPoints;
         for (let i = 0; i < nbrParticipants; i++) {

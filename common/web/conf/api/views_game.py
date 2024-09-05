@@ -237,14 +237,13 @@ def lockLobby(request):
         lobby.locked = True
         lobby.save()
         # delte all tournamenet game
-        if Tournament.objects.filter(UUID_LOBBY=lobby).exists():
-            return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
-        if Game_Tournament.objects.filter(UUID_TOURNAMENT__UUID_LOBBY=lobby).exists():
-            return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
-
-        Tournament.objects.create(UUID_LOBBY=lobby)
-        tournament = Tournament.objects.get(UUID_LOBBY=lobby)
-        makeMatchMakingTournament(lobby, tournament.UUID)
+            # return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
+        if not Tournament.objects.filter(UUID_LOBBY=lobby).exists() or not Game_Tournament.objects.filter(UUID_TOURNAMENT__UUID_LOBBY=lobby).exists():
+            Tournament.objects.create(UUID_LOBBY=lobby)
+            tournament = Tournament.objects.get(UUID_LOBBY=lobby)
+            makeMatchMakingTournament(lobby, tournament.UUID)
+        else:
+            tournament = Tournament.objects.get(UUID_LOBBY=lobby)
         # Initialize tournamentOrganized as a dictionary
         tournamentOrganized = {}
         tournamentOrganized['UUID'] = tournament.UUID
@@ -262,7 +261,7 @@ def lockLobby(request):
             for ia in game.ai_players.all():
                 gameData['players'].append(ia.id)
             tournamentOrganized['games'].append(gameData)
-
+        logger.info(tournamentOrganized)
         return Response({"tournament": tournamentOrganized}, status=200)
     except Lobby.DoesNotExist:
         return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
@@ -274,7 +273,7 @@ def lockLobby(request):
 # ============================================ UTILS ============================================
 # ===============================================================================================
 
-
+@csrf_exempt
 @api_view(['GET'])
 @login_required
 def getTournamentInfo(request):
@@ -292,9 +291,19 @@ def getTournamentInfo(request):
             gameData['winner_ai'] = game.winner_ai.id if game.winner_ai else None
             gameData['players'] = []
             for player in game.players.all():
-                gameData['players'].append(player.id)
+                logger.info(player)
+                
+                gameData['players'].append({
+                    'id': player.id,
+                    'is_ai': False
+                })
+                
             for ia in game.ai_players.all():
-                gameData['players'].append(ia.id)
+                gameData['players'].append({
+                    'id': ia.id,
+                    'is_ai': True
+                })
+                
             tournamentOrganized['games'].append(gameData)
         return Response({"tournament": tournamentOrganized}, status=200)
     except Tournament.DoesNotExist:
@@ -311,7 +320,6 @@ def getTournamentInfo(request):
 import logging
 
 logger = logging.getLogger('print')
-
 
 @api_view(['GET'])
 @login_required

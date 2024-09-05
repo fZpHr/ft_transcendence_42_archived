@@ -303,11 +303,11 @@ function handlersLockLobby() {
             }
 
             // send lock lobby to ws
-            let data = {
-                'eventType': 'lock_lobby',
-                'UUID': lobbyUUID
-            }
-            wsLobby.send(JSON.stringify(data));
+            // let data = {
+            //     'eventType': 'lock_lobby',
+            //     'UUID': lobbyUUID
+            // }
+            // wsLobby.send(JSON.stringify(data));
 
             // UPDATE view
             deleteLobbyBody();
@@ -316,20 +316,26 @@ function handlersLockLobby() {
             loader.style.display = 'block';
 
             // init canva tournament
-            // await innerCanvaTournament();
+            await innerCanvaTournament();
 
             // load data and draw tournament
             tournamentorganized = await APIlockLobby(lobbyUUID);
-            // ctx = await initCanvas();
-            // await drawTournament(ctx, tournamentorganized, NbrPlayer);
+            tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
+            console.log('tournamentINfo', tournamentINfo);
 
-            // console.log('tournamentorganized', tournamentorganized.tournament.UUID);
-            // tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
+            ctx = await initCanvas();
+            console.log('ctx', ctx);
+
+            await drawTournament(ctx, tournamentINfo, NbrPlayer);
+            console.log('tournament is loaded');
+
             loader.style.display = 'none';
-            // display canva tournament
+
+            // // display canva tournament
+            await displayCanvaTournament();
+            console.log('tournament is draw');
 
 
-            // await displayCanvaTournament();
             // spleep 10s
             // await sleep(10000);
             // redirect to tournament
