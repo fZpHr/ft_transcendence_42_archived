@@ -6,45 +6,19 @@ let gameStart = false;
 let p1Id;
 let pIaId;
 let game;
+let wssGame = null;
 
-async function domLoaded() {
+async function domLoadedAI() {
 	let inter = setInterval(async () => {
 		if (userId !== undefined) {
 			clearInterval(inter);
-			toggleCustomGame();
-			toggleMakeReady();
-			// let roomName = p1Id < p2Id ? p1Id + p2Id : p2Id + p1Id;
-			// roomName = await APIgetHashRoom('game_' + roomName);
-			// console.log(roomName)
-			console.log(gameId, p1Id, pIaId)
-			await connectWsGame(gameId);
+			toggleCustomGameIA();
+			toggleMakeReadyIA();
+			console.log(p1Id, pIaId)
+			await connectWsGameIA();
 		}
 		console.log("userid :" + userId)
 	}, 100)
-}
-
-// document.addEventListener('DOMContentLoaded', async function () {
-//     toggleCustomGame();
-//     toggleMakeReady();
-
-//     p1Id = document.getElementById('first-player').getAttribute('data-id');
-//     p2Id = document.getElementById('second-player').getAttribute('data-id');
-//     let roomName = p1Id < p2Id ? p1Id + p2Id : p2Id + p1Id;
-//     roomName = await APIgetHashRoom('game_' + roomName);
-//     await connectWsGame(roomName.roomName);
-// });
-
-async function sendToWsGame(eventType, msg) {
-	try {
-		let data = {
-			"userId": userId,
-			"eventType": eventType,
-			"message": msg
-		};
-		wssGame.send(JSON.stringify(data));
-	} catch (error) {
-		console.error(error);
-	}
 }
 
 async function setUserToLog() {
@@ -79,9 +53,6 @@ async function setUserToLogout() {
 	}
 }
 
-
-let wssGame = null;
-
 async function handleWsGameMessage(data) {
 	try {
 		if (data.userId === userId) {
@@ -101,9 +72,8 @@ async function handleWsGameMessage(data) {
 	}
 }
 
-async function connectWsGame(roomName) {
+async function connectWsGameIA() {
 	try {
-		console.log(roomName)
 		wssGame = new WebSocket(`wss://${window.location.host}/ws/game/pong/ia/`);
 
 		wssGame.onopen = function (event) {
@@ -215,7 +185,7 @@ async function moveBall(data) {
 
 // ================== TOGGLE MODAL ================== //
 
-async function toggleCustomGame() {
+async function toggleCustomGameIA() {
 	try {
 		let customGame = document.getElementById('curstom-game');
 
@@ -227,19 +197,15 @@ async function toggleCustomGame() {
 	}
 }
 
-async function toggleMakeReady() {
+async function toggleMakeReadyIA() {
 	try {
-		let startGameBox = document.getElementById('ready-game');
+		let startGameBox = document.getElementById('start-game');
 
 		startGameBox.addEventListener('click', function () {
-			let boxP1Status = document.getElementById('p1_status');
-			boxP1Status.innerHTML = 'Ready';
-			let readyGame = document.getElementById('ready-game');
-			readyGame.style.display = 'none';
 			playerReady = true;
 			let msg = userId + ' | ready';
 			sendToWsGame('ready', msg);
-            startInstance();
+            startInstanceAI();
             msg = userId + ' | start';
             sendToWsGame('start', msg);
 		});
@@ -251,27 +217,38 @@ async function toggleMakeReady() {
 // ================== GAME ================== //
 
 
-async function startInstance() {
+async function startInstanceAI() {
 	try {
 		console.log('toggleGame');
 
 		let box = document.getElementById('container-pong3D');
 		let footer = document.getElementById('footer');
-		let players = document.getElementById('lst-players').getAttribute('data-players').split(',');
 		footer.style.display = 'none';
 		box.innerHTML = '';
 		gameStart = true;
 		game = new Game();
-		console.log(p1Id, p2Id, "ici");
-		startGame([{ id: p1Id }, { id: p2Id }], game, { userId });
+		startGame([{ id: p1Id }, { id: p1Id }], game, { userId });
 		// toggleMovePlayer(userId);
 	} catch (error) {
 		console.error(error);
 	}
 }
 
-export {
-	sendToWsGame
+async function sendToWsGame(eventType, msg) {
+	try {
+		let data = {
+			"userId": userId,
+			"eventType": eventType,
+			"message": msg
+		};
+		wssGame.send(JSON.stringify(data));
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-domLoaded();
+export {
+	wssGame,
+}
+
+domLoadedAI();

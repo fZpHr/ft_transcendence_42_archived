@@ -7,7 +7,24 @@ import { Plateau } from "./class/plateau.js"
 import { Ball } from "./class/ball.js"
 import { Game } from './class/games.js'
 import { Player } from './class/player.js'
-import { sendToWsGame } from '../../../pongPrivGame/js/pongPrivGame.js';
+import { wssGame as wssGameAI} from '../../../ia/js/ia.js';
+import { wssGame } from '../../../pong3D/js/remote/pong3D.js';
+
+async function sendToWsGame(eventType, msg) {
+	try {
+		let data = {
+			"userId": userId,
+			"eventType": eventType,
+			"message": msg
+		};
+		if (wssGameAI.readyState === WebSocket.OPEN)
+			wssGameAI.send(JSON.stringify(data));
+		if (wssGame.readyState === WebSocket.OPEN)
+			wssGame.send(JSON.stringify(data));
+	} catch (error) {
+		console.error(error);
+	}
+}
 
 async function startGame(players, game, { up, down, userId }) {
 	let move_up = false;

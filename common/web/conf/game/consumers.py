@@ -286,11 +286,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.server = server
 
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['game_id']
-        self.room_group_name = f'game_{self.room_name}'
+        try:
+            self.room_name = self.scope['url_route']['kwargs']['game_id']
+            self.room_group_name = f'game_{self.room_name}'
+        except:
+            if not self.room_name:
+                logger.info("[WebSocket GAME] : No room name provided")
 
         logger.info(f"[WebSocket GAME] : Connecting to room {self.room_name}")
-
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name

@@ -2,6 +2,7 @@ import { startGame, movePaddles, moveSphere } from '../../pong3D/js/remote/pong3
 import { Game } from '../../pong3D/js/remote/class/games.js';
 
 let p1Ready = false;
+let wssGame = null;
 let p2Ready = false;
 let gameStart = false;
 let p1Id;
@@ -84,7 +85,6 @@ async function setUserToLogout() {
 }
 
 
-let wssGame = null;
 
 async function handleWsGameMessage(data) {
 	try {
@@ -114,7 +114,7 @@ async function connectWsGame(roomName) {
 
 		wssGame.onopen = function (event) {
 			let msg = userId + ' | ping';
-			sendToWsGame('ping', msg);
+			sendToWsGame(wssGame, 'ping', msg);
 		};
 
 		wssGame.onmessage = function (event) {
@@ -156,7 +156,7 @@ async function ping(data) {
 			p1Id = pID;
 			p2Id = userId;
 		}
-		sendToWsGame('pong', msg);
+		sendToWsGame(wssGame, 'pong', msg);
 		setUserToLog();
 	} catch (error) {
 		console.error(error);
@@ -312,7 +312,7 @@ async function startInstance() {
 }
 
 export {
-	sendToWsGame
+	wssGame,
 }
 
 domLoaded();
