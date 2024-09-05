@@ -201,3 +201,9 @@ def pongTournamentGame(request):
     except Exception as e:
         logger.info(e)
         return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})
+
+@login_required
+def pongIA(request):
+    if request.htmx:
+        return render(request, "ia/pongIA.html")
+    return render(request, "ia/pongIA_full.html")

@@ -16,4 +16,5 @@ urlpatterns = [
     path('pong/tournament/', views.pongTournament),
     path('pong/tournament/lobby/', views.pongTournamentLobby),
     path('pong/tournament/game/', views.pongTournamentGame),
+    path('pong/ia/', views.pongIA),
 ]
