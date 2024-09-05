@@ -1,4 +1,8 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { Plateau } from "./class/plateau.js"
 import { Ball } from "./class/ball.js"
 import { Game } from './class/games.js'
