@@ -25,6 +25,7 @@ from django.utils import timezone
 import tempfile
 from api.login_required import login_required
 from django.contrib.auth.hashers import make_password
+import os
 
 @api_view(['POST'])
 def login_player(request):
@@ -90,8 +91,8 @@ def download_file_from_url(url):
 def register_42(request, format=None):
     body = {
         "grant_type": "authorization_code",
-        "client_id": "u-s4t2ud-74438314e8cff2be68aee7a119f4c95bff6ba35b11a2bf5c2627a31a869c9f28",
-        "client_secret": "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",
+        "client_id": os.getenv("client_id"),
+        "client_secret": os.getenv("client_secret"),
         "code": request.query_params["code"],
         "redirect_uri": "https://localhost:42424/api/register-42/"
     }
