@@ -90,10 +90,10 @@ def download_file_from_url(url):
 def register_42(request, format=None):
     body = {
         "grant_type": "authorization_code",
-        "client_id": "u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193",
-        "client_secret": "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",
+        "client_id": "u-s4t2ud-74438314e8cff2be68aee7a119f4c95bff6ba35b11a2bf5c2627a31a869c9f28",
+        "client_secret": "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",
         "code": request.query_params["code"],
-        "redirect_uri": "https://10.12.249.33/api/register-42/"
+        "redirect_uri": "https://localhost:42424/api/register-42/"
     }
     headers = {"Content-Type": "application/json; charset=utf-8"}
     r = requests.post('https://api.intra.42.fr/oauth/token', headers=headers, json=body)
