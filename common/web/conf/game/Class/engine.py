@@ -1,3 +1,5 @@
+import json
+import random
 import time
 import asyncio
 import threading
@@ -19,20 +21,18 @@ class Engine:
 
     async def sendtoPlayers(self, message, eventType):
         for player in self.players:
-            logger.info(f"send to {player}")
             await self.ws.channel_layer.group_send(
-            self.ws.room_group_name,
-            {
-                'type': 'game_update',
-                'userId' : player,
-                'eventType': eventType,
-                'message': message
-            }
-        )
+                self.ws.room_group_name,
+                {
+                    'type': 'game_update',
+                    'userId' : player,
+                    'eventType': eventType,
+                    'message': message
+                }
+            )
         
 
     async def moveBall(self):
-            logger.info("move ball")
             self.ball.pos.x += 0.01
             await self.sendtoPlayers(self.ball.pos.x, "moveBall")
     
@@ -42,36 +42,32 @@ class Engine:
         while True:
             if self.state == "waiting":
                 continue
-            logger.info("==================================================")
             await self.moveBall()
             time.sleep(1 / 60)
             # time.sleep(2)
             
+import uuid
+
 class AIPong:
-    def __init__(self, channel_name, consumer):
-        logger.info("AI Pong created")
-        self.channel_name = channel_name
+    def __init__(self, original_channel_name, consumer):
+        logger.info(f"[AI] Init AIPong")
+        self.channel_name = f"{original_channel_name}_ai_{uuid.uuid4()}"
         self.consumer = consumer
         self.channel_layer = get_channel_layer()
         self.room_group_name = consumer.room_group_name
         # Schedule the send_message coroutine to run in the event loop
-        asyncio.create_task(self.send_message("Hello la team"))
 
-    def receive(self, text_data):
+    async def receive(self, text_data):
         data = json.loads(text_data)
         message = data.get('message', '')
-        logger.info(f"[AIIIIIIIIIIIIIIIIIIIII] Received message: {message}")
-        print(f"Received message: {message}")
         # Schedule the send_message coroutine to run in the event loop
-        asyncio.create_task(self.send_message("Hello la team"))
+        if data.get('eventType') == 'ping':
+            return
+        
+        movetype = random.choice(['up', 'down'])
 
-    async def send_message(self, message):
-        logger.info(f"Sending message: {message}")
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'game_message',
-                'message': message
-            }
-        )
-
+        await self.consumer.receive(text_data=json.dumps({
+            'userId': '-1',
+            'eventType': 'move',
+            'message': '-1 | ' + movetype
+        }))

@@ -300,7 +300,6 @@ async function startGame(players, game, { up, down, userId }) {
 
 async function movePaddles(game, id, type) {
 	for (const data of game.players) {
-		console.log(data, id);
 		if (data.id == id) {
 			if (data.paddle.paddle3D.rotation.z < 0) {
 				if (type == 'up' && (data.group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
@@ -318,7 +317,6 @@ async function movePaddles(game, id, type) {
 }
 
 async function moveSphere(game, data) {
-	console.log(data, "moving ball");
 	game.ball.group.position.x = data;
 }
 

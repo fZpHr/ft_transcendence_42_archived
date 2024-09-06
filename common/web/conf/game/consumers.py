@@ -279,7 +279,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
 server = Engine()
 class GameConsumer(AsyncWebsocketConsumer):
 
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.room_name = None
@@ -321,6 +320,11 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        if self.ai is not None:
+            await self.channel_layer.group_discard(
+                self.room_group_name,
+                self.ai.channel_name
+            )
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -328,13 +332,12 @@ class GameConsumer(AsyncWebsocketConsumer):
         eventType = text_data_json['eventType']
         message = text_data_json['message']
         logger.info(f"[WebSocket GAME] : Received message: {message} in room {self.room_name}")
-
+        logger.info(self.channel_name)
         if message == "ping":
             return
         command = message.split(" | ")[1]
         logger.info(command)
         if command == "start":
-            self.ia.receive("start")
             self.server.ws = self
             logger.info("cc")
             self.server.ball.pos.x = 0.5
@@ -344,7 +347,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         
         if command == "ready":
             self.server.players.append(userId)
-            # return 
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -361,7 +363,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         eventType = event['eventType']
         message = event['message']
 
-        logger.info(f"[WebSocket GAME] : Sending message: {message} to room {self.room_name}")
+        # logger.info(f"[WebSocket GAME] : Sending message: {message} to room {self.room_name}")
+        if self.ai is not None:
+            await self.ai.receive(text_data=json.dumps({
+                'userId' : userId,
+                'eventType': eventType,
+                'message': message,
+            }))
 
         await self.send(text_data=json.dumps({
             'userId' : userId,
