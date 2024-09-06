@@ -3,6 +3,7 @@ from asgiref.sync import async_to_sync
 import json
 import random
 from game.Class.engine import Engine
+from game.Class.engine import AIPong
 from asgiref.sync import sync_to_async
 from api import models
 from api.serializer import PlayerSerializer
@@ -276,24 +277,26 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         }))
 
 server = Engine()
-
 class GameConsumer(AsyncWebsocketConsumer):
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.room_name = None
         self.room_group_name = None
+        self.ai = None
         self.server = server
 
     async def connect(self):
         try:
             self.room_name = self.scope['url_route']['kwargs']['game_id']
             self.room_group_name = f'game_{self.room_name}'
+            logger.info(self.room_name)
         except:
             if not self.room_name:
                 logger.info("[WebSocket GAME] : No room name provided")
-            self.room_name = random.randint(1, 1000)
-            self.room_group_name = f'game_{self.room_name}'
+            # self.room_name = random.randint(1, 1000)
+            # self.room_group_name = f'game_{self.room_name}'
 
         logger.info(f"[WebSocket GAME] : Connecting to room {self.room_name}")
         await self.channel_layer.group_add(
@@ -301,6 +304,14 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        if self.room_name == "ia":
+            logger.info("[WebSocket GAME] : AI Pong game")
+            self.ai = AIPong(self.channel_name, self)
+            # Add AI to the channel group
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.ai.channel_name
+            )
         await self.accept()
         logger.info(f"[WebSocket GAME] : Connection established for room {self.room_name}")
 
@@ -323,6 +334,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         command = message.split(" | ")[1]
         logger.info(command)
         if command == "start":
+            self.ia.receive("start")
             self.server.ws = self
             logger.info("cc")
             self.server.ball.pos.x = 0.5
