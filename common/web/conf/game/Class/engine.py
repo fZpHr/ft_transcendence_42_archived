@@ -47,6 +47,7 @@ class Engine:
             # time.sleep(2)
             
 import uuid
+import asyncio
 
 class AIPong:
     def __init__(self, original_channel_name, consumer):
@@ -69,5 +70,6 @@ class AIPong:
         await self.consumer.receive(text_data=json.dumps({
             'userId': '-1',
             'eventType': 'move',
-            'message': '-1 | ' + movetype
+            'message': '-1 | up'
         }))
+        await asyncio.sleep(1 / 100)
