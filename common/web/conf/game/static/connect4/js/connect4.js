@@ -196,42 +196,53 @@ async function gameFinished(winner) {
         winnerText.style.color = "white";
     }
     [reconnect, cancel, divOpponentDisconnected, winnerText].forEach(el => el.style.display = "flex");
+    let cancelAfterSwapListener = (event) => {
+        console.log("cancel afterswap called");
+        if (event.detail.pathInfo.path === '/game/game/') {
+            console.log("cancel redirection called");
+            history.pushState({}, '', '/game/game/');
+            htmx.off('htmx:afterSwap', afterSwapListener); // Remove the event listener
+        }
+    };
+    
     cancel.addEventListener("click", () => {
+        htmx.on('htmx:afterSwap', cancelAfterSwapListener);
         htmx.ajax('GET', '/game/game/', {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
         });
-        htmx.on('htmx:afterSwap', (event) => {
-            if (event.detail.target.id === 'main-content') {
-                history.pushState({}, '', '/game/game/');
-            }
-        });
     });
+    let reconnectAfterSwapListener = (event) => {
+        console.log("reconnect afterswap called");
+        if (event.detail.pathInfo.path === '/game/ranked/') {
+            console.log("reconnect redirection called");
+            history.pushState({}, '', '/game/ranked/');
+            let intervalId = setInterval(() => {
+                let divConnect4 = document.getElementById("wrap");
+                if (divConnect4) {
+                    clearInterval(intervalId);
+                    createSocket("connect4");
+                    const playerDiv = document.getElementById("player-btn");
+                    const opponentDiv = document.getElementById("opps-btn");
+                    const gameDiv = document.getElementById("game-type");
+                    const vsDiv = document.getElementById("vs-text");
+                    const waitingDiv = document.getElementById("waiting-btn");
+                    [playerDiv, opponentDiv, gameDiv, vsDiv].forEach(el => el.style.display = "none");
+                    [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
+                }
+            }, 100);
+        }
+        htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
+    };
+    
     reconnect.addEventListener("click", () => {
+        console.log("reconnect clicked");
+        htmx.on('htmx:afterSwap', reconnectAfterSwapListener);
         htmx.ajax('GET', '/game/ranked/', {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
         });
-        htmx.on('htmx:afterSwap', (event) => {
-            if (event.detail.target.id === 'main-content') {
-                history.pushState({}, '', '/game/ranked/');
-                let intervalId = setInterval(() => {
-                    let divConnect4 = document.getElementById("wrap");
-                    if (divConnect4) {
-                        clearInterval(intervalId);
-                        createSocket("connect4");
-                        const playerDiv = document.getElementById("player-btn");
-                        const opponentDiv = document.getElementById("opps-btn");
-                        const gameDiv = document.getElementById("game-type");
-                        const vsDiv = document.getElementById("vs-text");
-                        const waitingDiv = document.getElementById("waiting-btn");
-                        [playerDiv, opponentDiv, gameDiv, vsDiv].forEach(el => el.style.display = "none");
-                        [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
-                    }
-                }, 100);
-            }
-        });
-    })
+    });
 }
 
 function checkWin(row, col) {
@@ -349,7 +360,7 @@ function handleError(message)
 document.addEventListener('htmx:beforeSwap', function(event) {
     connect4WebSocket.close();
     console.log("htmx:beforeSwap event listener matchMakingSocket close");
-});
+}, {once: true});
 
 connect4Load();
 setGame();
