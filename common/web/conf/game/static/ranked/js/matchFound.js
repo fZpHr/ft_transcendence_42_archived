@@ -30,7 +30,7 @@ function updateGameInfo(data)
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
           }).then(response => {
-            history.pushState({}, '', `game/${data.game_type}?id=${data.game_id}`);
+            history.pushState({}, '', `/game/${data.game_type}?id=${data.game_id}`);
         });
       }
     }, 5000); // FOR RESPONSIVE awef
