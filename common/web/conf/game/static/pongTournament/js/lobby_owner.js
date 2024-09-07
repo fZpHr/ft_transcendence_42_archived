@@ -2,7 +2,21 @@ var users;
 var lobbyUUID;
 var ws;
 
-document.addEventListener('DOMContentLoaded', async function () {
+// document.addEventListener('DOMContentLoaded', async function () {
+//     console.log("lobby_owner.js loaded");
+//     lobbyElement = document.getElementById('lobby_uuid');
+//     lobbyUUID = lobbyElement.getAttribute('data-value');
+//     users = await APIgetUserAvailableToLobby(lobbyUUID);
+//     lobbyUUID = lobbyUUID.replace(/-/g, '');
+//     await connectLobbySocket(lobbyUUID);
+//     toggleAddingPlayer();
+//     handlersLockLobby();
+
+//     window.addEventListener('beforeunload', disconnectLobbySocket);
+//     window.addEventListener('unload', disconnectLobbySocket);
+// });
+
+async function loadLobby() {
     console.log("lobby_owner.js loaded");
     lobbyElement = document.getElementById('lobby_uuid');
     lobbyUUID = lobbyElement.getAttribute('data-value');
@@ -12,9 +26,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     toggleAddingPlayer();
     handlersLockLobby();
 
-    window.addEventListener('beforeunload', disconnectLobbySocket);
-    window.addEventListener('unload', disconnectLobbySocket);
-});
+    document.addEventListener('htmx:beforeSwap', function(event) {
+        /* TODO remove all event listeners here*/
+        disconnectLobbySocket();
+        console.log("htmx:beforeSwap event listener");
+    }, {once: true});
+}
 
 // =============================== WS LOBBY NOTIF================================
 
@@ -370,3 +387,5 @@ function toggleChosePlayer() {
         console.error('Failed to toggleChosePlayer', error);
     }
 }
+
+loadLobby();
