@@ -2,6 +2,7 @@ import { createSocket } from "../../ranked/js/socket.js";
 
 var connect4WebSocket;
 
+let sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 async function connect4Load()
 {
     const searchParams = new URLSearchParams(window.location.search);
@@ -37,7 +38,6 @@ async function connect4Load()
                 console.log(data.error_message);
                 break;
             case 'roomFull':
-                sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
                 console.log("Room is full");
                 await sleep(3000);
                 htmx.ajax('GET', '/game/game/', {
@@ -49,7 +49,6 @@ async function connect4Load()
                 break;
             case 'reset':
                 gameFinished(data.winner);
-                declareWinner(data.winner);
                 break;
             case 'timer_update':
                 let divTimer = document.getElementById("timer");
@@ -169,11 +168,8 @@ function updatePlayerInfo(playerInfo, opponentInfo) {
     document.getElementById('player2-name').innerText = opponentInfo.username;
 }
 
-function declareWinner(winner) {
-    console.log(`${winner} wins due to timeout!`);
-}
-
-function gameFinished(winner) {
+async function gameFinished(winner) {
+    await sleep(1000);
     document.getElementById('timer').innerText = '';
     localStorage.removeItem('remainingTime');
     localStorage.removeItem('currentPlayer');
@@ -194,35 +190,46 @@ function gameFinished(winner) {
         winnerText.innerHTML = "You lose";
         winnerText.style.color = "red";
     }
+    if (winner == "draw")
+    {
+        winnerText.innerHTML = "Draw!";
+        winnerText.style.color = "white";
+    }
     [reconnect, cancel, divOpponentDisconnected, winnerText].forEach(el => el.style.display = "flex");
     cancel.addEventListener("click", () => {
         htmx.ajax('GET', '/game/game/', {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
-        }).then(response => {
-            history.pushState({}, '', '/game/game/');
+        });
+        htmx.on('htmx:afterSwap', (event) => {
+            if (event.detail.target.id === 'main-content') {
+                history.pushState({}, '', '/game/game/');
+            }
         });
     });
     reconnect.addEventListener("click", () => {
         htmx.ajax('GET', '/game/ranked/', {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
-        }).then(response => {
-            history.pushState({}, '', '/game/ranked/');
-            let intervalId = setInterval(() => {
-                let divConnect4 = document.getElementById("wrap");
-                if (divConnect4) {
-                    clearInterval(intervalId);
-                    createSocket("connect4");
-                    const playerDiv = document.getElementById("player-btn");
-                    const opponentDiv = document.getElementById("opps-btn");
-                    const gameDiv = document.getElementById("game-type");
-                    const vsDiv = document.getElementById("vs-text");
-                    const waitingDiv = document.getElementById("waiting-btn");
-                    [playerDiv, opponentDiv, gameDiv, vsDiv].forEach(el => el.style.display = "none");
-                    [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
-                }
-            }, 100);
+        });
+        htmx.on('htmx:afterSwap', (event) => {
+            if (event.detail.target.id === 'main-content') {
+                history.pushState({}, '', '/game/ranked/');
+                let intervalId = setInterval(() => {
+                    let divConnect4 = document.getElementById("wrap");
+                    if (divConnect4) {
+                        clearInterval(intervalId);
+                        createSocket("connect4");
+                        const playerDiv = document.getElementById("player-btn");
+                        const opponentDiv = document.getElementById("opps-btn");
+                        const gameDiv = document.getElementById("game-type");
+                        const vsDiv = document.getElementById("vs-text");
+                        const waitingDiv = document.getElementById("waiting-btn");
+                        [playerDiv, opponentDiv, gameDiv, vsDiv].forEach(el => el.style.display = "none");
+                        [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
+                    }
+                }, 100);
+            }
         });
     })
 }
