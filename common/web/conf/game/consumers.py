@@ -74,7 +74,7 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
             if Connect4GameConsumer.games[self.room_name]['player1'] is None:
                 role = random.choice(roles)
                 player_colors[player_id] = role
-                Connect4GameConsumer.games[self.room_name]['player1'] = {'player_id': player_id,'color': role}
+                Connect4GameConsumer.games[self.room_name]['player1'] = {'player': player,'color': role}
                 await self.send(text_data=json.dumps({
                     'type': 'roleGiving',
                     'role': role,
@@ -86,8 +86,8 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
             elif Connect4GameConsumer.games[self.room_name]['player2'] is None:
                 color = Connect4GameConsumer.games[self.room_name]['player1']['color']
                 role = 'yellow' if color == 'red' else 'red'
-                opponent = await sync_to_async(models.Player.objects.get)(id=Connect4GameConsumer.games[self.room_name]['player1']['player_id'])
-                Connect4GameConsumer.games[self.room_name]['player2'] = {'player_id': player_id, 'color': role}
+                opponent = await sync_to_async(models.Player.objects.get)(id=Connect4GameConsumer.games[self.room_name]['player1']['player'].id)
+                Connect4GameConsumer.games[self.room_name]['player2'] = {'player': player, 'color': role}
                 await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -166,11 +166,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         logger.info("Role giver called")
         serializeOpps = PlayerSerializer(event['opponentInfo']).data
         serializePlayer = PlayerSerializer(event['playerInfo']).data
-        logger.info("OPPS:")
-        logger.info(str(serializeOpps))
-        logger.info("PLAYER:")
-        logger.info(str(serializePlayer))
-        logger.info(event['sender'])
         serializePlayer['img'] = event['playerInfo'].img.name
         serializeOpps['img'] = event['opponentInfo'].img.name
         if self.channel_name == event['sender']:
@@ -203,9 +198,9 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         player1 = Connect4GameConsumer.games[self.room_name]['player1']
         player2 = Connect4GameConsumer.games[self.room_name]['player2']
         game = await sync_to_async(models.Game.objects.get)(UUID=gameid)
-        player1DB = await sync_to_async(models.Player.objects.get)(id=player1['player_id'])
+        player1DB = await sync_to_async(models.Player.objects.get)(id=player1['player'].id)
         if player2 is not None:
-            player2DB = await sync_to_async(models.Player.objects.get)(id=player2['player_id'])
+            player2DB = await sync_to_async(models.Player.objects.get)(id=player2['player'].id)
         else:
             player2DB = await sync_to_async(lambda: game.player2)()
         if event['winner'] == player1['color']:
@@ -244,7 +239,12 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                     self.room_group_name,
                     {
                         'type': 'timer_update',
-                        'timer': Connect4GameConsumer.games[self.room_name]['timer']
+                        'timer': Connect4GameConsumer.games[self.room_name]['timer'],
+                        'playerTurn': Connect4GameConsumer.games[self.room_name]['playerTurn'],
+                        'board': Connect4GameConsumer.games[self.room_name]['board'],
+                        'player1': Connect4GameConsumer.games[self.room_name]['player1'],
+                        'player2': Connect4GameConsumer.games[self.room_name]['player2'],
+                        'sender': self.channel_name
                     }
                 )
                 Connect4GameConsumer.games[self.room_name]['timer'] -= 1
@@ -264,10 +264,32 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                 break
 
     async def timer_update(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'timer_update',
-            'timer': event['timer']
-        }))
+        # player1 = PlayerSerializer(event['player1']).data
+        # player2 = PlayerSerializer(event['player2']).data
+        player1 = PlayerSerializer(event['player1']['player']).data
+        player2 = PlayerSerializer(event['player2']['player']).data
+        player1['img'] = event['player1']['player'].img.name
+        player2['img'] = event['player2']['player'].img.name
+        player1['color'] = event['player1']['color']
+        player2['color'] = event['player2']['color']
+        if self.channel_name == event['sender']:
+            await self.send(text_data=json.dumps({
+                'type': 'timer_update',
+                'timer': event['timer'],
+                'playerTurn': event['playerTurn'],
+                'board': event['board'],
+                'player1': player1,
+                'player2': player2
+            }))
+        else:
+            await self.send(text_data=json.dumps({
+                'type': 'timer_update',
+                'timer': event['timer'],
+                'playerTurn': event['playerTurn'],
+                'board': event['board'],
+                'player1': player2,
+                'player2': player1
+            }))
 
     async def timeout(self, event):
         await self.send(text_data=json.dumps({

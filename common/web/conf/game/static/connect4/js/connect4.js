@@ -55,6 +55,34 @@ async function connect4Load()
                 let divTimer = document.getElementById("timer");
                 divTimer.style.display = "flex";
                 divTimer.innerHTML = data.timer;
+                playerTurn = data.playerTurn;
+                playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
+                let user, opp;
+                if (data.player1.id == userId)
+                {
+                    user = data.player1;
+                    opp = data.player2;
+                }
+                else
+                {
+                    user = data.player2;
+                    opp = data.player1;
+                }
+                curHeader.innerHTML = "Current player: " + user.color;
+                const playerInfo = {
+                    img: user.img.startsWith("profile_pics") ? `/media/${user.img}` : user.img,
+                    username: user.username + " (" + user.color + ")"
+                };
+                try {
+                    const opponentInfo = {
+                        img: opp.img.startsWith("profile_pics") ? `/media/${opp.img}` : opp.img,
+                        username: opp.username + " (" + opp.color + ")"
+                    };
+                    updatePlayerInfo(playerInfo, opponentInfo);
+                } catch (e) {
+                    updatePlayerInfo(playerInfo, { img: "/media/profile_pics/default.png", username: "Waiting for opponent" });
+                }
+                updateBoard(data);
                 break;
             case 'timeout':
                 if (data.winner == currentPlayer)
@@ -64,40 +92,7 @@ async function connect4Load()
                 connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: data.winner }));
                 break;
             case 'roleGiving':
-                currentPlayer = data.role;
-                playerTurn = data.playerTurn;
-                curHeader.innerHTML = "Current player: " + currentPlayer;
-                playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
-                board = data.board;
-                const playerInfo = {
-                    img: data.playerInfo.img.startsWith("profile_pics") ? `/media/${data.playerInfo.img}` : data.playerInfo.img,
-                    username: data.playerInfo.username + " (" + data.role + ")"
-                };
-                let opponent;
-                if (data.role == "yellow")
-                    opponent = "red"
-                else
-                    opponent = "yellow"
-                try {
-                    const opponentInfo = {
-                        img: data.opponentInfo.img.startsWith("profile_pics") ? `/media/${data.opponentInfo.img}` : data.opponentInfo.img,
-                        username: data.opponentInfo.username + " (" + opponent + ")"
-                    };
-                    updatePlayerInfo(playerInfo, opponentInfo);
-                } catch (e) {
-                    updatePlayerInfo(playerInfo, { img: "/media/profile_pics/default.png", username: "Waiting for opponent" });
-                }
-                firstMove = false;
-                // check if the board is empty
-                for (var row = 0; row < 6; row++) {
-                    for (var col = 0; col < 7; col++) {
-                        if (board[row][col] == 'red') {
-                            document.getElementById(row + " " + col).classList.add("red");
-                        } else if (board[row][col] == 'yellow') {
-                            document.getElementById(row + " " + col).classList.add("yellow");
-                        }
-                    }
-                }
+                roleGiving(data);
                 break;
             default:
                 board = data.board;
@@ -111,6 +106,48 @@ async function connect4Load()
                     connect4WebSocket.send(JSON.stringify({ type:"reset", player_id: `${userId}`, winner: playerPlayed}));
                     return;
                 }
+        }
+    }
+}
+
+function roleGiving(data)
+{
+    currentPlayer = data.role;
+    curHeader.innerHTML = "Current player: " + currentPlayer;
+    playerTurn = data.playerTurn;
+    playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
+    const playerInfo = {
+        img: data.playerInfo.img.startsWith("profile_pics") ? `/media/${data.playerInfo.img}` : data.playerInfo.img,
+        username: data.playerInfo.username + " (" + data.role + ")"
+    };
+    let opponent;
+    if (data.role == "yellow")
+        opponent = "red"
+    else
+        opponent = "yellow"
+    try {
+        const opponentInfo = {
+            img: data.opponentInfo.img.startsWith("profile_pics") ? `/media/${data.opponentInfo.img}` : data.opponentInfo.img,
+            username: data.opponentInfo.username + " (" + opponent + ")"
+        };
+        updatePlayerInfo(playerInfo, opponentInfo);
+    } catch (e) {
+        updatePlayerInfo(playerInfo, { img: "/media/profile_pics/default.png", username: "Waiting for opponent" });
+    }
+    firstMove = false;
+    // check if the board is empty
+    updateBoard(data);
+}
+
+function updateBoard(data) {
+    board = data.board;
+    for (var row = 0; row < 6; row++) {
+        for (var col = 0; col < 7; col++) {
+            if (board[row][col] == 'red') {
+                document.getElementById(row + " " + col).classList.add("red");
+            } else if (board[row][col] == 'yellow') {
+                document.getElementById(row + " " + col).classList.add("yellow");
+            }
         }
     }
 }
