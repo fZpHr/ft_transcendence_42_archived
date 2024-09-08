@@ -61,12 +61,12 @@ function createSocket(gameType) {
       if (count === 0) {
         clearInterval(countdown);
         console.log("Redirecting to game page");
-        // htmx.ajax('GET', '/game/', {
-        //   target: '#main-content', // The target element to update
-        //   swap: 'innerHTML', // How to swap the content
-        // }).then(response => {
-        //   history.pushState({}, '', '/game/game/');
-        // })
+        htmx.ajax('GET', '/game/', {
+          target: '#main-content', // The target element to update
+          swap: 'innerHTML', // How to swap the content
+        }).then(response => {
+          history.pushState({}, '', '/game/');
+        })
       }
       else {
         let divWaiting = document.getElementById("loadingText");
@@ -143,11 +143,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (window.location.pathname !== '/game/ranked/') {
     return;
   }
-  htmx.ajax('GET', '/game/game/', {
+  htmx.ajax('GET', '/game/', {
     target: '#main-content', // The target element to update
     swap: 'innerHTML', // How to swap the content
   }).then(response => {
-    history.pushState({}, '', '/game/game/');
+    history.pushState({}, '', '/game/');
   });
 });
 

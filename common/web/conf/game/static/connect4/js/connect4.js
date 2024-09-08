@@ -8,7 +8,11 @@ async function connect4Load()
     const searchParams = new URLSearchParams(window.location.search);
     let gameId = searchParams.get('id'); // This will be '17' for your example URL
 
-    connect4WebSocket = new WebSocket("wss://" + window.location.host + `/ws/game/connect4/${gameId}` + "/");
+    try {
+        connect4WebSocket = new WebSocket("wss://" + window.location.host + `/ws/game/connect4/${gameId}` + "/");
+    } catch (e) {
+        console.log("WebSocket connection failed:", e);
+    }
 
     connect4WebSocket.onopen = function(e) {
         console.log("WebSocket connection established connect4");
@@ -21,6 +25,7 @@ async function connect4Load()
     }
 
     connect4WebSocket.onclose = function(e) {
+        console.log(e);
         console.log("WebSocket connection closed");
     }
 
@@ -40,11 +45,11 @@ async function connect4Load()
             case 'roomFull':
                 console.log("Room is full");
                 await sleep(3000);
-                htmx.ajax('GET', '/game/game/', {
+                htmx.ajax('GET', '/game/', {
                     target: '#main-content', // The target element to update
                     swap: 'innerHTML', // How to swap the content
                 }).then(response => {
-                    history.pushState({}, '', '/game/game/');
+                    history.pushState({}, '', '/game/');
                 });
                 break;
             case 'reset':
@@ -92,6 +97,16 @@ async function connect4Load()
                 break;
             case 'roleGiving':
                 roleGiving(data);
+                break;
+            case 'Game does not exist':
+                console.log("Game does not exist");
+                await sleep(3000);
+                htmx.ajax('GET', '/game/', {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', '/game/');
+                });
                 break;
             default:
                 board = data.board;
@@ -198,16 +213,17 @@ async function gameFinished(winner) {
     [reconnect, cancel, divOpponentDisconnected, winnerText].forEach(el => el.style.display = "flex");
     let cancelAfterSwapListener = (event) => {
         console.log("cancel afterswap called");
-        if (event.detail.pathInfo.path === '/game/game/') {
+        if (event.detail.pathInfo.path === '/game/') {
             console.log("cancel redirection called");
-            history.pushState({}, '', '/game/game/');
-            htmx.off('htmx:afterSwap', afterSwapListener); // Remove the event listener
+            history.pushState({}, '', '/game/');
+            htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
+            htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
         }
     };
     
     cancel.addEventListener("click", () => {
         htmx.on('htmx:afterSwap', cancelAfterSwapListener);
-        htmx.ajax('GET', '/game/game/', {
+        htmx.ajax('GET', '/game/', {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
         });
@@ -232,6 +248,7 @@ async function gameFinished(winner) {
                 }
             }, 100);
         }
+        htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
         htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
     };
     
