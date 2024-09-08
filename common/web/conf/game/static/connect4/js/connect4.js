@@ -1,6 +1,9 @@
+import { div } from "three/webgpu";
 import { createSocket } from "../../ranked/js/socket.js";
 
 var connect4WebSocket;
+var reconnectAfterSwapListener;
+var cancelAfterSwapListener;
 
 let sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 async function connect4Load()
@@ -8,21 +11,35 @@ async function connect4Load()
     const searchParams = new URLSearchParams(window.location.search);
     let gameId = searchParams.get('id'); // This will be '17' for your example URL
 
+    let regex = new RegExp("^ws/game/connect4/([0-9a-f-]+)/$");
+    let link = "ws/game/connect4/" + gameId + "/";
+    if (regex.test(link) == false)
+    {
+        console.log("Invalid link");
+        await sleep(3000);
+        htmx.ajax('GET', '/game/', {
+            target: '#main-content', // The target element to update
+            swap: 'innerHTML', // How to swap the content
+        }).then(response => {
+            history.pushState({}, '', '/game/');
+        });
+        return;
+    }
     try {
-        connect4WebSocket = new WebSocket("wss://" + window.location.host + `/ws/game/connect4/${gameId}` + "/");
+        connect4WebSocket = new WebSocket("wss://" + window.location.host + '/' + link);
+        connect4WebSocket.onopen = function(e) {
+            console.log("WebSocket connection established connect4");
+            let checkUserIdInterval = setInterval(() => {
+                if (userId && connect4WebSocket.readyState === WebSocket.OPEN) {
+                    connect4WebSocket.send(JSON.stringify({ type: 'join', player_id: `${userId}` }));
+                    clearInterval(checkUserIdInterval); // Stop checking once the message is sent
+                }
+            }, 100); // Check every 100 milliseconds
+        }
     } catch (e) {
         console.log("WebSocket connection failed:", e);
     }
 
-    connect4WebSocket.onopen = function(e) {
-        console.log("WebSocket connection established connect4");
-        let checkUserIdInterval = setInterval(() => {
-            if (userId && connect4WebSocket.readyState === WebSocket.OPEN) {
-                connect4WebSocket.send(JSON.stringify({ type: 'join', player_id: `${userId}` }));
-                clearInterval(checkUserIdInterval); // Stop checking once the message is sent
-            }
-        }, 100); // Check every 100 milliseconds
-    }
 
     connect4WebSocket.onclose = function(e) {
         console.log(e);
@@ -100,6 +117,9 @@ async function connect4Load()
                 break;
             case 'Game does not exist':
                 console.log("Game does not exist");
+                let divGameNotExist = document.getElementById("overlay");
+                divGameNotExist.style.display = "flex";
+                divGameNotExist.innerText = "Game does not exist... Redirecting to game page";
                 await sleep(3000);
                 htmx.ajax('GET', '/game/', {
                     target: '#main-content', // The target element to update
@@ -211,7 +231,7 @@ async function gameFinished(winner) {
         winnerText.style.color = "white";
     }
     [reconnect, cancel, divOpponentDisconnected, winnerText].forEach(el => el.style.display = "flex");
-    let cancelAfterSwapListener = (event) => {
+    cancelAfterSwapListener = (event) => {
         console.log("cancel afterswap called");
         if (event.detail.pathInfo.path === '/game/') {
             console.log("cancel redirection called");
@@ -228,7 +248,7 @@ async function gameFinished(winner) {
             swap: 'innerHTML', // How to swap the content
         });
     });
-    let reconnectAfterSwapListener = (event) => {
+    reconnectAfterSwapListener = (event) => {
         console.log("reconnect afterswap called");
         if (event.detail.pathInfo.path === '/game/ranked/') {
             console.log("reconnect redirection called");
@@ -247,9 +267,9 @@ async function gameFinished(winner) {
                     [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
                 }
             }, 100);
+            htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
+            htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
         }
-        htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
-        htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
     };
     
     reconnect.addEventListener("click", () => {
@@ -375,7 +395,8 @@ function handleError(message)
 }
 
 document.addEventListener('htmx:beforeSwap', function(event) {
-    connect4WebSocket.close();
+    if (connect4WebSocket && connect4WebSocket.readyState === WebSocket.OPEN)
+        connect4WebSocket.close();
     console.log("htmx:beforeSwap event listener matchMakingSocket close");
 }, {once: true});
 

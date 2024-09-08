@@ -21,6 +21,8 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['game_id']
         self.room_group_name = 'connect4_%s' % self.room_name
+        logger.info(f"CONNECT called for room {self.room_name}")
+
         if self.room_name not in Connect4GameConsumer.games:
             Connect4GameConsumer.games[self.room_name] = {
                 'board': [['' for i in range(7)] for j in range(6)],
@@ -66,6 +68,22 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         player = await sync_to_async(models.Player.objects.get)(id=player_id)
         logger.info("player : ")
         logger.info(str(player))
+        try:
+            game = await sync_to_async(models.Game.objects.get)(UUID=self.room_name)
+            if game is None:
+                logger.info("Game does not exist")
+                await self.send(text_data=json.dumps({
+                    'type': 'Game does not exist'
+                }))
+                self.disconnect(1)
+                return
+        except Exception as e:
+            logger.info(e)
+            await self.send(text_data=json.dumps({
+                'type': 'Game does not exist'
+            }))
+            self.disconnect(1)
+            return
 
         if text_data_json['type'] == "join":
             logger.info("JOIN called")
