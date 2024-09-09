@@ -45,22 +45,17 @@ function createSocket(gameType) {
         const timerText = document.getElementById("timer-text");
         const reconnect = document.getElementById("reconnect");
         const cancel = document.getElementById("cancel");
+        const gamelink = document.getElementById("game-link");
         [timer, timerText].forEach(el => el.style.display = "none");
-        [reconnect, cancel, divOpponentDisconnected].forEach(el => el.style.display = "flex");
-        matchMakingSocket.close(1000);
-        break;
-      case 'gameStarted':
-        divOpponentDisconnected = document.getElementById("overlay");
-        const gameLink = document.getElementById("game-link");
-        [divOpponentDisconnected, gameLink].forEach(el => el.style.display = "flex");
-        gameLink.addEventListener("click", function() {
-          htmx.ajax('GET', '/game/' + data.game_type + '/' + data.game_id + '/', {
+        [reconnect, cancel, divOpponentDisconnected, gamelink].forEach(el => el.style.display = "flex");
+        gamelink.addEventListener("click", function() {
+          htmx.ajax('GET', '/game/' + data.game_type + '?id=' + data.game_id, {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
           }).then(response => {
-            history.pushState({}, '', '/game/');
-          })
-        }, {once: true});
+            history.pushState({}, '', '/game/' + data.game_type + '?id=' + data.game_id);
+          });
+        });
         break;
       default:
         console.log('Unknown message type:', data.type);

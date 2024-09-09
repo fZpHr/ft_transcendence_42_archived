@@ -25,13 +25,13 @@ function updateGameInfo(data)
     startTimer();
     setTimeout(() => {
       const timerText = document.getElementById("timer-text");
-      if (timerText.style.display === "flex") {
+      if (timerText && timerText.style.display === "flex") {
         htmx.ajax('GET', `/game/${data.game_type}?id=${data.game_id}`, {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
           }).then(response => {
             history.pushState({}, '', `/game/${data.game_type}?id=${data.game_id}`);
-        });
+        })
       }
     }, 5000); // FOR RESPONSIVE awef
 }

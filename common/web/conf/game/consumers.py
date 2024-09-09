@@ -256,12 +256,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         game.elo_after_player2 = player2DB.eloConnect4
         game.finish = True
         game.time = (int)((timezone.now() - game.created_at).total_seconds())
-        logger.info("WINNER: ")
-        logger.info(event['winner'])
-        if event['winner'] == player1['color']:
-            logger.info(player1DB.eloConnect4)
-        elif event['winner'] == player2['color']:
-            logger.info(player2DB.eloConnect4)
         await sync_to_async(game.save)()
         await sync_to_async(player1DB.save)()
         await sync_to_async(player2DB.save)()
@@ -431,7 +425,7 @@ class RankedGameConsumer(AsyncWebsocketConsumer):
         for i in range(len(RankedGameConsumer.playing_list)):
             if RankedGameConsumer.playing_list[i]['socket'] == self:
                 await RankedGameConsumer.playing_list[i]['socket_opps'].send(text_data=json.dumps({
-                    'type': 'gameStarted',
+                    'type': 'opponentDisconnected',
                     'game_id': str(RankedGameConsumer.playing_list[i]['game'].UUID),
                     'game_type': RankedGameConsumer.playing_list[i]['game'].type
                 }))
