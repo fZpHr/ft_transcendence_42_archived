@@ -19,7 +19,9 @@ async function loadCanvaTournament(tournamentINfo, NbrPlayer) {
         await innerCanvaTournament();
         let ctx = await initCanvas();
 
-        await drawTournament(ctx, tournamentINfo, NbrPlayer);
+        console.log('tournamentINfo', tournamentINfo);
+        console.log('tournamentINfo Game', tournamentINfo.gameTournament);
+        await drawTournament(ctx, tournamentINfo.gameTournament, NbrPlayer);
         
         let loader = document.getElementById('loader-container');
         loader.style.display = 'none';
@@ -135,13 +137,17 @@ function getNbrGame(nbrParticipants, DFP) {
     return Math.floor(nbrGame);
 }
 
-async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
+async function drawTournament(ctx, gameTournament, NbrPlayer) {
     let canvasWidth = ctx.canvas.width;
     let canvasHeight = ctx.canvas.height;
 
+    console.log('===========DRAW TOURNAMENT===========');
+    console.log('NbrPlayer', NbrPlayer);
+    console.log('gameTournament', gameTournament);
+
     let factor = await getProduitFacteurPremier(NbrPlayer);
-    let tournament = tournamentorganized.tournament;
-    let gamesTab = tournament.games;
+    let gamesTab = gameTournament;
+    console.log('gameTab', gamesTab);
     let nbrRound = factor.length;
     let currentCanvasWidth = canvasWidth;
     let currentCanvasHeight = canvasHeight;
@@ -149,6 +155,7 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
     let currentStartY = 0;   
     let splitWidth = 2 * factor.length - 1;    
     let splitHeight;
+
     
     for (let i = 0; i < nbrRound; i++) {
         let nbrGameForTour = getNbrPartyByTour(NbrPlayer, i + 1, factor);
@@ -163,7 +170,7 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
         for (let j = 0; j < nbrGameForTour; j++) {
             let xstart;
             let game = gamesTab.shift();
-        
+            console.log('PTN ICIC STP game', game);
             nbrPlayerPerGame = getNbrPlayerForGamePerTour(NbrPlayer, i + 1, factor);
             ystep = (currentCanvasHeight / splitHeight) / nbrPlayerPerGame;
             if (j % 2 == 0) {
@@ -188,13 +195,13 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
 } 
 
 async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jumpHeight, nbrParticipants, directionArrow, canvasWidth, splitWidth) {
-    try {        
+    try {   
         let firstPoints = jumpHeight + (ystep / 2);
         let lastPoints = firstPoints;
         for (let i = 0; i < nbrParticipants; i++) {
             let yplayer = jumpHeight + (ystep / 2) + ystep * i;
             let len = canvasWidth / splitWidth / 2;
-            let playerImg = '/media/profile_pics/default.png'
+            let playerImg = 'https://png.pngtree.com/png-clipart/20191121/original/pngtree-sign-waiting-download-on-internet-icon-flat-style-png-image_5153330.jpg'
             if (game.players.length > 0) {
                 playerImg = game.players[i].img;
                 playerImg = playerImg.startsWith('profile_pics') ? '/media/' + playerImg : playerImg;
@@ -233,36 +240,30 @@ async function drawLine(ctx, x, y, x2, y2) {
 async function drawConnexionGame(ctx, x, y, len, directionArrow, roundNum, nbrRound, isLeft) {
     try {
         ctx.beginPath();
-        if (roundNum != 0 && roundNum != nbrRound - 1) {
+        ctx.strokeStyle = 'white';
+
+        if (roundNum !== 0 && roundNum !== nbrRound - 1) {
             ctx.moveTo(x - len, y);
             ctx.lineTo(x + len, y);
-            ctx.strokeStyle = 'white';
-            ctx.stroke();
-        } else if (roundNum == 0) {
+        } else if (roundNum === 0) {
             if (directionArrow) {
                 ctx.moveTo(x, y);
                 ctx.lineTo(x + len, y);
-                ctx.strokeStyle = 'white';
-                ctx.stroke();
             } else {
                 ctx.moveTo(x, y);
                 ctx.lineTo(x - len, y);
-                ctx.strokeStyle = 'white';
-                ctx.stroke();
             }
         } else {
             if (isLeft) {
                 ctx.moveTo(x, y);
                 ctx.lineTo(x - len, y);
-                ctx.strokeStyle = 'white';
-                ctx.stroke();
             } else {
                 ctx.moveTo(x, y);
                 ctx.lineTo(x + len, y);
-                ctx.strokeStyle = 'white';
-                ctx.stroke();
             }
         }
+
+        ctx.stroke();
     } catch (error) {
         console.error('Failed to drawConnexionGame', error);
     }

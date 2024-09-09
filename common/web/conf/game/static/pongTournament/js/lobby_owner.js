@@ -2,19 +2,23 @@ var users;
 var lobbyUUID;
 var ws;
 
-// document.addEventListener('DOMContentLoaded', async function () {
-//     console.log("lobby_owner.js loaded");
-//     lobbyElement = document.getElementById('lobby_uuid');
-//     lobbyUUID = lobbyElement.getAttribute('data-value');
-//     users = await APIgetUserAvailableToLobby(lobbyUUID);
-//     lobbyUUID = lobbyUUID.replace(/-/g, '');
-//     await connectLobbySocket(lobbyUUID);
-//     toggleAddingPlayer();
-//     handlersLockLobby();
+async function innerCanvaIfLockLobby() {
+    try {
+        let element = document.getElementById('lobby-body');
+        let isLocked = element.getAttribute('data-locked');
+        if (isLocked) {
+            let NbrPlayer = document.getElementsByClassName('player-present').length;
+            tournamentorganized = await APIlockLobby(lobbyUUID);
 
-//     window.addEventListener('beforeunload', disconnectLobbySocket);
-//     window.addEventListener('unload', disconnectLobbySocket);
-// });
+            tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
+            console.log('======= OWNER ==== tournamentINfo', tournamentINfo);
+            deleteLobbyBody();
+            loadCanvaTournament(tournamentINfo, NbrPlayer);
+        }
+    } catch (error) {
+        console.error('Failed to innerCanvaIfLockLobby', error);
+    }
+}
 
 async function loadLobby() {
     console.log("lobby_owner.js loaded");
@@ -23,14 +27,21 @@ async function loadLobby() {
     users = await APIgetUserAvailableToLobby(lobbyUUID);
     lobbyUUID = lobbyUUID.replace(/-/g, '');
     await connectLobbySocket(lobbyUUID);
-    toggleAddingPlayer();
-    handlersLockLobby();
+    let isLocked = document.getElementById('lobby-body').getAttribute('data-locked');
+    if (!isLocked) {
+        toggleAddingPlayer();
+        handlersLockLobby();
+    } else {
+        updateLockAtRedirect();
+    }
+        
+        innerCanvaIfLockLobby();
 
-    document.addEventListener('htmx:beforeSwap', function(event) {
-        /* TODO remove all event listeners here*/
-        disconnectLobbySocket();
-        console.log("htmx:beforeSwap event listener");
-    }, {once: true});
+        document.addEventListener('htmx:beforeSwap', function(event) {
+            /* TODO remove all event listeners here*/
+            disconnectLobbySocket();
+            console.log("htmx:beforeSwap event listener");
+        }, {once: true});
 }
 
 // =============================== WS LOBBY NOTIF================================
@@ -286,7 +297,6 @@ function handlersLockLobby() {
     }
 }
 
-
 // =============================== Looby toggle ================================
 
 async function toggleAddingPlayer() {
@@ -323,9 +333,19 @@ async function updateLockAtRedirect() {
         redirect.innerHTML = 'Redirect';
         parrentBox.appendChild(redirect);
         redirect.addEventListener('click', async function () {
+            let nbrPlayer = document.getElementsByClassName('player-present').length;
+            let nbrPlayerReady = document.getElementsByClassName('waiting-player').length;
+            if (nbrPlayer != nbrPlayerReady) {
+                sendNotifAtUserNotReady();
+                console.log('You need to wait for all player to be ready');
+                return;
+            }
+
             sendToWsLobby('redirect', `/game/pong/tournament/game/?lobby_id=${lobbyUUID}`);
         });
     } catch (error) {
         console.error('Failed to updateLockAtRedirect', error);
     }
 }
+
+loadLobby();

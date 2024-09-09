@@ -4,14 +4,14 @@
 
 async function updateInviteStatusUI(status) {
     try {
-        console.log('status:', status);
+        // console.log('status:', status);
         let chatMessages = document.getElementById('chat-messages');
         let gameInvites = chatMessages.getElementsByClassName('game-invite');
         for (let i = 0; i < gameInvites.length; i++) {
-            console.log('gameInvites[i]:', gameInvites[i]);
+            // console.log('gameInvites[i]:', gameInvites[i]);
             let gameInvite = gameInvites[i];
             let chooseGamesDiv = gameInvite.getElementsByClassName('choose-games')[0];
-            console.log('status:', status);
+            // console.log('status:', status);
             status == 2 ? chooseGamesDiv.innerHTML = '<button class="btn btn-join" data-tooltip="Join lobby">Join</button>' : chooseGamesDiv.innerHTML = '<span>Declined</span>';
         }
     } catch (error) {
@@ -25,12 +25,12 @@ async function sendWebSocketMessage(message, senderId, contactId, wsChat) {
         let user = await APIgetCurrentUser();
         let myId = user.id;
         if (!message || !senderId || !contactId) {
-            console.log('You must provide a message, a senderId and a contactId');
+            // console.log('You must provide a message, a senderId and a contactId');
             return;
         }
         if (senderId != myId) {
-            console.log('sender id = ', senderId, 'mine = ', myId);
-            console.log('You can only send messages from your own account');
+            // console.log('sender id = ', senderId, 'mine = ', myId);
+            // console.log('You can only send messages from your own account');
             return ;
         }
             
@@ -88,11 +88,11 @@ async function addGameInviteToChat(senderId, contactId) {
 
 async function connectWebSocket(roomName) {
     try {
-        // console.log('Connecting to WebSocket:', roomName);
+        console.log('Connecting to WebSocket:', roomName);
         wsChat = new WebSocket(`wss://${window.location.host}/ws/chat/${roomName}/`);        
 
         wsChat.onopen = function () {
-            // console.log('[WebSocket] => connection opened');
+            console.log('[WebSocket] => connection opened');
         };
         
         wsChat.onmessage = function (e) {

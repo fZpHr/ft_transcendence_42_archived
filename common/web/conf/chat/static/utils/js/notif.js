@@ -11,7 +11,6 @@ async function updateAllNotif() {
         socialNotif = await getSocialNotif(globalNotif);
         nbrChatNotif = await APIgetNbrChatNotif(userId);
         nbrSocialNotif = await APIgetNbrSocialNotif(userId);
-        console.log('NOtif updated');
     } catch (error) {
         console.error('Failed to updateAllNotif', error);
     }
@@ -39,7 +38,6 @@ async function updateNotifSocial() {
 
 async function displayNotifMenusChat() {
     try {
-        console.log('call')
         if (nbrChatNotif == 0)
             return ;
         let notifChatBox = document.getElementById('notif-chat');

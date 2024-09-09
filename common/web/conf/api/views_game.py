@@ -22,6 +22,11 @@ from functools import reduce
 from api.login_required import login_required
 
 
+import logging
+
+logger = logging.getLogger('print')
+
+
 @api_view(['GET'])
 @login_required
 def getHistoryGame(request):
@@ -277,9 +282,11 @@ def getTournamentInfo(request):
         UUID_TOURNAMENT = request.GET.get('tournamentUUID')
         tournament = Tournament.objects.get(UUID=UUID_TOURNAMENT)
         games = Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament)
+        games = games.order_by('id')
         tournamentOrganized = {}
         tournamentOrganized['UUID'] = tournament.UUID
         tournamentOrganized['games'] = []
+
         for game in games:
             gameData = {}
             gameData['id'] = game.id
@@ -303,23 +310,55 @@ def getTournamentInfo(request):
                     'username': 'ia',
                     'img': 'https://www.forbes.fr/wp-content/uploads/2017/01/intelligence-artificielle-872x580.jpg.webp'
                 })
-                
             tournamentOrganized['games'].append(gameData)
-        return Response({"tournament": tournamentOrganized}, status=200)
+
+        return Response({"gameTournament": tournamentOrganized['games']}, status=200)
     except Tournament.DoesNotExist:
         return Response({"error": f"Tournament does not exist for lobby with id {UUID_TOURNAMENT}"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-    
+
+@csrf_exempt
+@api_view(['POST'])
+@login_required
+def setWinnerAtTournamentGame(request):
+    try :
+        logger.info('====================> SET WINNER')
+        logger.info(request.data)
+
+        id = request.data.get('contactId')
+
+        gameId = request.data.get('idGame')
+        winnerId = request.data.get('idWinner')
+        isAI = request.data.get('isIa')
+        logger.info(gameId)
+        logger.info(winnerId)
+        logger.info(isAI)
+        game = Game_Tournament.objects.get(id=gameId)
+        logger.info(game)
+        if isAI == 'True':
+            winner = AIPlayer.objects.get(id=winnerId)
+            game.winner_ai = winner
+        else:
+            winner = Player.objects.get(id=winnerId)
+            game.winner_player = winner
+        game.save()
+        logger.info(game)
+
+        return Response({"game": game.id}, status=200)
+    except Game_Tournament.DoesNotExist:
+        return Response({"error": f"Game with id {gameId} does not exist"}, status=404)
+    except Player.DoesNotExist:
+        return Response({"error": f"Player with id {winnerId} does not exist"}, status=404)
+    except AIPlayer.DoesNotExist:
+        return Response({"error": f"AIPlayer with id {winnerId} does not exist"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 
 
 # ===============================================================================================
 # ============================================ GAME MANDA ============================================
 # ===============================================================================================
-
-import logging
-
-logger = logging.getLogger('print')
 
 @api_view(['GET'])
 @login_required

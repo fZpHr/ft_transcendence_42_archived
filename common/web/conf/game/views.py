@@ -200,8 +200,10 @@ def pongTournamentGame(request):
                 'img': player.img
             })
         for player in participantsAI:
+            logger.info('============= IA')
+            logger.info(player.id)
             participants.append({
-                'id': '-1',
+                'id': player.id,
                 'username': 'ia',
                 'img': 'ia'
             })

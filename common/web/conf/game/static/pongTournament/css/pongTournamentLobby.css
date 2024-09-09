@@ -76,7 +76,7 @@
 /* LOBBY content */
 
 #pongTournamentLobby-content .lobby-content {
-    width: 60vw;
+    width: 80vw;
     height: 80vh;
     background-color: var(--to-teal-3-rgba);
     padding: 20px;
@@ -445,6 +445,33 @@
 #lobby_uuid span {
     font-size: 0.8rem;
     font-weight: 600;
+}
+
+
+.aside-player {
+    background-color: red;
+    position: fixed;
+    top: 50%;
+    left: 2%;
+    transform: translateY(-50%);
+    width: 15vw;
+    height: fit-content;
+    background-color: var(--to-teal-3-rgba);
+    border-radius: 10px;
+    z-index: 1000;
+    padding: 10px;
+}
+
+#pongTournamentLobby-content .aside-player .box-players {
+    max-height: 50vh;
+    overflow-x: auto;
+}
+
+#pongTournamentLobby-content .aside-player .player-slot {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 @media screen and (max-width: 1400px)  {

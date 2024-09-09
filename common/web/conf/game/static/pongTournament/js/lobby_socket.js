@@ -27,8 +27,6 @@ async function setUserToLogout(userId) {
 
 async function handleWsLobbyMessage(data) {
     try {
-        console.log('data', data);
-
         if (data.eventType === 'redirect') {
             redirect(data);
             return ;
@@ -38,7 +36,6 @@ async function handleWsLobbyMessage(data) {
             return;
         }
         if (data.userId && data.userId === userId) {
-            console.log('ignorted')
             return;
         }
         let eventTypes = { 
@@ -89,7 +86,7 @@ async function connectLobbySocket(roomName) {
         wsLobby = new WebSocket(`wss://${window.location.host}/ws/lobby/${roomName}/`);
         
         wsLobby.onopen = function () {
-            console.log('[WebSocket Lobby] => Connection established to room =>', roomName);
+            // console.log('[WebSocket Lobby] => Connection established to room =>', roomName);
             let msg = userId + ' | ping';
             sendToWsLobby('ping', msg);
         };

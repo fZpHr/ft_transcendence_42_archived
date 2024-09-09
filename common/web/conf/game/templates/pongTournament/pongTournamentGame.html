@@ -12,17 +12,18 @@
     <p>{{ game }}</p>
     <div class="participant-lst">
         {% for participant in participants %}
-            <div class="participant">
+            <div class="participant user" data-id="{{ participant.id }}" data-ia="{{ participant.username }}">
                 <p>ID: {{ participant.id }}</p>
                 <p>Username: {{ participant.username }}</p>
             </div>
         {% endfor %}
     </div>
+    <div class="btn" id="btnSetWinner">
+        <span>i win</span>
+    </div>
 </div>
 {% endblock %}
 
-{% block custom_js %}
-{% endblock %}
-
 {% block extra_scripts %}
+    <script src="{% static 'pongTournament/js/pongTournamentGame.js' %}"></script>
 {% endblock %}

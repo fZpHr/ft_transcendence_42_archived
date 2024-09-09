@@ -89,6 +89,7 @@ async function APIgetUserById(userId) {
 async function APIgetTournamentInfo(tournamentUUID) {
 	return new Promise(async (resolve, reject) => {
 		let game = await getFetchAPI(`/api/getTournamentInfo?tournamentUUID=${tournamentUUID}`);
+		console.log('APIgetTournamentInfo', game);
 		resolve(game);
 	});
 }
@@ -227,10 +228,31 @@ async function APIaddIaToLobby(lobbyUUID) {
 	});
 }
 
+async function APIsetWinnerAtTournamentGame(idGame, idWinner, isIa) {
+	return fetch("/api/setWinnerAtTournamentGame/", {
+		method: "POST",
+		headers: {
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ idGame, idWinner, isIa }),
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Network response was not ok ' + response.statusText);
+		}
+		return response.json();
+	})
+	.catch(error => {
+		console.error("Failed to add player to lobby:", error);
+		throw error;
+	});
+}
+
+
 async function getFetchAPI(url) {
 	return new Promise(async (resolve, reject) => {
 		try {
-			console.log(url)
 			let response = await fetch(url, {
 				method: "GET",
 				headers: {
