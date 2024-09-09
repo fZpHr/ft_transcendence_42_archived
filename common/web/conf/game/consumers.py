@@ -12,10 +12,6 @@ import hashlib
 from django.utils import timezone
 
 logger = logging.getLogger('print')
-
-room_counts = {}
-player_colors = {}  # Global dictionary to store player colors
-
 class Connect4GameConsumer(AsyncWebsocketConsumer):
     games = {}
     async def connect(self):
@@ -35,11 +31,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                 'player1': None,
                 'player2': None
             }
-        if room_counts.get(self.room_group_name, 0) >= 2:
-            await self.send(text_data=json.dumps({
-                'type': 'roomFull'
-            }))
-            return
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -47,8 +38,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
         )
         logger.info("CONNECT called")
         logger.info(self.room_group_name)
-
-        room_counts[self.room_group_name] = room_counts.get(self.room_group_name, 0) + 1
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -56,7 +45,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        room_counts[self.room_group_name] = room_counts.get(self.room_group_name, 0) - 1
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -76,6 +64,11 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                     'type': 'Game does not exist'
                 }))
                 self.disconnect(1)
+            if game.finish:
+                logger.info("Game has already finished")
+                await self.send(text_data=json.dumps({
+                    'type': 'Game has already finished'
+                }))
                 return
         except Exception as e:
             logger.info(e)
@@ -91,7 +84,6 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
 
             if Connect4GameConsumer.games[self.room_name]['player1'] is None:
                 role = random.choice(roles)
-                player_colors[player_id] = role
                 Connect4GameConsumer.games[self.room_name]['player1'] = {'player': player,'color': role}
                 await self.send(text_data=json.dumps({
                     'type': 'roleGiving',
@@ -118,6 +110,11 @@ class Connect4GameConsumer(AsyncWebsocketConsumer):
                     'opponentInfo': opponent
                 }
             )
+            else:
+                await self.send(text_data=json.dumps({
+                    'type': 'Game is full'
+                }))
+                return
             if not Connect4GameConsumer.games[self.room_name]['timer_started']:
                 asyncio.create_task(self.start_timer()) # Start timer for the game
                 Connect4GameConsumer.games[self.room_name]['timer_started'] = True

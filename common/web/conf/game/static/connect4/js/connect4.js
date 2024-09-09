@@ -59,8 +59,37 @@ async function connect4Load()
                 handleError(data.error_message);
                 console.log(data.error_message);
                 break;
-            case 'roomFull':
-                console.log("Room is full");
+            case 'Game is full':
+                console.log("Game is full");
+                let divGameNotExist = document.getElementById("overlay");
+                divGameNotExist.style.display = "flex";
+                divGameNotExist.innerText = "Game is full... Redirecting to game page";
+                await sleep(3000);
+                htmx.ajax('GET', '/game/', {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', '/game/');
+                });
+                break;
+            case 'Game does not exist':
+                console.log("Game does not exist");
+                divGameNotExist = document.getElementById("overlay");
+                divGameNotExist.style.display = "flex";
+                divGameNotExist.innerText = "Game does not exist... Redirecting to game page";
+                await sleep(3000);
+                htmx.ajax('GET', '/game/', {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', '/game/');
+                });
+                break;
+            case 'Game has already finished':
+                console.log("Game does not exist");
+                divGameNotExist = document.getElementById("overlay");
+                divGameNotExist.style.display = "flex";
+                divGameNotExist.innerText = "Game has already finished... Redirecting to game page";
                 await sleep(3000);
                 htmx.ajax('GET', '/game/', {
                     target: '#main-content', // The target element to update
@@ -114,19 +143,6 @@ async function connect4Load()
                 break;
             case 'roleGiving':
                 roleGiving(data);
-                break;
-            case 'Game does not exist':
-                console.log("Game does not exist");
-                let divGameNotExist = document.getElementById("overlay");
-                divGameNotExist.style.display = "flex";
-                divGameNotExist.innerText = "Game does not exist... Redirecting to game page";
-                await sleep(3000);
-                htmx.ajax('GET', '/game/', {
-                    target: '#main-content', // The target element to update
-                    swap: 'innerHTML', // How to swap the content
-                }).then(response => {
-                    history.pushState({}, '', '/game/');
-                });
                 break;
             default:
                 board = data.board;
