@@ -1,31 +1,6 @@
 {% load i18n %}
 {% load static %}
-{% block title %}lobby{% endblock %}
-
 <div id="pongTournamentLobby-content" class="warp-lobby">
-    <!-- <aside class="chat-lobby" style="display: none;">
-        <div class="title-chat-lobby">
-            <h1>chat</h1>
-        </div>
-        <div class="warp-message-lobby">
-            <div class="my-message msg">
-                <span class="username-chat-lobby">username</span>
-                <span class="separator-chat-lobby">:</span>
-                <span class="msg-chat-lobby">message</span>
-            </div>
-            <div class="their-message msg">
-                <span class="username-chat-lobby">username</span>
-                <span class="separator-chat-lobby">:</span>
-                <span class="msg-chat-lobby">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laudantium suscipit placeat optio, in tempora magni dignissimos natus minus sunt et officia ab pariatur quo, alias laborum expedita, iusto voluptatibus consectetur?</span>
-            </div>
-            <div class="my-message msg">
-                <span class="username-chat-lobby">username</span>
-                <span class="separator-chat-lobby">:</span>
-                <span class="msg-chat-lobby">message</span>
-            </div>
-        </div>
-    </aside>
-
     <span class="loader" id="loader-container"></span>
 
     <section class="lobby-content">
@@ -34,7 +9,7 @@
         </div> 
         <div class="lobby-body" id="lobby-body">
             <div class="slop-content" id="slop-content">
-                {% if lobby.owner.id == user.id %}
+                {% if lobby.owner.id == userId %}
                     <div class="player-slot" id="new-player-slot">
                         <div id="newplayer-btn" class="newplayer-slot active">
                             <i class="fa-solid fa-plus"></i>
@@ -62,11 +37,10 @@
                     </div>
                     <div class="player-status">
                         {% if player.id == userId %}
-                            <div class="waiting-player"></div>
+                        <div class="waiting-player"></div>
                         {% else %}
-                            <div class="pending-player"></div>
+                        <div class="pending-player"></div>
                         {% endif %}
-                        <div class="pending-player"></div> -->
                     </div>
                 </div>
                 {% endfor %}
@@ -85,21 +59,19 @@
             </div>
         </div>
         <div class="lobby-footer">
-            {% if lobby.owner.id == user.id %}
-            <div class="lock-lobby">
-                <button id="lock-lobby">LOCK</button>
-            </div>
+            {% if lobby.owner.id == userId %}
+            <button id="lock-lobby">LOCK</button>
             {% endif %}
             <div id="lobby_uuid" data-value="{{ lobby.UUID }}">
-                <span>UUID = {{ lobby.UUID|cut:"-"|slice:":8" }}</span>
+                <span>Lobby UUID = {{ lobby.UUID|slice:":8" }}</span>
             </div>
         </div>
     </section>
-    <script src="{% static 'pongTournament/js/lobby_socket.js' %}"></script>
-    <script src="{% static 'pongTournament/js/drawTournament.js' %}"></script>
-    {% if lobby.owner.id == user.id %}
-        <script src="{% static 'pongTournament/js/lobby_owner.js' %}"></script>
-    {% else %}
-        <script src="{% static 'pongTournament/js/lobby.js' %}"></script>
-    {% endif %}
 </div>
+<script src="{% static 'pongTournament/js/lobby_socket.js' %}"></script>
+<script src="{% static 'pongTournament/js/drawTournament.js' %}"></script>
+{% if lobby.owner.id == userId %}
+    <script src="{% static 'pongTournament/js/lobby_owner.js' %}"></script>
+{% else %}
+    <script src="{% static 'pongTournament/js/lobby.js' %}"></script>
+{% endif %}
