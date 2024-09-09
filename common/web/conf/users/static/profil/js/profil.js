@@ -1,5 +1,3 @@
-
-
 async function loadProfile() {
 
 	handlerUpdatePP();

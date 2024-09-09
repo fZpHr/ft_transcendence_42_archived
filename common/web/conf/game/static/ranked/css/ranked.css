@@ -231,6 +231,7 @@ order: 3;
 }
 
 #cancel,
+#game-link,
 #reconnect {
     border: none;
     background: none;

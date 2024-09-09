@@ -45,9 +45,17 @@ function createSocket(gameType) {
         const timerText = document.getElementById("timer-text");
         const reconnect = document.getElementById("reconnect");
         const cancel = document.getElementById("cancel");
+        const gamelink = document.getElementById("game-link");
         [timer, timerText].forEach(el => el.style.display = "none");
-        [reconnect, cancel, divOpponentDisconnected].forEach(el => el.style.display = "flex");
-        matchMakingSocket.close(1000);
+        [reconnect, cancel, divOpponentDisconnected, gamelink].forEach(el => el.style.display = "flex");
+        gamelink.addEventListener("click", function() {
+          htmx.ajax('GET', '/game/' + data.game_type + '?id=' + data.game_id, {
+            target: '#main-content', // The target element to update
+            swap: 'innerHTML', // How to swap the content
+          }).then(response => {
+            history.pushState({}, '', '/game/' + data.game_type + '?id=' + data.game_id);
+          });
+        });
         break;
       default:
         console.log('Unknown message type:', data.type);
@@ -61,11 +69,11 @@ function createSocket(gameType) {
       if (count === 0) {
         clearInterval(countdown);
         console.log("Redirecting to game page");
-        htmx.ajax('GET', '/game/game/', {
+        htmx.ajax('GET', '/game/', {
           target: '#main-content', // The target element to update
           swap: 'innerHTML', // How to swap the content
         }).then(response => {
-          history.pushState({}, '', '/game/game/');
+          history.pushState({}, '', '/game/');
         })
       }
       else {
@@ -139,11 +147,15 @@ function createSocket(gameType) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  htmx.ajax('GET', '/game/game/', {
+  console.log("pathname " + window.location.pathname);
+  if (window.location.pathname !== '/game/ranked/') {
+    return;
+  }
+  htmx.ajax('GET', '/game/', {
     target: '#main-content', // The target element to update
     swap: 'innerHTML', // How to swap the content
   }).then(response => {
-    history.pushState({}, '', '/game/game/');
+    history.pushState({}, '', '/game/');
   });
 });
 
