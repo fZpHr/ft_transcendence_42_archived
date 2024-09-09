@@ -16,6 +16,9 @@ async function connect4Load()
     if (regex.test(link) == false)
     {
         console.log("Invalid link");
+        let divGameNotExist = document.getElementById("overlay");
+        divGameNotExist.style.display = "flex";
+        divGameNotExist.innerText = "Game does not exist... Redirecting to game page";
         await sleep(3000);
         htmx.ajax('GET', '/game/', {
             target: '#main-content', // The target element to update
@@ -220,15 +223,14 @@ function updatePlayerInfo(playerInfo, opponentInfo) {
 }
 
 async function gameFinished(winner) {
-    await sleep(1000);
     document.getElementById('timer').innerText = '';
     localStorage.removeItem('remainingTime');
     localStorage.removeItem('currentPlayer');
     console.log(`${winner} wins!`);
-    let divOpponentDisconnected = document.getElementById("overlay");
+    let overlay = document.getElementById("overlay");
     document.getElementById("timer").style.display = "none";
     // const timerText = document.getElementById("timer-text");
-    const reconnect = document.getElementById("reconnect");
+    // const reconnect = document.getElementById("reconnect");
     const cancel = document.getElementById("cancel");
     const winnerText = document.getElementById("winnerText");
     if (winner == currentPlayer)
@@ -246,14 +248,14 @@ async function gameFinished(winner) {
         winnerText.innerHTML = "Draw!";
         winnerText.style.color = "white";
     }
-    [reconnect, cancel, divOpponentDisconnected, winnerText].forEach(el => el.style.display = "flex");
+    [cancel, overlay, winnerText].forEach(el => el.style.display = "flex");
     cancelAfterSwapListener = (event) => {
         console.log("cancel afterswap called");
         if (event.detail.pathInfo.path === '/game/') {
             console.log("cancel redirection called");
             history.pushState({}, '', '/game/');
             htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
-            htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
+            // htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
         }
     };
     
@@ -264,38 +266,38 @@ async function gameFinished(winner) {
             swap: 'innerHTML', // How to swap the content
         });
     });
-    reconnectAfterSwapListener = (event) => {
-        console.log("reconnect afterswap called");
-        if (event.detail.pathInfo.path === '/game/ranked/') {
-            console.log("reconnect redirection called");
-            history.pushState({}, '', '/game/ranked/');
-            let intervalId = setInterval(() => {
-                let divConnect4 = document.getElementById("wrap");
-                if (divConnect4) {
-                    clearInterval(intervalId);
-                    createSocket("connect4");
-                    const playerDiv = document.getElementById("player-btn");
-                    const opponentDiv = document.getElementById("opps-btn");
-                    const gameDiv = document.getElementById("game-type");
-                    const vsDiv = document.getElementById("vs-text");
-                    const waitingDiv = document.getElementById("waiting-btn");
-                    [playerDiv, opponentDiv, gameDiv, vsDiv].forEach(el => el.style.display = "none");
-                    [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
-                }
-            }, 100);
-            htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
-            htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
-        }
-    };
+    // reconnectAfterSwapListener = (event) => {
+    //     console.log("reconnect afterswap called");
+    //     if (event.detail.pathInfo.path === '/game/ranked/') {
+    //         console.log("reconnect redirection called");
+    //         history.pushState({}, '', '/game/ranked/');
+    //         let intervalId = setInterval(() => {
+    //             let divConnect4 = document.getElementById("wrap");
+    //             if (divConnect4) {
+    //                 clearInterval(intervalId);
+    //                 createSocket("connect4");
+    //                 const playerDiv = document.getElementById("player-btn");
+    //                 const opponentDiv = document.getElementById("opps-btn");
+    //                 const gameDiv = document.getElementById("game-type");
+    //                 const vsDiv = document.getElementById("vs-text");
+    //                 const waitingDiv = document.getElementById("waiting-btn");
+    //                 [playerDiv, opponentDiv, gameDiv, vsDiv].forEach(el => el.style.display = "none");
+    //                 [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
+    //             }
+    //         }, 100);
+    //         htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
+    //         htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
+    //     }
+    // };
     
-    reconnect.addEventListener("click", () => {
-        console.log("reconnect clicked");
-        htmx.on('htmx:afterSwap', reconnectAfterSwapListener);
-        htmx.ajax('GET', '/game/ranked/', {
-            target: '#main-content', // The target element to update
-            swap: 'innerHTML', // How to swap the content
-        });
-    });
+    // reconnect.addEventListener("click", () => {
+    //     console.log("reconnect clicked");
+    //     htmx.on('htmx:afterSwap', reconnectAfterSwapListener);
+    //     htmx.ajax('GET', '/game/ranked/', {
+    //         target: '#main-content', // The target element to update
+    //         swap: 'innerHTML', // How to swap the content
+    //     });
+    // });
 }
 
 function checkWin(row, col) {

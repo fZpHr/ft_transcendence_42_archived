@@ -49,6 +49,19 @@ function createSocket(gameType) {
         [reconnect, cancel, divOpponentDisconnected].forEach(el => el.style.display = "flex");
         matchMakingSocket.close(1000);
         break;
+      case 'gameStarted':
+        divOpponentDisconnected = document.getElementById("overlay");
+        const gameLink = document.getElementById("game-link");
+        [divOpponentDisconnected, gameLink].forEach(el => el.style.display = "flex");
+        gameLink.addEventListener("click", function() {
+          htmx.ajax('GET', '/game/' + data.game_type + '/' + data.game_id + '/', {
+            target: '#main-content', // The target element to update
+            swap: 'innerHTML', // How to swap the content
+          }).then(response => {
+            history.pushState({}, '', '/game/');
+          })
+        }, {once: true});
+        break;
       default:
         console.log('Unknown message type:', data.type);
     }
