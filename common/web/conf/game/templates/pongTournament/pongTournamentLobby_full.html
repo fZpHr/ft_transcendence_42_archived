@@ -10,7 +10,7 @@
 <div id="pongTournamentLobby-content" class="warp-lobby">
     <span class="loader" id="loader-container"></span>
 
-    <section class="lobby-content">
+    <section class="lobby-content"> 
         <div class="title-lobby">
             <h1>Lobby</h1>
         </div> 
@@ -67,7 +67,7 @@
         </div>
         <div class="lobby-footer">
             {% if lobby.owner.id == userId %}
-            <button id="lock-lobby">LOCK</button>
+            <button id="lock-lobby" class="lock-lobby">LOCK</button>
             {% endif %}
             <div id="lobby_uuid" data-value="{{ lobby.UUID }}">
                 <span>Lobby UUID = {{ lobby.UUID|slice:":8" }}</span>

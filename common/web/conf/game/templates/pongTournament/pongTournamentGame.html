@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="warp-pongTournament" id="warp-pongT">
+<div class="warp-pongTournament" id="warp-pongT" data-id="{{ game.id }}">
     <p>{{ game }}</p>
     <div class="participant-lst">
         {% for participant in participants %}

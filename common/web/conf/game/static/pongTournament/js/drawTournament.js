@@ -1,3 +1,61 @@
+
+// =================== Lobby part ===================
+
+async function deleteLobbyBody() {
+    try {
+        let lobbyBody = document.getElementById('slop-content');
+        lobbyBody.innerHTML = '';
+        let loader = document.getElementById('loader-container');
+        loader.style.display = 'block';
+    } catch (error) {
+        console.error('Failed to deleteLobbyBody', error);
+    }
+
+}
+
+
+async function loadCanvaTournament(tournamentINfo, NbrPlayer) {
+    try {
+        await innerCanvaTournament();
+        let ctx = await initCanvas();
+
+        await drawTournament(ctx, tournamentINfo, NbrPlayer);
+        
+        let loader = document.getElementById('loader-container');
+        loader.style.display = 'none';
+        
+        await displayCanvaTournament();
+        console.log('tournament is draw');
+    } catch (error) {
+        console.error('Failed to innerCanvaTournament', error);
+    }
+}
+
+async function innerCanvaTournament() {
+    try {
+        let element = document.getElementById('lobby-body');
+        element.innerHTML = `
+            <div id="tournamentConainterOrga" style="display: none;">
+            <canvas width="1000" height="600" style="background-color: black;" id="tournamentOrganized"></canvas>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Failed to innerCanvaTournament', error);
+    }
+}
+
+async function displayCanvaTournament() {
+    try {
+        let tournamentBoxOrga = document.getElementById('tournamentConainterOrga');
+        tournamentBoxOrga.style.display = 'block';
+    } catch (error) {
+        console.error('Failed to displayCanvaTournament', error);
+    }
+}
+
+
+// =================== Cava part ===================
+
 async function initCanvas() {
     try {
         const canvas = document.getElementById('tournamentOrganized');
@@ -28,7 +86,6 @@ async function getProduitFacteurPremier(nbr) {
 
 function getNbrPartyByTour(nbrParticipants, tour, DFP) {
     if (DFP.length === 0) {
-        console.log('DFP is empty');
         return 0;
     }
 
@@ -46,7 +103,6 @@ function getNbrPartyByTour(nbrParticipants, tour, DFP) {
 
 function getNbrPlayerForGamePerTour(nbrParticipants, tour, DFP) {
     if (DFP.length === 0) {
-        console.log('DFP is empty');
         return 0;
     }
 
@@ -67,7 +123,6 @@ function getNbrPlayerForGamePerTour(nbrParticipants, tour, DFP) {
 
 function getNbrGame(nbrParticipants, DFP) {
     if (DFP.length === 0) {
-        console.log('DFP is empty');
         return 0;
     }
     let nbrGame = 0;
@@ -133,18 +188,21 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
 } 
 
 async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jumpHeight, nbrParticipants, directionArrow, canvasWidth, splitWidth) {
-    try {
-        console.log('drawGame', game);
+    try {        
         let firstPoints = jumpHeight + (ystep / 2);
         let lastPoints = firstPoints;
         for (let i = 0; i < nbrParticipants; i++) {
             let yplayer = jumpHeight + (ystep / 2) + ystep * i;
             let len = canvasWidth / splitWidth / 2;
-            
+            let playerImg = '/media/profile_pics/default.png'
+            if (game.players.length > 0) {
+                playerImg = game.players[i].img;
+                playerImg = playerImg.startsWith('profile_pics') ? '/media/' + playerImg : playerImg;
+            }
             lastPoints = yplayer;
             
             drawConnexionGame(ctx, currentStartX, yplayer, len ,directionArrow, roundNum, nbrRound, i % 2 == 0);
-            drawPlayer(ctx, "https://cdn.intra.42.fr/users/27082b5f4fe8df2f838153a15ea9e679/bberkrou.jpg", currentStartX, yplayer);
+            drawPlayer(ctx, playerImg, currentStartX, yplayer);
         }
         if (roundNum == nbrRound - 1) {
             drawLine(ctx, currentStartX, firstPoints, currentStartX, lastPoints);

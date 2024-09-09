@@ -400,7 +400,7 @@
     position: relative;
 }
 
-#lock-lobby {
+.lock-lobby {
     all: unset;
     width: 100px;
     height: 40px;
@@ -420,12 +420,12 @@
     align-items: center;
 }
 
-#lock-lobby:hover {
+.lock-lobby:hover {
     background-color: var(--text-color);
     color: var(--to-teal-2-rgba);
 }
 
-#lock-lobby:active {
+.lock-lobby:active {
     transform: translate(-50%, -10%);
 }
 

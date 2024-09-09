@@ -27,15 +27,15 @@ async function setUserToLogout(userId) {
 
 async function handleWsLobbyMessage(data) {
     try {
-        // console.log('data', data);
         console.log('data', data);
-        console.log('userId', userId);
+
         if (data.eventType === 'redirect') {
-            if (data.userId && data.userId === userId) {
-                redirect(data);
-                return;
-            }
+            redirect(data);
             return ;
+        }
+        if (data.eventType === 'lock') {
+            lock(data);
+            return;
         }
         if (data.userId && data.userId === userId) {
             console.log('ignorted')
@@ -46,7 +46,8 @@ async function handleWsLobbyMessage(data) {
             'pong': pong,
             'leave': leave,
             'addPlayer': addPlayer,
-            'addIa': addIa
+            'addIa': addIa,
+            'lock': lock,
         }; 
         eventTypes[data.eventType](data);
     } catch (error) {
@@ -184,13 +185,27 @@ async function redirect(data) {
         console.log('[WS-G]=> (' + data.message + ')');
         console.log('redirecting');
         console.log(data.message);
-        htmx.ajax('GET', data.message, {
-            target: '#main-content', // The target element to update
-            swap: 'innerHTML', // How to swap the content
-        }).then(response => {
-            history.pushState({}, '', data.message);
-        });
 
+        window.location.href = data.message;
+        // htmx.ajax('GET', data.message, {
+        //     target: '#main-content',
+        //     swap: 'innerHTML',
+        // }).then(response => {
+        //     history.pushState({}, '', data.message);
+        // });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function lock(data) {
+    try {
+        console.log('[WS-G]=> (' + data.message + ')');
+        tournamentINfo = await APIgetTournamentInfo(data.message);
+        let NbrPlayer = document.getElementsByClassName('player-present').length;
+        deleteLobbyBody();
+        loadCanvaTournament(tournamentINfo, NbrPlayer);
     } catch (error) {
         console.error(error);
     }
@@ -240,3 +255,5 @@ async function innerNewIA() {
         console.error('Failed to innerNewIA', error);
     }
 }
+
+// =============================== LOBBY WS UTILS ================================

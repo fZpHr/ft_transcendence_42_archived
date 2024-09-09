@@ -119,15 +119,6 @@ async function selectThisPlayer(user) {
     }
 }
 
-async function redirectionManager(tournamentorganized) {
-    try {
-        console.log('tournamentorganized', tournamentorganized);
-    } catch (error) {
-        console.error('Failed to redirectionManager', error);
-    }
-}
-
-
 // =============================== Lobby display ================================
 
 async function displayChosePlayerMenus() {
@@ -167,16 +158,6 @@ async function hideChosePlayerMenus() {
     } catch (error) {
         console.error('Failed to hideChosePlayer', error);
     }
-}
-
-async function deleteLobbyBody() {
-    try {
-        let lobbyBody = document.getElementById('slop-content');
-        lobbyBody.innerHTML = '';
-    } catch (error) {
-        console.error('Failed to deleteLobbyBody', error);
-    }
-
 }
 
 // =============================== Lobby INNER ================================
@@ -228,28 +209,6 @@ async function innerPlayerFound(user) {
     }
 }
 
-async function innerCanvaTournament() {
-    try {
-        let element = document.getElementById('lobby-body');
-        element.innerHTML = `
-            <div id="tournamentConainterOrga" style="display: none;">
-            <canvas width="1000" height="600" style="background-color: black;" id="tournamentOrganized"></canvas>
-            </div>
-        `;
-    } catch (error) {
-        console.error('Failed to innerCanvaTournament', error);
-    }
-}
-
-async function displayCanvaTournament() {
-    try {
-        let tournamentBoxOrga = document.getElementById('tournamentConainterOrga');
-        tournamentBoxOrga.style.display = 'block';
-    } catch (error) {
-        console.error('Failed to displayCanvaTournament', error);
-    }
-}
-
 // =============================== Lobby handlers ================================
 
 function handlersChosePlayer() {
@@ -289,7 +248,7 @@ function handlersSearchPlayer() {
 function handlersLockLobby() {
     try {
         let lockLobby = document.getElementById('lock-lobby');
-        lockLobby.addEventListener('click', async function () {
+        lockLobby.addEventListener('click', async function handleClickLock() {
             let NbrPlayer = document.getElementsByClassName('player-present').length;
             if (NbrPlayer < 4 || (NbrPlayer & (NbrPlayer - 1)) !== 0) {
                 console.log('You need to add more players');
@@ -301,45 +260,9 @@ function handlersLockLobby() {
                 console.log('You need to wait for all player to be ready');
                 return;
             }
-
-            // send lock lobby to ws
-            // let data = {
-            //     'eventType': 'lock_lobby',
-            //     'UUID': lobbyUUID
-            // }
-            // wsLobby.send(JSON.stringify(data));
-
-            // UPDATE view
-            deleteLobbyBody();
-
-            let loader = document.getElementById('loader-container');
-            loader.style.display = 'block';
-
-            // init canva tournament
-            await innerCanvaTournament();
-
-            // load data and draw tournament
             tournamentorganized = await APIlockLobby(lobbyUUID);
-            tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
-            console.log('tournamentINfo', tournamentINfo);
-
-            ctx = await initCanvas();
-            console.log('ctx', ctx);
-
-            await drawTournament(ctx, tournamentINfo, NbrPlayer);
-            console.log('tournament is loaded');
-
-            loader.style.display = 'none';
-
-            // // display canva tournament
-            await displayCanvaTournament();
-            console.log('tournament is draw');
-
-
-            // spleep 10s
-            // await sleep(10000);
-            // redirect to tournament
-            // redirectionManager(tournamentINfo);
+            sendToWsLobby('lock', tournamentorganized.tournament.UUID);
+            updateLockAtRedirect();
         });
     } catch (error) {
         console.error('Failed to handlersLockLobby', error);
@@ -368,5 +291,24 @@ function toggleChosePlayer() {
         return;
     } catch (error) {
         console.error('Failed to toggleChosePlayer', error);
+    }
+}
+
+// =============================== UPDATE ================================
+
+async function updateLockAtRedirect() {
+    try {
+        let lockLobby = document.getElementById('lock-lobby');
+        let parrentBox = lockLobby.parentNode;
+        lockLobby.remove();
+        let redirect = document.createElement('button');
+        redirect.className = 'lock-lobby';
+        redirect.innerHTML = 'Redirect';
+        parrentBox.appendChild(redirect);
+        redirect.addEventListener('click', async function () {
+            sendToWsLobby('redirect', `/game/pong/tournament/game/?lobby_id=${lobbyUUID}`);
+        });
+    } catch (error) {
+        console.error('Failed to updateLockAtRedirect', error);
     }
 }

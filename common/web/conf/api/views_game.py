@@ -149,33 +149,31 @@ def getAllParticipants(lobby):
     player_participants = lobby.players.all()
     ia_participants = lobby.ai_players.all()
     participants = []
-    
+    logger.info('================= PARTICIPANTS')
     for player in player_participants:
+        logger.info('PARTICIPANT')
+        logger.info(player)
+        logger.info(player.img)
+        logger.info(player.username)
         participant = {
             'id': player.id,
-            'isIA': False
+            'isIA': False,
+            'username': player.username,
+            'img': player.img
         }
         participants.append(participant)
     
     for ia in ia_participants:
         participant = {
             'id': ia.id,
-            'isIA': True
+            'isIA': True,
+            'username': 'ia',
+            'img': 'https://www.forbes.fr/wp-content/uploads/2017/01/intelligence-artificielle-872x580.jpg.webp'
         }
         participants.append(participant)
     random.shuffle(participants)
     return participants
 
-
-def createGame(participants, gameIndex):
-    game = {
-        'gameIndex': gameIndex,
-        'winner': None,
-        'players': []
-    }
-    for participant in participants:
-        game['players'].append(participant)
-    return game
 
 def decompositionProduitFactorPremier(n):
     facteurs = []
@@ -236,8 +234,6 @@ def lockLobby(request):
         lobby = Lobby.objects.get(UUID=lobbyUUID)
         lobby.locked = True
         lobby.save()
-        # delte all tournamenet game
-            # return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
         if not Tournament.objects.filter(UUID_LOBBY=lobby).exists() or not Game_Tournament.objects.filter(UUID_TOURNAMENT__UUID_LOBBY=lobby).exists():
             Tournament.objects.create(UUID_LOBBY=lobby)
             tournament = Tournament.objects.get(UUID_LOBBY=lobby)
@@ -295,13 +291,17 @@ def getTournamentInfo(request):
                 
                 gameData['players'].append({
                     'id': player.id,
-                    'is_ai': False
+                    'is_ai': False,
+                    'username': player.username,
+                    'img': str(player.img)
                 })
                 
             for ia in game.ai_players.all():
                 gameData['players'].append({
                     'id': ia.id,
-                    'is_ai': True
+                    'is_ai': True,
+                    'username': 'ia',
+                    'img': 'https://www.forbes.fr/wp-content/uploads/2017/01/intelligence-artificielle-872x580.jpg.webp'
                 })
                 
             tournamentOrganized['games'].append(gameData)

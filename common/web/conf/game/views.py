@@ -168,8 +168,26 @@ def pongTournamentLobby(request):
 @login_required
 def pongTournamentGame(request):
     try:
-        gameId = request.GET.get('gameId', 'default_value')
-        logger.info("==============> %s", gameId)
+        logger.info("==============> PONG GAME TOURNAMENT")
+        user = request.user
+        player = Player.objects.get(username=user.username)
+        lobbyUUID = request.GET.get('lobby_id', 'default_value')
+        tournament = Tournament.objects.get(UUID_LOBBY=lobbyUUID)
+        games = Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament)
+
+        gameId = -1
+        for game in games:
+            logger.info("==============> %s", game)
+            if game.players.filter(id=player.id).exists() or game.ai_players.filter(id=player.id).exists():
+                if game.winner_player is None and game.winner_ai is None:
+                    gameId = game.id
+                    break
+        
+        if gameId == -1:
+            logger.info(f"==============> error {gameId}")
+            return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})
+        
+
         game = Game_Tournament.objects.get(id=gameId)
         logger.info("==============> %s", game)
         participantsPlayer = game.players.all()
