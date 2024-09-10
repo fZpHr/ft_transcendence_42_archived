@@ -7,13 +7,7 @@ async function domloaded() {
     let userId = await APIgetCurrentUser();
     await connectLobbySocket(lobbyUUID);
 
-    window.addEventListener('beforeunload', disconnectLobbySocket);
-    window.addEventListener('unload', disconnectLobbySocket);
     innerCanvaIfLockLobby();
-    document.addEventListener('htmx:beforeSwap', function(event) {
-        ws.close();
-        console.log("htmx:beforeSwap event listener matchMakingSocket close");
-    }, {once: true});
 }
 
 async function innerCanvaIfLockLobby() {

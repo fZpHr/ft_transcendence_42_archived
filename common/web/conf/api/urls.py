@@ -69,4 +69,5 @@ urlpatterns += [
     path('getConnect4GameForUser/', views_game.getConnect4GameForUser),
     path('getPongGameForUser/', views_game.getPongGameForUser),
     path('setWinnerAtTournamentGame/', views_game.setWinnerAtTournamentGame),
+    path('finishGameOnlyIa/', views_game.finishGameOnlyIa),
 ]

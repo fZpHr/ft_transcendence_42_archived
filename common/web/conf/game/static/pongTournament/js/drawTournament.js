@@ -18,9 +18,6 @@ async function loadCanvaTournament(tournamentINfo, NbrPlayer) {
     try {
         await innerCanvaTournament();
         let ctx = await initCanvas();
-
-        console.log('tournamentINfo', tournamentINfo);
-        console.log('tournamentINfo Game', tournamentINfo.gameTournament);
         await drawTournament(ctx, tournamentINfo.gameTournament, NbrPlayer);
         
         let loader = document.getElementById('loader-container');
@@ -147,7 +144,6 @@ async function drawTournament(ctx, gameTournament, NbrPlayer) {
 
     let factor = await getProduitFacteurPremier(NbrPlayer);
     let gamesTab = gameTournament;
-    console.log('gameTab', gamesTab);
     let nbrRound = factor.length;
     let currentCanvasWidth = canvasWidth;
     let currentCanvasHeight = canvasHeight;
@@ -170,7 +166,6 @@ async function drawTournament(ctx, gameTournament, NbrPlayer) {
         for (let j = 0; j < nbrGameForTour; j++) {
             let xstart;
             let game = gamesTab.shift();
-            console.log('PTN ICIC STP game', game);
             nbrPlayerPerGame = getNbrPlayerForGamePerTour(NbrPlayer, i + 1, factor);
             ystep = (currentCanvasHeight / splitHeight) / nbrPlayerPerGame;
             if (j % 2 == 0) {
@@ -196,8 +191,19 @@ async function drawTournament(ctx, gameTournament, NbrPlayer) {
 
 async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jumpHeight, nbrParticipants, directionArrow, canvasWidth, splitWidth) {
     try {   
+        console.log('game is => ', game);
         let firstPoints = jumpHeight + (ystep / 2);
         let lastPoints = firstPoints;
+        let winnerType;
+
+        if (game.winner_player != null)
+            winnerType = 'player';
+        else if (game.winner_ai != null)
+            winnerType = 'ai';
+        else
+            winnerType = 'none';
+
+
         for (let i = 0; i < nbrParticipants; i++) {
             let yplayer = jumpHeight + (ystep / 2) + ystep * i;
             let len = canvasWidth / splitWidth / 2;
@@ -208,7 +214,17 @@ async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jum
             }
             lastPoints = yplayer;
             
+
             drawConnexionGame(ctx, currentStartX, yplayer, len ,directionArrow, roundNum, nbrRound, i % 2 == 0);
+            if (winnerType != 'none') {
+                if (winnerType == 'player' && game.winner_player == game.players[i].id) {
+                    drawCircle(ctx, currentStartX, yplayer, 30, 'green');
+                } else if (winnerType == 'ai' && game.winner_ai == game.players[i].id) {
+                    drawCircle(ctx, currentStartX, yplayer, 30, 'green');
+                } else {
+                    drawCircle(ctx, currentStartX, yplayer, 30, 'red');
+                }
+            }
             drawPlayer(ctx, playerImg, currentStartX, yplayer);
         }
         if (roundNum == nbrRound - 1) {
@@ -266,6 +282,20 @@ async function drawConnexionGame(ctx, x, y, len, directionArrow, roundNum, nbrRo
         ctx.stroke();
     } catch (error) {
         console.error('Failed to drawConnexionGame', error);
+    }
+}
+
+async function drawCircle(ctx, x, y, radius, color) {
+    try {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 10; // Ajustez cette valeur pour plus ou moins de flou
+        ctx.fill();
+        ctx.shadowBlur = 0; // Réinitialiser l'effet de flou pour les dessins suivants
+    } catch (error) {
+        console.error('Failed to drawCircle', error);
     }
 }
 

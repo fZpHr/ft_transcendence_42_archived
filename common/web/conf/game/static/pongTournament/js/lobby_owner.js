@@ -36,12 +36,6 @@ async function loadLobby() {
     }
         
         innerCanvaIfLockLobby();
-
-        document.addEventListener('htmx:beforeSwap', function(event) {
-            /* TODO remove all event listeners here*/
-            disconnectLobbySocket();
-            console.log("htmx:beforeSwap event listener");
-        }, {once: true});
 }
 
 // =============================== WS LOBBY NOTIF================================
@@ -342,6 +336,7 @@ async function updateLockAtRedirect() {
             }
 
             sendToWsLobby('redirect', `/game/pong/tournament/game/?lobby_id=${lobbyUUID}`);
+            await APIfinishGameOnlyIa(lobbyUUID);
         });
     } catch (error) {
         console.error('Failed to updateLockAtRedirect', error);

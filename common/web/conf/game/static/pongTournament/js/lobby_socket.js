@@ -98,27 +98,23 @@ async function connectLobbySocket(roomName) {
         };
         
         wsLobby.onclose = function (e) {
-            console.error('[WebSocket] => Connection closed:', e);
+            console.log('oui   ');
+            console.log('[WebSocket] => Connection closed:', e);
         };
 
         wsLobby.onerror = function (error) {
             console.error('[WebSocket] => Error:', error);
         };
+
+        document.addEventListener('htmx:beforeSwap', function(event) {
+            console.log('DEBOG WS===================> ' + wsLobby);
+            if (wsLobby && wsLobby.readyState === WebSocket.OPEN) {
+                wsLobby.close();
+            }
+            console.log("htmx:beforeSwap event listener matchMakingSocket close");
+        }, {once: true});
     } catch (error) {
         console.error('[WebSocket] => Connection failed', error);
-    }
-}
-
-function disconnectLobbySocket() {
-    try {
-        console.log('[WebSocket] => Disconnecting...');
-        console.log(userId);
-        wsLobby.send(JSON.stringify({
-            'message': 'disconnect',
-            'senderId': userId
-        }));
-    } catch (error) {
-        console.error('Error in disconnectWebSocket:', error);
     }
 }
 
@@ -254,3 +250,4 @@ async function innerNewIA() {
 }
 
 // =============================== LOBBY WS UTILS ================================
+

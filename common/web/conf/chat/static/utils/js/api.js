@@ -122,6 +122,13 @@ async function APIgetPongGameForUser(userId) {
 	});
 }
 
+async function APIfinishGameOnlyIa(lobbyUUID) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/finishGameOnlyIa?lobbyUUID=${lobbyUUID}`);
+		resolve(game);
+	});
+}
+
 
 function APIupdateSocialStatus(socialUserId, friendStatus) {
     return fetch("/api/updateSocialStatus/", {
