@@ -6,28 +6,25 @@
     padding: 0;
 }
 
-.pongCustom-wrapper {
+#pongCustom-content {
     width: 100vw;
-    height: 100vh;
+    height: fit-content;
     min-height: 100vh;
     text-align: center;
+    
     background-color: var(--to-teal-2-rgba);
     color: var(--text-color);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+
     overflow: hidden;
-    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 #pongCustom-content .custom_list {
-    width: 18vw;
-    /* height: 80vh; */
+    width: 25vw;
     height: fit-content;
+    margin-left: 25px;
     background-color: rgba(18, 15, 23, 0.8);
-    position: fixed;
-    left: 2%;
-    top: 15%;
     padding: 20px;
     border-radius: 10px;
     overflow: hidden;
@@ -46,7 +43,6 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    /* height: 80vh; */
     height: fit-content;
     overflow-x: auto;
 }
@@ -249,7 +245,6 @@
 /* render custom */
 
 #render {
-    position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
@@ -264,41 +259,78 @@
 
 /* start responsive for window 1024 */
 
-@media screen and (max-width: 1240px) {
-    #pongCustom-content .custom_list {
-        width: 25vw;
-        background-color: blue;
-    }
-}
-
 @media screen and (max-width: 1024px) {
     #pongCustom-content .custom_list {
-        width: 30vw;
-        background-color: yellow;
+        width: 35vw;
     }
 }
 
 @media screen and (max-width: 768px) {
+
+    #pongCustom-content {
+        justify-content: center;
+        align-items: flex-end;
+    }
+
     #pongCustom-content .custom_list {
-        background-color: green;
+        width: 95vw;
+        margin-left: 0;
+    }
+
+    #all_custom {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        height: 80px;
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    #pongCustom-content .title-custom-lst h1 {
+        font-size: 1.5rem;
+    }
+
+    #pongCustom-content .custom-element {
+        width: 20%;
+        justify-content: center;
+    }
+
+    .fas.fa-arrow-right {
+        display: none;
+    }
+
+    #pongCustom-content .custom-option {
+        width: 100%;
+        max-height: 60vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 10px;
+    }
+
+    #pongCustom-content .custom-option-element {
+        width: 25%;
+        margin-right: 20px;
+        height: 60px;
+    }
+
+    #pongCustom-content .custom-option-element label {
+        font-size: 0.7rem;
+    }
+
+    #pongCustom-content .custom-option-element.color  {
+        flex-direction: column;
+        height: 60px;
     }
 }
 
-@media screen and (max-width: 600px) {
-    #pongCustom-content .custom_list {
-        background-color: red;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    #pongCustom-content .custom_list {
-        background-color: purple;
-    }
-}
-
-@media screen and (max-width: 320px) {
-    #pongCustom-content .custom_list {
-        background-color: orange;
+@media screen and (max-width: 375px) {
+    #pongCustom-content .custom-option-element label {
+        font-size: 0.4rem;
     }
 }
 

@@ -126,19 +126,19 @@ def visited_profil_view(request, username):
 
 
 @login_required
-def visited_progress_view(request, username):
-    if request.htmx:
-        return render(request, 'progress/progress.html', {'username': username})
-    return render(request, 'progress/progress_full.html', {'username': username})
-
-@login_required
 def progressPong_view(request):
+    user = request.GET.get('user', 'default_value')
+    logger.info("debog view progress")
+    logger.info(user)
     if request.htmx:
         return render(request, 'progress/progress.html', {'type': 'pong'})
     return render(request, 'progress/progress_full.html', {'type': 'pong'})
 
 @login_required
 def progressConnect4_view(request):
+    user = request.GET.get('user', 'default_value')
+    logger.info("debog view progress")
+    logger.info(user)
     if request.htmx:
         return render(request, 'progress/progress.html', {'type': 'connect4'})
     return render(request, 'progress/progress_full.html', {'type': 'connect4'})

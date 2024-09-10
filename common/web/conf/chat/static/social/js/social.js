@@ -130,7 +130,7 @@ async function innerSocialPannel() {
                     <div id="social-header">
                         <div class="social-head-info">
                             <a href="/profil/"></a>
-                            <h3>bberkrou</h3>
+                            <h3>${user.username}</h3>
                             <button id="social-close-btn" class="btn btn-link"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                     </div>

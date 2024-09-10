@@ -67,3 +67,20 @@ function fadeElem ()
 
 fadeElem();
 carousel();
+
+
+document.querySelectorAll('.game-mode-element').forEach((element) => {
+    const titleMode = element.querySelector('.title-mode');
+    const isBot = element.closest('.home__containt').classList.contains('bot');
+
+    element.addEventListener('mouseover', () => {
+        const parentWidth = element.offsetWidth;
+        const childWidth = titleMode.offsetWidth;
+        const translateValue = parentWidth - childWidth;
+        titleMode.style.transform = isBot ? `translateX(-${translateValue}px)` : `translateX(${translateValue}px)`;
+    });
+
+    element.addEventListener('mouseout', () => {
+        titleMode.style.transform = 'translateX(0)';
+    });
+});

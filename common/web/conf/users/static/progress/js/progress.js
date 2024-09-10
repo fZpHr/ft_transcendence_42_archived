@@ -1,5 +1,7 @@
 async function toggleMenuStats() {
 	
+	let uId = window.location.href.match(/\d+$/)[0];
+
     // Graph and chart canvas and contexts
     var canvasGraph = document.getElementById('progress-chart');
     var ctxGraph = canvasGraph.getContext('2d');
@@ -20,18 +22,17 @@ async function toggleMenuStats() {
 
     // Fetch user data
 	let resp = await fetch('/api/@me/');
-	let user = await resp.json();
-	let userId = user.id;
+	let user = await APIgetUserById(uId);
 	let type = 'connect4';
 	let endpoints = {
-		numberOfGames: `/getNumberOfGames?user=${userId}&type=${type}`,
-		maxWinStreak: `/getMaxWinStreak?user=${userId}&type=${type}`,
-		avgGameTime: `/getAvgGameTime?user=${userId}&type=${type}`,
-		currentElo: `/getCurrentElo?user=${userId}&type=${type}`,
-		maxElo: `/getMaxElo?user=${userId}&type=${type}`,
-		getWinrate: `/getWinrate?user=${userId}&type=${type}`,
-		lastGameIsWin: `/lastGameIsWin?user=${userId}&type=${type}`,
-		lastConnexion: `/lastConnexion?user=${userId}&type=${type}`,
+		numberOfGames: `/getNumberOfGames?user=${uId}&type=${type}`,
+		maxWinStreak: `/getMaxWinStreak?user=${uId}&type=${type}`,
+		avgGameTime: `/getAvgGameTime?user=${uId}&type=${type}`,
+		currentElo: `/getCurrentElo?user=${uId}&type=${type}`,
+		maxElo: `/getMaxElo?user=${uId}&type=${type}`,
+		getWinrate: `/getWinrate?user=${uId}&type=${type}`,
+		lastGameIsWin: `/lastGameIsWin?user=${uId}&type=${type}`,
+		lastConnexion: `/lastConnexion?user=${uId}&type=${type}`,
 	};
 
 
@@ -56,9 +57,9 @@ async function toggleMenuStats() {
 	};
 
 
-	async function fetchAndDisplayMatchHistory(userId) {
+	async function fetchAndDisplayMatchHistory(uId) {
 		try {
-			let games = await APIgetConnect4GameForUser(user.id);
+			let games = await APIgetConnect4GameForUser(uId);
 			games = games.match_data;
 			let statsPanel = document.getElementById('match-history-container');
 			statsPanel.innerHTML = '';
@@ -92,7 +93,7 @@ async function toggleMenuStats() {
 		let imgDiv = document.getElementById('img-profil');
 		imgDiv.innerHTML = `
 			<a href="/profil/">
-				<img src="${user.img}" alt="Profile picture" class="profile-picture">
+				<img src="${user.img.startsWith('profile_pics/') ? '/media/' + user.img : user.img}" alt="Profile picture" class="profile-picture">
 			</a>
 		`;
 		const anchors = imgDiv.querySelectorAll('a');
@@ -117,16 +118,16 @@ async function toggleMenuStats() {
 	await fetchAndUpdate(endpoints.maxElo, 'max-elo');
 	fetchAndUpdate(endpoints.lastGameIsWin, 'last-game-is-win');
 	fetchAndUpdate(endpoints.lastConnexion, 'last-connexion');
-	fetchAndDisplayMatchHistory(userId);
+	fetchAndDisplayMatchHistory(uId);
 	addProfileInfo(user);
 	let parent = canvasGraph.parentElement;
 	canvasGraph.width = parent.clientWidth;
 	canvasGraph.height = parent.clientHeight;
 	await drawGraph();
 
-	async function fetchPlayerGameData(userId) {
+	async function fetchPlayerGameData(uId) {
 		try {
-			let resp = await fetch(`/api/getPlayerGameData?user=${userId}&type=${type}`);
+			let resp = await fetch(`/api/getPlayerGameData?user=${uId}&type=${type}`);
 			let jsonData = await resp.json();
 			let gamesData = jsonData.data;
 	
@@ -145,7 +146,7 @@ async function toggleMenuStats() {
 	
 	
 	async function drawGraph() {
-		let data = await fetchPlayerGameData(user.id);
+		let data = await fetchPlayerGameData(uId);
 		
 		console.log(data);
 		drawChart(ctxGraph, canvasGraph.width, canvasGraph.height, chartConfig);

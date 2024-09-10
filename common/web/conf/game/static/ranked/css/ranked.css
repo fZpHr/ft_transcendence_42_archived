@@ -15,6 +15,16 @@
     animation-fill-mode: both;
 }
 
+.participant-box {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    margin: 20px;
+    width: 100%;
+    height: fit-content;
+}
+
 .opps-btn,
 .player-btn {
     animation-name: slideIn;
@@ -99,6 +109,7 @@
     flex-direction: column;
     position: relative;
     transition: transform 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    background-color: red;
 }
 
 .opps-btn {
@@ -220,6 +231,7 @@ order: 3;
 }
 
 #cancel,
+#game-link,
 #reconnect {
     border: none;
     background: none;
@@ -234,4 +246,37 @@ order: 3;
 #cancel:hover,
 #reconnect:hover {
     background: rgba(255, 255, 255, 0.2);
+}
+
+@media screen and (max-width: 1023px) {
+    .opps-btn, .player-btn {
+        order: 1;
+        width: 40%;
+        height: 40%;
+    }
+    #vs-text {
+        width: 10%;
+        height: 10%;
+    }
+
+    .opps-btn {
+        order: 3;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+
+    .opps-btn, .player-btn {
+        width: 60%;
+        height: 40%;
+    }
+
+
+    .participant-box {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 420px) {
 }

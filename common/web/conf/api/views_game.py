@@ -64,9 +64,11 @@ def getAllLobby(request):
         player = Player.objects.get(username=user.username)
         tab = []
         lobbys = Lobby.objects.all()
+        lobbys.order_by('created_at')
         for lobby in lobbys:
             if player in lobby.players.all():
                 tab.append(lobby.UUID)
+
         return Response({"data": tab}, status=200)
     except Exception as e:
         return Response({"error": str(e)}, status=500)

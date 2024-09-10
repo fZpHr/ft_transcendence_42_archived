@@ -1,14 +1,10 @@
 function pongTournament() {
     let AllLobby = new Set();
 
-    // document.addEventListener('DOMContentLoaded', async function () {
     async function initPongTournament() {
         let newTournamentBtn = document.getElementById('pongTournament-btn');
         let allLobby = await APIgetAllLobby(userId);
         await innerAllLobby(allLobby.data);
-        // for (let i = 0; i < allLobby.length; i++) {
-        //     console.log(allLobby[i]);
-        // }
 
         handlersJoinLobby();
         newTournamentBtn.addEventListener('click', async function () {
@@ -22,7 +18,6 @@ function pongTournament() {
             }
         });
     }
-    // });
 
 
     // ========================= INNER newTournament =========================

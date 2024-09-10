@@ -6,6 +6,11 @@ dev:
 mandatory:
 	@docker compose up --build
 
+env-modif:
+	@sudo chmod -R 777 ./data/*
+	@docker compose -f gen_env/docker-compose-expose-vault.yml up --build -d
+	@sudo docker inspect vault | grep "\"IPAddress\": \"1" | awk '{print $$2}' | sed 's/^\"//;s/\",$$//' | awk '{print "http://" $$0 ":8200"}'
+
 down:
 	@-docker compose -f docker-compose-dev.yml down
 	@docker system prune -a -f
@@ -18,6 +23,12 @@ down-mandatory:
 	@docker volume prune -f
 	@docker network prune -f
 
+down-env:
+	@-docker compose -f gen_env/docker-compose-expose-vault.yml down
+	@docker system prune -a -f
+	@docker volume prune -f
+	@docker network prune -f
+
 env:
 	@if [ ! -f .env ]; then \
 			sudo chmod -R 777 ./data/*; \
@@ -25,8 +36,9 @@ env:
 			docker compose -f gen_env/docker-compose-env.yml up --build; \
 			docker system prune -a -f; \
 			docker network prune -f; \
-		fi
-	
+	else \
+		echo "Environment already created"; \
+	fi
 re:
 	@make down
 	@make all

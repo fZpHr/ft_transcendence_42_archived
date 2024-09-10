@@ -1,5 +1,3 @@
-
-
 async function loadProfile() {
 
 	handlerUpdatePP();
@@ -280,7 +278,7 @@ async function innerStats(games) {
 	}
 }
 
-async function innerShowProgress(games, type) {
+async function innerShowProgress(games, type, currentUser) {
 	try {
 		let progressButton = document.getElementById('progress-button');
 		console.log(progressButton);
@@ -290,7 +288,7 @@ async function innerShowProgress(games, type) {
 			return;
 		}
 		progressButton.style.display = 'block';
-        let href = (type === 'connect4' ? '/progress/connect4' : '/progress/pong');
+        let href = (type === 'connect4' ? `/progress/connect4?user=${currentUser}` : `/progress/pong?user=${currentUser}`);
 		console.log(href);
 		progressButton.innerHTML = `<a id="progress-link" hx-get="${href}" hx-target="#main-content" hx-push-url="true" href="${href}" class="btn">Show My Progress</a>`
 		let progressLink = document.getElementById('progress-link');
@@ -324,7 +322,7 @@ async function loadStats(type) {
 		if (noGames)
 			noGames.remove();
 		innerStats(games.match_data);
-		innerShowProgress(games.match_data, type);
+		innerShowProgress(games.match_data, type, currentUser);
 	} catch (e) {
 		console.error(e);
 	}

@@ -237,7 +237,7 @@
     transform: translateY(-5px);
 
     .title-mode {
-        transform: translateX(440px);
+        transform: translateX(100%);
     }
 
     .title-mode i {
@@ -316,23 +316,30 @@
 }
 
 #home-content .chalenge.show {
-    width: 80%;
-    transform: translateX(-15%);
+    width: 70%;
+    height: 100%;
+    transform: translateX(-25%);
     display: block;
     transition: ease-in-out 0.3s;
     animation: slideLeft 0.3s ease-out;
-    font-size: 1rem;
-    text-align: right;
+    font-size: 0.8rem;
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #home-content .bot .chalenge.show {
-    width: 80%;
-    transform: translateX(15%);
+    width: 70%;
+    transform: translateX(25%);
     display: block;
     transition: ease-in-out 0.3s;
     animation: none;
     font-size: 1rem;
     text-align: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Animation */
@@ -344,7 +351,7 @@
     }
     to {
         opacity: 1;
-        transform: translateX(-15%);
+        transform: translateX(-25%);
     }
 }
 
@@ -355,7 +362,7 @@
     }
     to {
         opacity: 1;
-        transform: translateX(15%);
+        transform: translateX(25%);
     }
 }
 
@@ -599,6 +606,10 @@
     #home-content .card {
         width: 30%;
         height: 60%;
+    }
+
+    #home-content .bot .chalenge.show {
+        font-size: 0.8rem;
     }
 }
 

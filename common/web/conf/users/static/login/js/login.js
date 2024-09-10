@@ -163,12 +163,15 @@ async function toggleChangeForm() {
     });
 }
 
-
 async function toggle42Login() {
     const btn42 = document.getElementById('btn-42');
-
+    
     btn42.addEventListener('click', () => {
-        window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193&redirect_uri=https%3A%2F%2F10.12.249.33%2Fapi%2Fregister-42%2F&response_type=code';
+        const hostname = window.location.hostname;
+        const redirectUri = `https://${hostname}:42424/api/register-42/`;
+        const clientId = 'u-s4t2ud-74438314e8cff2be68aee7a119f4c95bff6ba35b11a2bf5c2627a31a869c9f28';
+        const authUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+        window.location.href = authUrl;
     });
 }
 

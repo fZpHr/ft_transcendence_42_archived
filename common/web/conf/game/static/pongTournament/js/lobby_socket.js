@@ -1,6 +1,6 @@
 // =============================== LOBBY up UX ================================
 
-let wsLobby = null;
+var wsLobby = null;
 
 async function setUserToLog(userId) {
     try {

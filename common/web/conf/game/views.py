@@ -32,20 +32,12 @@ def joinGame(request):
         currentPlayer = request.user.player
         lobby_id = request.GET.get('lobby_id', 'default_value')
         lobby = Lobby.objects.get(UUID=lobby_id)
-        
-        # Assuming the lobby is linked to a tournament via the Tournament model's UUID_LOBBY field
         tournament = Tournament.objects.get(UUID_LOBBY=lobby)
-        
-        # Fetch all games associated with the tournament
         tournament_games = tournament.games.all()
-        
-        # Check if the current player is in any of the tournament's games
         for game in tournament_games:
             if game.players.filter(id=currentPlayer.id).exists() :
-                # get the id of the game
                 game_id = game.id
                 logger.info("Player is in game with id: {game_id}")
-        
 
         return HttpResponse("Player is not in any of the tournament's games. Proceed with joining logic.")
     except Lobby.DoesNotExist:
