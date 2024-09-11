@@ -5,7 +5,7 @@ function pongTournament() {
         let newTournamentBtn = document.getElementById('pongTournament-btn');
         let allLobby = await APIgetAllLobby(userId);
         await innerAllLobby(allLobby.data);
-
+        handlersRemoveLobby();
         handlersJoinLobby();
         newTournamentBtn.addEventListener('click', async function () {
             try {
@@ -31,8 +31,27 @@ function pongTournament() {
                 let lobbyDiv = document.createElement('div');
                 lobbyDiv.classList.add('lobby-element');
                 lobbyDiv.innerHTML = `
-                    <span id="${lobby}">${lobby.substring(0, 8)}</span>
+                    <div id="${lobby.UUID}" class="lobby-element-data">
+                        <span>
+                            ${lobby.name}
+                        </span>
+                        <div>
+                            <span>
+                                ${lobby.nbr_players} <i class="fa-solid fa-user"></i>
+                            </span>
+                            <span>
+                                ${lobby.isLocked ? '🟢' : '🟡'}
+                            </span>
+                        </div>
+                    </div>
                 `;
+                if (lobby.owner === userId) {
+                    lobbyDiv.innerHTML += `
+                        <div class="lobby-element-btn">
+                            <span id="remove-{${lobby.UUID}}" class="remove-btn" data-lobbyUUID="${lobby.UUID}"><i class="fa-solid fa-xmark"></i></span>
+                        </div>
+                    `;
+                }
                 lobbyBox.appendChild(lobbyDiv);
             }
         } catch (error) {
@@ -47,8 +66,23 @@ function pongTournament() {
             let lobbyDiv = document.createElement('div');
             lobbyDiv.classList.add('lobby-element');
             lobbyDiv.innerHTML = `
-                <span id="${newLobby}" id="link-${newLobby}">${newLobby.substring(0, 8)}</span>
-            `;
+                    <div id="${newLobby}" class="lobby-element-data">
+                        <span>
+                            Tournament
+                        </span>
+                        <div>
+                            <span>
+                                1 <i class="fa-solid fa-user"></i>
+                            </span>
+                            <span>
+                                🟡
+                            </span>
+                        </div>
+                    </div>
+                    <div class="lobby-element-btn">
+                        <span id="remove-{${newLobby}}" class="remove-btn" data-lobbyUUID="${newLobby}"><i class="fa-solid fa-xmark"></i></span>
+                    </div>
+                `;
             lobbyBox.appendChild(lobbyDiv);
         } catch (error) {
             console.error('Failed to innerNewLobby', error);
@@ -58,12 +92,13 @@ function pongTournament() {
     // ========================= handler newTournament =========================
 
     async function handlersJoinLobby() {
-        let allLobby = document.getElementsByClassName('lobby-element');
+        let allLobby = document.getElementsByClassName('lobby-element-data');
         for (let i = 0; i < allLobby.length; i++) {
-            if (AllLobby.has(allLobby[i].children[0].id))
+            if (AllLobby.has(allLobby[i].id))
                 continue;
             allLobby[i].addEventListener('click', async function () {
-                let lobbyId = allLobby[i].children[0].id;
+                console.log(allLobby[i].id);
+                let lobbyId = allLobby[i].id;
                 console.log(lobbyId);
                 htmx.ajax('GET', `/game/pong/tournament/lobby?lobby_id=${lobbyId}`, {
                     target: '#main-content', // The target element to update
@@ -76,6 +111,25 @@ function pongTournament() {
         }
     }
     initPongTournament();
+}
+
+async function handlersRemoveLobby() {
+    try {
+        let allRemove = document.getElementsByClassName('remove-btn');
+        for (let i = 0; i < allRemove.length; i++) {
+            allRemove[i].addEventListener('click', async function () {
+                let lobbyUUID = allRemove[i].getAttribute('data-lobbyUUID');
+                console.log('remove lobby ' + lobbyUUID);
+                let res = await APIremoveLobby(lobbyUUID);
+                console.log(res);
+                let lobby = document.getElementById(lobbyUUID);
+                lobby = lobby.parentElement;
+                lobby.remove();
+            }
+        )};
+    } catch (error) {
+        console.error('Failed to removeLobby', error);
+    }
 }
 
 pongTournament();

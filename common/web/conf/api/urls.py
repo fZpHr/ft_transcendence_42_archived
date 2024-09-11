@@ -71,4 +71,5 @@ urlpatterns += [
     path('setWinnerAtTournamentGame/', views_game.setWinnerAtTournamentGame),
     path('finishGameOnlyIa/', views_game.finishGameOnlyIa),
     path('getLobbyIsLocked/', views_game.getLobbyIsLocked),
+    path('removeLobby/', views_game.removeLobby),
 ]

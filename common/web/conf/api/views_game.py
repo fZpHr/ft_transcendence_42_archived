@@ -68,12 +68,19 @@ def getAllLobby(request):
         user = request.user
         player = Player.objects.get(username=user.username)
         tab = []
-        lobbys = Lobby.objects.all()
-        lobbys.order_by('created_at')
+        lobbys = Lobby.objects.all().order_by('created_at')
         for lobby in lobbys:
             if player in lobby.players.all():
-                tab.append(lobby.UUID)
-
+                nbr_players = len(lobby.players.all())
+                nbr_players += len(lobby.ai_players.all())
+                lobby_info = {
+                    'UUID': lobby.UUID,
+                    'name': lobby.name,
+                    'isLocked': lobby.locked,
+                    'nbr_players': nbr_players,
+                    'owner': lobby.owner.id,
+                }
+                tab.append(lobby_info)
         return Response({"data": tab}, status=200)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
@@ -276,13 +283,19 @@ def setNextGameForGame(currentGame, nextGames):
             return
         if (currentGame.id % 2) == 0:
             for nGame in nextGames:
-                if nGame.id % 2 == 0 and nGame.id != currentGame.id and nGame.players.count() < 2:
-                    nextGameId = nGame.id
+                if nGame.id % 2 == 0 and nGame.id != currentGame.id :
+                    if nGame.players.count() + nGame.ai_players.count() < 2:
+                        nextGameId = nGame.id
+                    else:
+                        nextGameId = nGame.id + 2
                     break
         else:
             for nGame in nextGames:
-                if nGame.id % 2 != 0 and nGame.id != currentGame.id and nGame.players.count() < 2:
-                    nextGameId = nGame.id
+                if nGame.id % 2 != 0 and nGame.id != currentGame.id:
+                    if nGame.players.count() + nGame.ai_players.count() < 2:
+                        nextGameId = nGame.id
+                    else:
+                        nextGameId = nGame.id + 2
                     break
         if nextGameId:
             currentGame.next_game = Game_Tournament.objects.get(id=nextGameId)
@@ -508,6 +521,21 @@ def getLobbyIsLocked(request):
         logger.info(f"   lobby [{lobby}]")
         logger.info(f"   locked [{lobby.locked}]")
         return Response({"locked": lobby.locked}, status=200)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def removeLobby(request):
+    try :
+        lobbyUUID = request.GET.get('lobbyUUID')
+        lobby = Lobby.objects.get(UUID=lobbyUUID)
+        lobby.delete()
+        lobby.save()
+        return Response({"message": "Lobby has been deleted"}, status=200)
+    except Lobby.DoesNotExist:
+        return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 

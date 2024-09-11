@@ -135,6 +135,13 @@ async function APIgetLobbyIsLocked(lobbyUUID) {
 	});
 }
 
+async function APIremoveLobby(lobbyUUID) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/removeLobby?lobbyUUID=${lobbyUUID}`);
+		resolve(game);
+	});
+}
+
 
 function APIupdateSocialStatus(socialUserId, friendStatus) {
     return fetch("/api/updateSocialStatus/", {

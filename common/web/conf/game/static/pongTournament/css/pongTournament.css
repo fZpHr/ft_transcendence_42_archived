@@ -39,17 +39,26 @@
     background-color: var(--to-teal-5-rgba);
     width: 80%;
     height: 40px;
-    padding: 5px 10px;
     margin-bottom: 10px;
     transition: ease-in-out 0.2s;
     border-radius: 10px;
+    padding: 5px 10px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+
 }
 
 #pongTournament-content .lobby-element:hover {
     transform: scale(1.05);
+}
+
+#pongTournament-content .lobby-element-data {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #pongTournament-btn {
@@ -64,16 +73,15 @@
 }
 
 
+
 @media screen and (max-width: 1023px) {
     #pongTournament-content .title-lobby-lst h1 {
         font-size: 2.5rem; 
-        color: red;
     }
 }
 
 @media screen and (max-width: 768px) {
     #pongTournament-content {
-        background-color: blue;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -93,7 +101,6 @@
 
     #pongTournament-content .title-lobby-lst h1 {
         font-size: 2rem; 
-        color: red;
     }
 
     #pongTournament-btn {
