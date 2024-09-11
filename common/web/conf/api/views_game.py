@@ -316,7 +316,8 @@ def setNextGamePerGame(lobby):
             logger.info(f"  nbr game for [{i}]: {nbrGameByTour}")
             for j in range(nbrGameByTour):
                 Currentgame = games.get(id=gameIndex)
-
+                Currentgame.layer = i
+                Currentgame.save()
                 logger.info(f"      Currentgame [{Currentgame}]")
                 logger.info(f"      nextGames [{nextGames}]")
 
@@ -333,6 +334,8 @@ def setNextGamePerGame(lobby):
 @login_required
 def lockLobby(request):
     try:
+        logger.info('====================> LOCK LOBBY')
+        logger.info(f"   CALL")
         lobbyUUID = request.data.get('lobbyUUID')
         lobby = Lobby.objects.get(UUID=lobbyUUID)
         lobby.locked = True
@@ -344,7 +347,7 @@ def lockLobby(request):
             setNextGamePerGame(lobby)
         else:
             tournament = Tournament.objects.get(UUID_LOBBY=lobby)
-            setNextGamePerGame(lobby)
+            setNextGamePerGame(lobby) #A RETIRER
         tournamentOrganized = {}
         tournamentOrganized['UUID'] = tournament.UUID
         tournamentOrganized['games'] = []
@@ -355,6 +358,8 @@ def lockLobby(request):
             gameData['id'] = game.id
             gameData['winner_player'] = game.winner_player.id if game.winner_player else None
             gameData['winner_ai'] = game.winner_ai.id if game.winner_ai else None
+            gameData['next_game'] = game.next_game.id if game.next_game else None
+            gameData['layer'] = game.layer
             gameData['players'] = []
             for player in game.players.all():
                 gameData['players'].append(player.id)
@@ -391,6 +396,7 @@ def getTournamentInfo(request):
             gameData['winner_player'] = game.winner_player.id if game.winner_player else None
             gameData['winner_ai'] = game.winner_ai.id if game.winner_ai else None
             gameData['next_game'] = game.next_game.id if game.next_game else None
+            gameData['layer'] = game.layer
             gameData['players'] = []
             for player in game.players.all():
                 logger.info(player)
@@ -451,17 +457,31 @@ def setWinnerAtTournamentGame(request):
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 
+
+def getCurrentLayer(tournament):
+    games = Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament)
+    games = games.order_by('id')
+    for game in games:
+        if game.winner_ai is None and game.winner_player is None:
+            return game.layer
+    return -1
+
 @csrf_exempt
 @api_view(['GET'])
 @login_required
 def finishGameOnlyIa(request):
     try:
+        logger.info('====================> finishGameOnlyIa')
         lobbyUUID = request.GET.get('lobbyUUID')
         lobby = Lobby.objects.get(UUID=lobbyUUID)
         tournament = Tournament.objects.get(UUID_LOBBY=lobby)
+        layer = getCurrentLayer(tournament)
+        logger.info(f"   layer [{layer}]")
         games = Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament)
+        games = games.filter(layer=layer)
         for game in games:
-            if game.players.count() == 0 and game.ai_players.count() > 0:
+            if game.players.count() == 0 and game.ai_players.count() == 2:
+                logger.info(f"          gameWiniS")
                 game.winner_ai = game.ai_players.first()
                 game.save()
                 nextGame = game.next_game
@@ -473,6 +493,21 @@ def finishGameOnlyIa(request):
         return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
     except tournament.DoesNotExist:
         return Response({"error": f"Tournament with id {lobbyUUID} does not exist"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def getLobbyIsLocked(request):
+    try :
+        logger.info('====================> GET LOBBY IS LOCKED')
+        lobbyUUID = request.GET.get('lobbyUUID')
+        logger.info(f"   lobbyUUID [{lobbyUUID}]")
+        lobby = Lobby.objects.get(UUID=lobbyUUID)
+        logger.info(f"   lobby [{lobby}]")
+        logger.info(f"   locked [{lobby.locked}]")
+        return Response({"locked": lobby.locked}, status=200)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 

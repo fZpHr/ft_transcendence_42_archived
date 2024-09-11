@@ -5,7 +5,8 @@ var ws;
 async function innerCanvaIfLockLobby() {
     try {
         let element = document.getElementById('lobby-body');
-        let isLocked = element.getAttribute('data-locked');
+        let isLocked = await APIgetLobbyIsLocked(lobbyUUID);
+        isLocked = isLocked.locked;
         if (isLocked) {
             let NbrPlayer = document.getElementsByClassName('player-present').length;
             tournamentorganized = await APIlockLobby(lobbyUUID);
@@ -21,21 +22,24 @@ async function innerCanvaIfLockLobby() {
 }
 
 async function loadLobby() {
-    console.log("lobby_owner.js loaded");
     lobbyElement = document.getElementById('lobby_uuid');
     lobbyUUID = lobbyElement.getAttribute('data-value');
     users = await APIgetUserAvailableToLobby(lobbyUUID);
     lobbyUUID = lobbyUUID.replace(/-/g, '');
+
     await connectLobbySocket(lobbyUUID);
-    let isLocked = document.getElementById('lobby-body').getAttribute('data-locked');
-    if (!isLocked) {
+
+    let isLocked = await APIgetLobbyIsLocked(lobbyUUID);
+    isLocked = isLocked.locked;
+    console.log('isLocked', isLocked);
+
+    if (isLocked == true) {
+        updateLockAtRedirect();
+        innerCanvaIfLockLobby();
+    } else {
         toggleAddingPlayer();
         handlersLockLobby();
-    } else {
-        updateLockAtRedirect();
     }
-        
-        innerCanvaIfLockLobby();
 }
 
 // =============================== WS LOBBY NOTIF================================
@@ -269,6 +273,7 @@ function handlersSearchPlayer() {
 
 function handlersLockLobby() {
     try {
+        console.log('handlersLockLobby');
         let lockLobby = document.getElementById('lock-lobby');
         lockLobby.addEventListener('click', async function handleClickLock() {
             let NbrPlayer = document.getElementsByClassName('player-present').length;

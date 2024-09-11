@@ -89,7 +89,6 @@ async function APIgetUserById(userId) {
 async function APIgetTournamentInfo(tournamentUUID) {
 	return new Promise(async (resolve, reject) => {
 		let game = await getFetchAPI(`/api/getTournamentInfo?tournamentUUID=${tournamentUUID}`);
-		console.log('APIgetTournamentInfo', game);
 		resolve(game);
 	});
 }
@@ -125,6 +124,13 @@ async function APIgetPongGameForUser(userId) {
 async function APIfinishGameOnlyIa(lobbyUUID) {
 	return new Promise(async (resolve, reject) => {
 		let game = await getFetchAPI(`/api/finishGameOnlyIa?lobbyUUID=${lobbyUUID}`);
+		resolve(game);
+	});
+}
+
+async function APIgetLobbyIsLocked(lobbyUUID) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/getLobbyIsLocked?lobbyUUID=${lobbyUUID}`);
 		resolve(game);
 	});
 }

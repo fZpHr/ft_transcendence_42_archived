@@ -91,6 +91,7 @@ class Game_Tournament(models.Model):
     winner_ai = models.ForeignKey('AIPlayer', on_delete=models.CASCADE, related_name='won_games', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     next_game = models.ForeignKey('Game_Tournament', on_delete=models.CASCADE, related_name='previous_game', null=True, blank=True)
+    layer = models.IntegerField(default=0)
 
 class Tournament(models.Model):
     UUID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
