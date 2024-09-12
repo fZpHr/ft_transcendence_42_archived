@@ -3,6 +3,8 @@ import asyncio
 import threading
 import logging
 from .ball import Ball
+import json
+
 
 logger = logging.getLogger('print')
 class Engine:
@@ -17,7 +19,7 @@ class Engine:
 
     async def sendtoPlayers(self, message, eventType):
         for player in self.players:
-            logger.info(f"send to {player}")
+            # logger.info(f"send to {player}")
             await self.ws.channel_layer.group_send(
             self.ws.room_group_name,
             {
@@ -30,18 +32,23 @@ class Engine:
         
 
     async def moveBall(self):
-            logger.info("move ball")
-            self.ball.pos.x += 0.01
-            await self.sendtoPlayers(self.ball.pos.x, "moveBall")
+            # logger.info("move ball")
+            await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
     
+    async def checkCollision(self):
+        logger.info("check collision")
+         
 	
     async def checkBall(self):
         logger.info("ici")
+        self.ball.acc.x = 0.1
+        self.ball.acc.y = 0
         while True:
             if self.state == "waiting":
                 continue
-            logger.info("==================================================")
+            # logger.info("==================================================")
             await self.moveBall()
-            time.sleep(1 / 25)
+            await self.checkCollision()
+            time.sleep(1 / 60)
             # time.sleep(2)
             

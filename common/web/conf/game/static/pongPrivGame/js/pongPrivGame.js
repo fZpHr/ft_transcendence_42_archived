@@ -245,7 +245,10 @@ async function move(data) {
 
 async function moveBall(data) {
 	try {
-		moveSphere(game, parseFloat(data.message));
+		var data = JSON.parse(data.message);
+		game.ball.acceleration.x = parseFloat(data.x);
+		game.ball.acceleration.y = parseFloat(data.y);
+		// moveSphere(game, parseFloat(data.message));
 	} catch (error) {
 		console.error(error);
 	}

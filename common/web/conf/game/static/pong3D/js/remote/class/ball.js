@@ -51,7 +51,11 @@ class Ball {
 			min: bouncing.min,
 			max: bouncing.max
 		}
-
+		this.acceleration = {
+			x: 0,
+			y: 0,
+			z: 0
+		};
 		this.group;
 		this.initTorus(nbr.nbrTorus);
 	}
@@ -84,9 +88,8 @@ class Ball {
 		}
 	}
 
-	async move(x) {
-		this.ballDirection.x = x;
-		console.log(this.ballDirection);
+	async move(acceleration) {
+		this.ballDirection.x = acceleration.x;
 		this.group.position.add(this.ballDirection);
 	}
 

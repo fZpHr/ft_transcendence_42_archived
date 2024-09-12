@@ -114,7 +114,7 @@ async function startGame(players, game, { up, down, userId }) {
 	let paddle_1_grp = new THREE.Group();
 	let paddle_2_grp = new THREE.Group();
 
-	// game.floor.add(ground.groundMirror);
+	game.floor.add(ground.groundMirror);
 	game.floor.add(ground.plateau);
 	game.floor.add(ground.circle3D);
 	game.floor.add(limits);
@@ -165,10 +165,10 @@ async function startGame(players, game, { up, down, userId }) {
 			sendToWsGame('move', msg);
 			movePaddles(game, userId, 'down');
 		}
-		// if (game.render) {
-		// 	sphere.move();
-		// 	game.checkCollision(ground);
-		// }
+		if (game.render) {
+			sphere.move(game.ball.acceleration);
+			game.checkCollision(ground);
+		}
 		game.renderer.render(game.scene, game.camera.camera3D);
 	}
 
@@ -295,16 +295,17 @@ async function movePaddles(game, id, type) {
 
 async function moveSphere(game, data) {
 	console.log(data, "moving ball");
-	for (let i = game.ball.group.position.x; i <= data; i += 0.01) {
-		game.ball.group.position.add({ x: i, y: 0, z: 0 });
-	}
-	// console.log(game.ball.group.position.x, "current position", data, "new position");
-	// for (let i = game.ball.group.position.x; i < data; i += 0.01) {
-	// 	console.log(i);
-	// 	game.ball.group.position.x += i;
-	// 	// game.ball.move(i);
-	// 	// game.checkCollision(game.floor);
+	// game.ball.group.position.add({ x: data, y: 0, z: 0 });
+	// for (let i = game.ball.group.position.x; i <= data; i += 0.01) {
+	// 	game.ball.group.position.add({ x: i, y: 0, z: 0 });
 	// }
+	// // console.log(game.ball.group.position.x, "current position", data, "new position");
+	// // for (let i = game.ball.group.position.x; i < data; i += 0.01) {
+	// // 	console.log(i);
+	// // 	game.ball.group.position.x += i;
+	// // 	// game.ball.move(i);
+	// // 	// game.checkCollision(game.floor);
+	// // }
 }
 
 
