@@ -1,3 +1,4 @@
+
 function pongTournament() {
     let AllLobby = new Set();
 
@@ -116,17 +117,18 @@ function pongTournament() {
 async function handlersRemoveLobby() {
     try {
         let allRemove = document.getElementsByClassName('remove-btn');
-        for (let i = 0; i < allRemove.length; i++) {
-            allRemove[i].addEventListener('click', async function () {
-                let lobbyUUID = allRemove[i].getAttribute('data-lobbyUUID');
+        for (const lobby of allRemove) {
+            let lobbyUUID = lobby.getAttribute('data-lobbyUUID');
+            lobby.addEventListener('click', async function () {
                 console.log('remove lobby ' + lobbyUUID);
                 let res = await APIremoveLobby(lobbyUUID);
                 console.log(res);
                 let lobby = document.getElementById(lobbyUUID);
                 lobby = lobby.parentElement;
                 lobby.remove();
-            }
-        )};
+                return;
+            });
+        }
     } catch (error) {
         console.error('Failed to removeLobby', error);
     }

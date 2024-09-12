@@ -267,13 +267,21 @@ def getAllGamesAtTurn(indexFirstGame, turn, DFP, nbrParticipants):
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 
-def setNextGameForGame(currentGame, nextGames):
+def count_divisions_by_n(number, n):
+    count = 0
+    while number >= n:
+        number /= n
+        count += 1
+    return count
+
+def setNextGameForGame(currentGame, nextGames, cptLeft, cptRight):
     try :
         nextGameId = None
         logger.info('====================> SET NEXT GAME FOR GAME')
         logger.info(f"      nextGames [{nextGames}]")
         logger.info(f"      nextGamesCOUnt [{len(nextGames)}]")
-        logger.info('====================> END SET NEXT GAME FOR GAME')
+        logger.info(f"      cptLeft [{cptLeft}]")
+        logger.info(f"      cptRight [{cptRight}]")
         if not nextGames:
             logger.info('   NO NEXT GAME')
             return
@@ -281,25 +289,32 @@ def setNextGameForGame(currentGame, nextGames):
             currentGame.next_game = nextGames[0]
             currentGame.save()
             return
+        
         if (currentGame.id % 2) == 0:
             for nGame in nextGames:
                 if nGame.id % 2 == 0 and nGame.id != currentGame.id :
-                    if nGame.players.count() + nGame.ai_players.count() < 2:
+                    if cptLeft <= 2:
+                        logger.info(f"      nGame.id [{nGame.id}]")
                         nextGameId = nGame.id
                     else:
-                        nextGameId = nGame.id + 2
+                        logger.info(f"      nGame.id  + 2 [{nGame.id + ( count_divisions_by_n(cptLeft, 2) * 2)}]")
+                        nextGameId = nGame.id + ( count_divisions_by_n(cptLeft, 2) * 2)
                     break
         else:
             for nGame in nextGames:
                 if nGame.id % 2 != 0 and nGame.id != currentGame.id:
-                    if nGame.players.count() + nGame.ai_players.count() < 2:
+                    if cptRight <= 2:
+                        logger.info(f"      nGame.id [{nGame.id}]")
                         nextGameId = nGame.id
                     else:
-                        nextGameId = nGame.id + 2
+                        logger.info(f"      nGame.id  + 2 [{nGame.id + ( count_divisions_by_n(cptRight, 2) * 2)}]")
+                        nextGameId = nGame.id + ( count_divisions_by_n(cptRight, 2) * 2)
                     break
         if nextGameId:
+            logger.info(f"      nextGameId [{nextGameId}]")
             currentGame.next_game = Game_Tournament.objects.get(id=nextGameId)
             currentGame.save()
+        logger.info('====================> END SET NEXT GAME FOR GAME')
     except Exception as e:
         logger.info(f'   ERROR{e}')
         return Response({"error": str(e)}, status=500)
@@ -322,7 +337,10 @@ def setNextGamePerGame(lobby):
         logger.info(f"  nbrTour [{nbrTour}]")
         logger.info(f"  gameIndex [{gameIndex}]")
 
-        
+        cptLeft = 0
+        cptRight = 0
+
+
         for i in range(1, nbrTour):
             nextGames = getAllGamesAtTurn(firstGameId, i + 1, DFP, nbrParticipants)
             nbrGameByTour = get_nbr_party_by_tour(nbrParticipants, i, DFP)
@@ -331,12 +349,16 @@ def setNextGamePerGame(lobby):
                 Currentgame = games.get(id=gameIndex)
                 Currentgame.layer = i
                 Currentgame.save()
-                logger.info(f"      Currentgame [{Currentgame}]")
-                logger.info(f"      nextGames [{nextGames}]")
-
-                setNextGameForGame(Currentgame, nextGames)
+                # logger.info(f"      Currentgame [{Currentgame}]")
+                # logger.info(f"      nextGames [{nextGames}]")
+                if (Currentgame.id % 2) == 0:
+                    cptLeft += 1
+                else:
+                    cptRight += 1
+                setNextGameForGame(Currentgame, nextGames, cptLeft, cptRight)
                 gameIndex += 1
-
+            cptLeft = 0
+            cptRight = 0
         logger.info('====================> END OF SET NEXT GAME')  
     except Exception as e:
         return Response({"error": str(e)}, status=500)

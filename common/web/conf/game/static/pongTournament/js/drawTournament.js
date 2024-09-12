@@ -190,8 +190,12 @@ async function drawTournament(ctx, gameTournament, NbrPlayer) {
 } 
 
 async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jumpHeight, nbrParticipants, directionArrow, canvasWidth, splitWidth) {
-    try {   
-        console.log('game is => ', game);
+    try {
+        console.log('   g[id] => ', game.id+ ' | g[layer] =>' + game.layer + ' | g[next_game] =>' + game.next_game);
+        // console.log('   game[player] => ', game.players);
+        // console.log('   game[winner_player] => ', game.winner_player);
+        // console.log('   game[winner_ai] => ', game.winner_ai);
+        
         let firstPoints = jumpHeight + (ystep / 2);
         let lastPoints = firstPoints;
         let winnerType;
