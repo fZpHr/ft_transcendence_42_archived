@@ -101,7 +101,7 @@ async function toggleSubmitForm() {
                             htmx.ajax('GET', result.redirect_url || '/', {
                                 target: '#main-content', // The target element to update
                                 swap: 'innerHTML', // How to swap the content
-                            }).then(response => {
+                            }, {once: true}).then(response => {
                                 history.pushState({}, '', result.redirect_url || '/');
                             });
                         } else {
