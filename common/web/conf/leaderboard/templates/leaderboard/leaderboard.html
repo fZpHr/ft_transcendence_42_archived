@@ -1,4 +1,4 @@
-{% load i18n %}
+
 {% load static %}
 <div id="leaderboard-content" class="leaderboard-page">
     <main>
@@ -16,11 +16,11 @@
             <article class="podium-card second">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans media_url %}{% trans leaderboardPong.1.img %}" alt="{% trans leaderboardPong.1.user.username %}">
+                        <img src="{{ media_url }}{{ leaderboardPong.1.img }}" alt="{{ leaderboardPong.1.user.username }}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboardPong.1.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboardPong.1.eloPong }}</p>
+                        <h2>{{ leaderboardPong.1.username }}</h2>
+                        <p>{{ 'Elo:' }} {{ leaderboardPong.1.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -31,11 +31,11 @@
             <article class="podium-card first">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans media_url %}{% trans leaderboardPong.0.img %}" alt="{% trans leaderboardPong.0.username %}">
+                        <img src="{{ media_url }}{{ leaderboardPong.0.img }}" alt="{{ leaderboardPong.0.username }}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboardPong.0.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboardPong.0.eloPong }}</p>
+                        <h2>{{ leaderboardPong.0.username }}</h2>
+                        <p>{{ 'Elo:' }} {{ leaderboardPong.0.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -46,11 +46,11 @@
             <article class="podium-card">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans media_url %}{% trans leaderboardPong.2.img %}" alt="{% trans leaderboardPong.2.user.username %}">
+                        <img src="{{ media_url }}{{ leaderboardPong.2.img }}" alt="{{ leaderboardPong.2.user.username }}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboardPong.2.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboardPong.2.eloPong }}</p>
+                        <h2>{{ leaderboardPong.2.username }}</h2>
+                        <p>{{ 'Elo:' }} {{ leaderboardPong.2.eloPong }}</p>
                     </div>
                 </div>
             </article>
@@ -61,13 +61,13 @@
             <div class="body-leaderboard head">
                 <div class="user">
                     <div class="rank">
-                        <p>{% trans 'Rank' %}</p>
+                        <p>{{ 'Rank' }}</p>
                     </div>
                     <div class="username">
-                        <p>{% trans 'Username' %}</p>
+                        <p>{{ 'Username' }}</p>
                     </div>
                     <div class="elo">
-                        <p>{% trans 'Elo' %}</p>
+                        <p>{{ 'Elo' }}</p>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                         <p>{{ forloop.counter }}</p>
                     </div>
                     <div class="username">
-                        <img src="{% trans media_url %}{% trans user.img %}" alt="{{ user.user }}">
+                        <img src="{{ media_url }}{{ user.img }}" alt="{{ user.user }}">
                         <p>{{ user.username }}</p>
                     </div>
                     <div class="elo">
@@ -100,11 +100,11 @@
             <article class="podium-card second">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans media_url %}{% trans leaderboardConnect4.1.img %}" alt="{% trans leaderboardConnect4.1.user.username %}">
+                        <img src="{{ media_url }}{{ leaderboardConnect4.1.img }}" alt="{{ leaderboardConnect4.1.user.username }}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboardConnect4.1.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboardConnect4.1.eloConnect4 }}</p>
+                        <h2>{{ leaderboardConnect4.1.username }}</h2>
+                        <p>{{ 'Elo:' }} {{ leaderboardConnect4.1.eloConnect4 }}</p>
                     </div>
                 </div>
             </article>
@@ -115,11 +115,11 @@
             <article class="podium-card first">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans media_url %}{% trans leaderboardConnect4.0.img %}" alt="{% trans leaderboardConnect4.0.username %}">
+                        <img src="{{ media_url }}{{ leaderboardConnect4.0.img }}" alt="{{ leaderboardConnect4.0.username }}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboardConnect4.0.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboardConnect4.0.eloConnect4 }}</p>
+                        <h2>{{ leaderboardConnect4.0.username }}</h2>
+                        <p>{{ 'Elo:' }} {{ leaderboardConnect4.0.eloConnect4 }}</p>
                     </div>
                 </div>
             </article>
@@ -130,11 +130,11 @@
             <article class="podium-card">
                 <div class="podium-body">
                     <div class="img-podium">
-                        <img src="{% trans media_url %}{% trans leaderboardConnect4.2.img %}" alt="{% trans leaderboardConnect4.2.user.username %}">
+                        <img src="{{ media_url }}{{ leaderboardConnect4.2.img }}" alt="{{ leaderboardConnect4.2.user.username }}">
                     </div>
                     <div class="data-podium">
-                        <h2>{% trans leaderboardConnect4.2.username %}</h2>
-                        <p>{% trans 'Elo:' %} {{ leaderboardConnect4.2.eloConnect4 }}</p>
+                        <h2>{{ leaderboardConnect4.2.username }}</h2>
+                        <p>{{ 'Elo:' }} {{ leaderboardConnect4.2.eloConnect4 }}</p>
                     </div>
                 </div>
             </article>
@@ -145,13 +145,13 @@
             <div class="body-leaderboard head">
                 <div class="user">
                     <div class="rank">
-                        <p>{% trans 'Rank' %}</p>
+                        <p>{{ 'Rank' }}</p>
                     </div>
                     <div class="username">
-                        <p>{% trans 'Username' %}</p>
+                        <p>{{ 'Username' }}</p>
                     </div>
                     <div class="elo">
-                        <p>{% trans 'Elo' %}</p>
+                        <p>{{ 'Elo' }}</p>
                     </div>
                 </div>
             </div>
@@ -164,7 +164,7 @@
                         <p>{{ forloop.counter }}</p>
                     </div>
                     <div class="username">
-                        <img src="{% trans media_url %}{% trans user.img %}" alt="{{ user.user }}">
+                        <img src="{{ media_url }}{{ user.img }}" alt="{{ user.user }}">
                         <p>{{ user.username }}</p>
                     </div>
                     <div class="elo">
