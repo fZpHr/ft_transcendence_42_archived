@@ -269,7 +269,7 @@ def getAllGamesAtTurn(indexFirstGame, turn, DFP, nbrParticipants):
 
 def count_divisions_by_n(number, n):
     count = 0
-    while number >= n:
+    while number > n:
         number /= n
         count += 1
     return count
@@ -278,10 +278,9 @@ def setNextGameForGame(currentGame, nextGames, cptLeft, cptRight):
     try :
         nextGameId = None
         logger.info('====================> SET NEXT GAME FOR GAME')
-        logger.info(f"      nextGames [{nextGames}]")
-        logger.info(f"      nextGamesCOUnt [{len(nextGames)}]")
-        logger.info(f"      cptLeft [{cptLeft}]")
-        logger.info(f"      cptRight [{cptRight}]")
+        # logger.info(f"      nextGames [{nextGames}]")
+        # logger.info(f"      nextGamesCOUnt [{len(nextGames)}]")
+        logger.info(f"      DEBOG => cptLeft [{cptLeft}] - cptRight [{cptRight}]")
         if not nextGames:
             logger.info('   NO NEXT GAME')
             return
@@ -289,26 +288,28 @@ def setNextGameForGame(currentGame, nextGames, cptLeft, cptRight):
             currentGame.next_game = nextGames[0]
             currentGame.save()
             return
-        
+        logger.info(f"      currentGame.id [{currentGame.id}]")
         if (currentGame.id % 2) == 0:
             for nGame in nextGames:
                 if nGame.id % 2 == 0 and nGame.id != currentGame.id :
                     if cptLeft <= 2:
-                        logger.info(f"      nGame.id [{nGame.id}]")
                         nextGameId = nGame.id
                     else:
-                        logger.info(f"      nGame.id  + 2 [{nGame.id + ( count_divisions_by_n(cptLeft, 2) * 2)}]")
-                        nextGameId = nGame.id + ( count_divisions_by_n(cptLeft, 2) * 2)
+                        cpt = count_divisions_by_n(cptLeft, 2)  
+                        logger.info(f"      nbrDivBy2 Left [{cpt}]")
+                        logger.info(f"      nGame.id[{nGame.id}] + cpt*2[{cpt * 2}] = [{nGame.id + ( cpt * 2)}]")
+                        nextGameId = nGame.id + ( cpt * 2)
                     break
         else:
             for nGame in nextGames:
                 if nGame.id % 2 != 0 and nGame.id != currentGame.id:
                     if cptRight <= 2:
-                        logger.info(f"      nGame.id [{nGame.id}]")
                         nextGameId = nGame.id
                     else:
-                        logger.info(f"      nGame.id  + 2 [{nGame.id + ( count_divisions_by_n(cptRight, 2) * 2)}]")
-                        nextGameId = nGame.id + ( count_divisions_by_n(cptRight, 2) * 2)
+                        cpt = count_divisions_by_n(cptRight, 2)
+                        logger.info(f"      nbrDivBy2 right [{cpt}]")
+                        logger.info(f"      nGame.id[{nGame.id}] + cpt*2[{cpt * 2}] = [{nGame.id + ( cpt * 2)}]")
+                        nextGameId = nGame.id + ( cpt * 2)
                     break
         if nextGameId:
             logger.info(f"      nextGameId [{nextGameId}]")
