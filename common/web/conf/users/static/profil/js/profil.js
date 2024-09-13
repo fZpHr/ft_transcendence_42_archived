@@ -36,7 +36,7 @@ async function APIupdatePP(file) {
 				'X-CSRFToken': getCookie('csrftoken'),
 			},
 			mode: 'same-origin',
-			body: formData,
+			body: formData, 
 		});
 		resp = await resp.json();
 		resolve(resp);
@@ -148,11 +148,24 @@ async function toggleEditPanel() {
 			try {
 				let username = editData.form.username.value;
 				let email = editData.form.email.value;
+				if (username == '' || email == '') {
+					let errorBox = document.getElementById('error-content');
+					errorBox.textContent = 'Please fill in all fields';
+					return;
+				}
+				if (!validateEmailUpdate(email)) {
+					let errorBox = document.getElementById('error-content');
+					errorBox.textContent = 'Invalid email';
+					return;
+				}
 				let resp = await APIudpateData(username, email);
 				if (resp.success == false) {
 					let errorBox = document.getElementById('error-content');
 					errorBox.textContent = resp.error;
 					return;
+				} else {
+					let errorBox = document.getElementById('error-content');
+					errorBox.textContent = 'Your profil has been updated';
 				}
 				document.getElementById('username').textContent = resp.new_username;
 				document.getElementById('username-profil').textContent = resp.new_username;
@@ -326,4 +339,11 @@ async function loadStats(type) {
 	} catch (e) {
 		console.error(e);
 	}
+}
+
+// ===================== CHECK UPDATE DATA	 =====================
+
+function validateEmailUpdate(email) {
+	const re = /\S+@\S+\.\S+/;
+	return re.test(email);
 }
