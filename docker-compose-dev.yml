@@ -40,6 +40,7 @@ services:
       - ./data/logs/nginx/:/var/log/nginx/
       - ./common/nginx/certs:/etc/nginx/certs
       - ./data/logs/modsecurity:/var/log/modsecurity/
+      - ./common/web/conf/:/web/
     ports:
       - "443:443"
     env_file:

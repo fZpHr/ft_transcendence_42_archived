@@ -51,6 +51,14 @@
         htmx.onLoad(function(evt) {
             window.scrollTo(0, 0);
         });
+
+        document.body.addEventListener('htmx:beforeSwap', function (evt) {
+            console.log(evt.detail.pathInfo.finalPath);
+            console.log(window.location.pathname);
+            if (evt.detail.pathInfo.finalPath == window.location.pathname) {
+                evt.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
