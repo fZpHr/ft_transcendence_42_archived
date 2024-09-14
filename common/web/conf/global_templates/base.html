@@ -51,6 +51,34 @@
         htmx.onLoad(function(evt) {
             window.scrollTo(0, 0);
         });
+
+        document.body.addEventListener("htmx:beforeOnLoad", function(evt) {
+            console.log(evt);
+            if (evt.detail.pathInfo.finalPath === window.location.pathname) {
+                evt.preventDefault();
+                return
+            }  
+        });
+
+        document.body.addEventListener("htmx:historyRestore", function(evt) {
+            console.log(evt);
+            if (evt.detail.path === window.location.pathname) {
+                evt.preventDefault();
+                return
+            }
+            if (window.location.pathname === '/login/')
+            {
+                evt.preventDefault();
+                htmx.ajax('GET', '/login/',
+                    {
+                        history: 'replace',
+                        target: '#main-content', // The target element to update
+                        swap: 'innerHTML', // How to swap the content
+                    }
+                );
+                return;
+            }
+        });
     </script>
 </body>
 </html>

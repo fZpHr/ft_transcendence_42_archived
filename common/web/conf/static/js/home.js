@@ -13,6 +13,9 @@ document.querySelectorAll('.desct-mode').forEach(function(element) {
 
 function carousel () {
     const carousel = document.querySelector('.card-container');
+    if (!carousel) {
+        return;
+    }
     const cards = Array.from(carousel.children);
     let currentIndex = 0;
     

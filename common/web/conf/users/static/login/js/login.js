@@ -165,6 +165,9 @@ async function toggleChangeForm() {
 
 async function toggle42Login() {
     const btn42 = document.getElementById('btn-42');
+    if (!btn42) {
+        return;
+    }
     
     btn42.addEventListener('click', () => {
         const hostname = window.location.hostname;
