@@ -1,5 +1,5 @@
 {% load static %}
-{% load i18n %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -52,30 +52,53 @@
             window.scrollTo(0, 0);
         });
 
-        document.body.addEventListener("htmx:beforeOnLoad", function(evt) {
-            console.log(evt);
-            if (evt.detail.pathInfo.finalPath === window.location.pathname) {
-                evt.preventDefault();
-                return
-            }  
+        document.addEventListener("htmx:beforeSwap", function(evt) {
+            console.log("Before swap");
         });
 
-        document.body.addEventListener("htmx:historyRestore", function(evt) {
-            console.log(evt);
-            if (evt.detail.path === window.location.pathname) {
+        document.addEventListener("htmx:beforeSend", function(evt) {
+            console.log("Before send");
+        });
+
+        document.addEventListener("htmx:beforeRequest", function(evt) {
+            console.log("before Request");
+        });
+
+        document.addEventListener("htmx:beforeOnLoad", function(evt) {
+            console.log("before On Load");
+        });
+
+        document.body.addEventListener("htmx:beforeRequest", function(evt) {
+            let userIsAuthenticated = getCookie('userIsAuthenticated');
+            const isAuthenticated = userIsAuthenticated === 'true';
+            console.log("evt.detail", evt.detail)
+            console.log("User",userIsAuthenticated)
+            if (!isAuthenticated &&
+                evt.detail.pathInfo.finalPath === '/login/' &&
+                evt.detail.pathInfo.finalPath === '/' && 
+                evt.detail.pathInfo.finalPath === '/api/logout/') 
+            {
+                console.log("Not authenticated, preventing request");
+                evt.preventDefault();
+                return;
+            }
+            if (evt.detail.pathInfo.finalPath === window.location.pathname) {
+                console.log("Same path, preventing request");
                 evt.preventDefault();
                 return
             }
-            if (window.location.pathname === '/login/')
-            {
+        });
+
+        document.body.addEventListener("htmx:historyRestore", function(evt) {
+            let userIsAuthenticated = getCookie('userIsAuthenticated');
+            const isAuthenticated = userIsAuthenticated === 'true';
+            if (!isAuthenticated && evt.detail.path !== '/login/' && evt.detail.path !== '/') {
                 evt.preventDefault();
-                htmx.ajax('GET', '/login/',
-                    {
-                        history: 'replace',
-                        target: '#main-content', // The target element to update
-                        swap: 'innerHTML', // How to swap the content
-                    }
-                );
+                htmx.ajax('GET', '/login/', {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                });
+                history.pushState(null, '', '/login/');
                 return;
             }
         });

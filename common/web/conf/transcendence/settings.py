@@ -148,27 +148,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
-
-LANGUAGE_CODE = 'en'
-
-LANGUAGES = [
-    ('en', 'English'),
-    ('fr', 'Français'),
-    ('es', 'Español'),
-]
-
-USE_I18N = True
-
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
-
-LANGUAGE_SESSION_KEY = 'django_language'
-
-LANGUAGE_COOKIE_NAME = 'django_language'
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 

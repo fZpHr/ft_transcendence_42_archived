@@ -36,7 +36,9 @@ def login_player(request):
         user = authenticate(request, username=player.username, password=password)
         if user is not None:
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return JsonResponse({'success': True, 'redirect_url': '/profil/'})
+            response = JsonResponse({'success': True, 'redirect_url': '/profil/'})
+            response.set_cookie('userIsAuthenticated', 'true', max_age=7*24*60*60)  # Set cookie for 7 days
+            return response
         else:
             return JsonResponse({'success': False, 'error': 'Invalid email or password'})
     except Player.DoesNotExist:
@@ -64,7 +66,9 @@ def register_player(request):
         player = Player.objects.create(username=username, mail=email)
         user = authenticate(request, username=username, password=password)
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return JsonResponse({'success': True, 'redirect_url': '/profil/'})
+        response = JsonResponse({'success': True, 'redirect_url': '/profil/'})
+        response.set_cookie('userIsAuthenticated', 'true', max_age=7*24*60*60)  # Set cookie for 7 days
+        return response
     except ValidationError as e:
         return JsonResponse({'success': False, 'error': str(e.messages[0])})
     except Exception as e:
@@ -113,18 +117,24 @@ def register_42(request, format=None):
         u.save()
         user = authenticate(request, username=username, password=password)
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        response = redirect('/profil/')
+        response.set_cookie('userIsAuthenticated', 'true', max_age=7*24*60*60)  # Set cookie for 7 days
     except User.DoesNotExist:
         data = User.objects.create_user(username, mail, password)
         player = Player.objects.create(username=data.username, mail=data.email, img=(r.json()["image"]["link"]))
         data.save()
         user = authenticate(request, username=username, password=password)
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-    return redirect('/profil/')
+        response = redirect('/profil/')
+        response.set_cookie('userIsAuthenticated', 'true', max_age=7*24*60*60)  # Set cookie for 7 days
+    return response
 
 @login_required
 def logout(request):
     auth_logout(request)
-    return redirect('/login/') 
+    response = redirect('/login/')
+    response.set_cookie('userIsAuthenticated', 'false', max_age=7*24*60*60)  # Set cookie for 7 days
+    return response
 
 @login_required
 @api_view(['POST'])

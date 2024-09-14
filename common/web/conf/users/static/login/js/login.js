@@ -98,6 +98,7 @@ async function toggleSubmitForm() {
                             errorElement.style.display = 'none';
                         }
                         if (result.success) {
+                            userIsAuthenticated = true;
                             htmx.ajax('GET', result.redirect_url || '/', {
                                 target: '#main-content',
                                 swap: 'innerHTML',
