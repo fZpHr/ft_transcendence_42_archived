@@ -99,13 +99,13 @@ async function toggleSubmitForm() {
                         }
                         if (result.success) {
                             htmx.ajax('GET', result.redirect_url || '/', {
-                                target: '#main-content', // The target element to update
-                                swap: 'innerHTML', // How to swap the content
+                                target: '#main-content',
+                                swap: 'innerHTML',
                             }, {once: true}).then(response => {
                                 history.pushState({}, '', result.redirect_url || '/');
                             });
                         } else {
-                            event.errorBox.innerHTML = error;
+                            event.errorBox.innerHTML = 'Invalid credentials. Please try again.';
                             event.errorBox.style.display = 'block';
                         }
                     } catch (error) {
@@ -181,7 +181,8 @@ async function toogleFiledInputs(inputs) {
             checkIfInputIsFiled(input);
             if (input.type === 'email') {
                 checkEmail(input);
-            } else if (input.type === 'password') {
+            } else if (input.id === 'login-pass' || input.id === 'register-pass') {
+                console.log('password');
                 checkPassword(input);
             }
         });
@@ -195,6 +196,7 @@ async function toggleShowPasswords() {
     for (let i = 0; i != events.length; i++) {
         if (events[i].event && events[i].button) {
             events[i].event.addEventListener('click', function () {
+                console.log(events[i]);
                 const type = events[i].button.getAttribute('type') === 'password' ? 'text' : 'password';
                 events[i].button.setAttribute('type', type);
                 events[i].event.innerHTML = type == 'password' ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
@@ -236,6 +238,7 @@ async function checkEmail(input) {
 // for password
 
 async function checkPassword(input) {
+    console.log('checkPassword');
     let validIndicator = input.parentElement.querySelector('.valid-indicator');
     if (validatePassword(input.value)) {
         validIndicator.innerHTML = '<i class="fa-solid fa-check-circle"></i>';

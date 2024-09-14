@@ -156,10 +156,6 @@ async function innerChatPannel() {
                         </div>
                     </div>
                     <div id="header-divider" style="display: none;"></div>
-                    <div id="search-bar">
-                        <input type="text" id="contact-search" placeholder="Rechercher...">
-                        <i class="fas fa-search"></i>
-                    </div>
                     <div id="contacts-list">
                     </div>
                     <div id="chat-box" style="display: none;">
