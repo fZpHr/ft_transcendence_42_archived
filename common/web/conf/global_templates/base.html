@@ -29,7 +29,7 @@
         {% include 'header.html' %}
     </header>
 
-    <main id="main-content">
+    <main id="main-content" hx-history-elt>
         {% block content %}{% endblock %}
     </main>
     <div id="chat">
@@ -51,13 +51,6 @@
         htmx.onLoad(function(evt) {
             window.scrollTo(0, 0);
         });
-
-        // document.body.addEventListener('htmx:beforeSwap', function (evt) {
-        //     if (evt.detail.pathInfo.finalPath == window.location.pathname) {
-        //         evt.preventDefault();
-        //     }
-        // });
-
     </script>
 </body>
 </html>
