@@ -1,4 +1,4 @@
-{% load i18n %}
+
 {% load static %}
 {% block title %}Profil{% endblock %}
 <div id="profil-content" class="warp-profil">
@@ -20,13 +20,13 @@
 			</li>
 			
 			<li class="nav-item">
-				<a hx-get="/en/leaderboard/" hx-target="#main-content" hx-push-url="true" class="nav-link" href="/en/leaderboard/">Leaderboard</a>
+				<a hx-get="/leaderboard/" hx-target="#main-content" hx-push-url="true" class="nav-link" href="/en/leaderboard/">Leaderboard</a>
 			</li>
 			<li class="nav-item">
 				<a hx-get="/game/" hx-target="#main-content" hx-push-url="true" href="/game/" class="nav-link">Play</a>
 			</li>
 			<li class="nav-item">
-				<a hx-get="/en/profil/" hx-target="#main-content" hx-push-url="true" class="nav-link" href="/en/profil/">Profil</a>
+				<a hx-get="/profil/" hx-target="#main-content" hx-push-url="true" class="nav-link" href="/en/profil/">Profil</a>
 			</li>
 			<li class="nav-item">
 				<a hx-get="/api/logout/" hx-target="#main-content" hx-push-url="true" class="nav-link" href="/api/logout/">Log out</a>

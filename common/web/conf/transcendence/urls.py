@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.conf.urls.i18n import i18n_patterns
 from . import views
 from django.views.generic import TemplateView
 from django.conf import settings
@@ -8,7 +7,6 @@ from django.conf.urls.static import static
 from api import consumers as consumers
 from game import consumers as game_consumers
 from two_factor.urls import urlpatterns as tf_urls
-from django.views.i18n import JavaScriptCatalog
 
 
 urlpatterns = [
@@ -16,17 +14,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('game/', include('game.urls')),
-    path('set-language/<str:language_code>/', views.set_language, name='set_language'),
-    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 ]
 
-urlpatterns += i18n_patterns(
+urlpatterns += [
     path('', include('users.urls')),
-)
+]
 
-urlpatterns += i18n_patterns(
+urlpatterns += [
     path('', include('leaderboard.urls')),
-)
+]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
