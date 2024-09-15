@@ -13,6 +13,14 @@ var nbrSocialNotif;
 
 // document.addEventListener('DOMContentLoaded', async function () {
 async function loadMenus () {
+    let isUserAuthenticated = getCookie('isUserAuthenticated');
+    if (isUserAuthenticated === 'false')
+        return;
+    let inter = setInterval(async function () {
+        if (typeof APIgetCurrentUser !== 'undefined') {
+            clearInterval(inter);
+        }
+    }, 100);
     user = await APIgetCurrentUser();
     userId = user.id;
     await updateAllNotif();

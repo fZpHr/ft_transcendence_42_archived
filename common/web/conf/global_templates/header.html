@@ -27,7 +27,7 @@
 			</li>
 			{% else %}
 			<li class="nav-item">
-				<a id="login-nav" hx-get="{% url 'login' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'login' %}">Login</a>
+				<a id="login-nav" hx-ext="logout-redirect" hx-get="{% url 'login' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'login' %}">Login</a>
 			</li>
 			{% endif %}
 		</ul>
