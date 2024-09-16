@@ -29,7 +29,7 @@
         {% include 'header.html' %}
     </header>
 
-    <main id="main-content">
+    <main id="main-content" hx-history-elt>
         {% block content %}{% endblock %}
     </main>
     <div id="chat">
@@ -50,6 +50,22 @@
     <script>
         htmx.onLoad(function(evt) {
             window.scrollTo(0, 0);
+        });
+
+        document.body.addEventListener("htmx:historyRestore", async function(evt) {
+            let userIsAuthenticated = getCookie('userIsAuthenticated');
+            const isAuthenticated = userIsAuthenticated === 'true';
+            console.log("historyRestore", evt.detail)
+            if (!isAuthenticated && evt.detail.path !== '/login/' && evt.detail.path !== '/') {
+                await htmx.ajax('GET', '/login/', {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                });
+                await history.pushState(null, '', '/login/');
+                await evt.preventDefault();
+                console.log("History Not authenticated, preventing request");
+                return;
+            }
         });
     </script>
 </body>
