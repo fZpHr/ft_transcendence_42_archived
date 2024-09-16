@@ -1,5 +1,5 @@
 {% load static %}
-{% load i18n %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,9 +32,11 @@
     <main id="main-content">
         {% block content %}{% endblock %}
     </main>
-    {% if user.is_authenticated %}
-        {% include 'menus/menus.html' %}
-    {% endif %}
+    <div id="chat">
+        {% if user.is_authenticated %}
+            {% include 'menus/menus.html' %}
+        {% endif %}
+    </div>
     
     
     <div id="notif-box"></div>

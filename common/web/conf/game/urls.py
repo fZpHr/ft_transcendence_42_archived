@@ -3,11 +3,11 @@ from . import views
 from django.conf import settings
 
 urlpatterns = [
+    path('', views.gameHome),
     path('join-game/', views.joinGame),
     path('ranked/', views.ranked),
     path('connect4/', views.connect4),
     path('pong3D/', views.pong3D),
-    path('game/', views.gameHome),
 	
     # view valide
     path('pong/local/', views.pongLocal),

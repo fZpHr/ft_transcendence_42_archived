@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+
 {% load static %}
 {% block title %}newGame{% endblock %}
 
@@ -51,9 +51,6 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-    <script type="module" src="{% static 'ranked/js/matchFound.js' %}"></script>
-    <script type="module" src="{% static 'ranked/js/socket.js' %}"></script>
+<script type="module" src="{% static 'ranked/js/matchFound.js' %}"></script>
+<script type="module" src="{% static 'ranked/js/socket.js' %}"></script>
 {% endblock %}

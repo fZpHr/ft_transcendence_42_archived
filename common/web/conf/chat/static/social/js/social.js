@@ -5,7 +5,7 @@
 function getSocialStatus(user) {
     const statusIcons = {
         3: '<i class="fa-regular fa-paper-plane"></i>',
-        2: '<i class="fa-solid fa-xmark"></i><i class="fa-solid fa-user-plus"></i>',
+        2: '<i class="fa-solid fa-user-plus"></i>',
         1: '<i class="fa-solid fa-hourglass-start"></i>',
         0: '<i class="fa-solid fa-plus"></i>',
         '-1': '<i class="fa-solid fa-user-slash"></i>',
@@ -17,10 +17,11 @@ function getSocialStatus(user) {
 
 function getUdateStatus(friend_status) {
     if (friend_status == 0) {
-        return '<i class="fa-solid fa-xmark"></i><i class="fa-solid fa-user-plus"></i>';
+        return '<i class="fa-solid fa-user-plus"></i>';
     } else if (friend_status == 2) {
         return '<i class="fa-regular fa-paper-plane"></i>';
     } else {
+        console.error('Error in getUdateStatus:', friend_status);
         return 'pbs';
     }
     
@@ -135,10 +136,6 @@ async function innerSocialPannel() {
                         </div>
                     </div>
                     <div id="profile-info">
-                        <div id="profile-search-bar">
-                            <input type="text" id="profile-contact-search" placeholder="Rechercher...">
-                            <i class="fas fa-search"></i>
-                        </div>
                         <div id="profile-info">
                             <div class="profile-info-item"></div>
                         </div>

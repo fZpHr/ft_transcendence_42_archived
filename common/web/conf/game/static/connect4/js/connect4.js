@@ -1,23 +1,208 @@
-const searchParams = new URLSearchParams(window.location.search);
-let gameId = searchParams.get('id'); // This will be '17' for your example URL
+import { div } from "three/webgpu";
+import { createSocket } from "../../ranked/js/socket.js";
 
-let connect4WebSocket = new WebSocket("wss://" + window.location.host + `/ws/game/connect4/${gameId}` + "/");
+var connect4WebSocket;
+var reconnectAfterSwapListener;
+var cancelAfterSwapListener;
 
-connect4WebSocket.onopen = function(e) {
-    console.log("WebSocket connection established");
-    let checkUserIdInterval = setInterval(() => {
-        if (userId && connect4WebSocket.readyState === WebSocket.OPEN) {
-            connect4WebSocket.send(JSON.stringify({ type: 'join', player_id: `${userId}` }));
-            clearInterval(checkUserIdInterval); // Stop checking once the message is sent
+let sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+async function connect4Load()
+{
+    const searchParams = new URLSearchParams(window.location.search);
+    let gameId = searchParams.get('id'); // This will be '17' for your example URL
+
+    let regex = new RegExp("^ws/game/connect4/([0-9a-f-]+)/$");
+    let link = "ws/game/connect4/" + gameId + "/";
+    if (regex.test(link) == false)
+    {
+        console.log("Invalid link");
+        let divGameNotExist = document.getElementById("overlay");
+        divGameNotExist.style.display = "flex";
+        divGameNotExist.innerText = "Game does not exist... Redirecting to game page";
+        await sleep(3000);
+        htmx.ajax('GET', '/game/', {
+            target: '#main-content', // The target element to update
+            swap: 'innerHTML', // How to swap the content
+        }).then(response => {
+            history.pushState({}, '', '/game/');
+        });
+        return;
+    }
+    try {
+        connect4WebSocket = new WebSocket("wss://" + window.location.host + '/' + link);
+        connect4WebSocket.onopen = function(e) {
+            console.log("WebSocket connection established connect4");
+            let checkUserIdInterval = setInterval(() => {
+                if (userId && connect4WebSocket.readyState === WebSocket.OPEN) {
+                    connect4WebSocket.send(JSON.stringify({ type: 'join', player_id: `${userId}` }));
+                    clearInterval(checkUserIdInterval); // Stop checking once the message is sent
+                }
+            }, 100); // Check every 100 milliseconds
         }
-      }, 100); // Check every 100 milliseconds
+    } catch (e) {
+        console.log("WebSocket connection failed:", e);
+    }
+
+
+    connect4WebSocket.onclose = function(e) {
+        console.log(e);
+        console.log("WebSocket connection closed");
+    }
+
+    connect4WebSocket.onerror = function(error) {
+        console.error("WebSocket error:", error);
+    }
+    
+    connect4WebSocket.onmessage = async function(e) {
+        console.log("After receiving")
+        let data = JSON.parse(e.data);
+        console.log(data)
+        switch (data.type) {
+            case 'error':
+                handleError(data.error_message);
+                console.log(data.error_message);
+                break;
+            case 'Game is full':
+                console.log("Game is full");
+                let divGameNotExist = document.getElementById("overlay");
+                divGameNotExist.style.display = "flex";
+                divGameNotExist.innerText = "Game is full... Redirecting to game page";
+                await sleep(3000);
+                htmx.ajax('GET', '/game/', {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', '/game/');
+                });
+                break;
+            case 'Game does not exist':
+                console.log("Game does not exist");
+                divGameNotExist = document.getElementById("overlay");
+                divGameNotExist.style.display = "flex";
+                divGameNotExist.innerText = "Game does not exist... Redirecting to game page";
+                await sleep(3000);
+                htmx.ajax('GET', '/game/', {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', '/game/');
+                });
+                break;
+            case 'Game has already finished':
+                console.log("Game does not exist");
+                divGameNotExist = document.getElementById("overlay");
+                divGameNotExist.style.display = "flex";
+                divGameNotExist.innerText = "Game has already finished... Redirecting to game page";
+                await sleep(3000);
+                htmx.ajax('GET', '/game/', {
+                    target: '#main-content', // The target element to update
+                    swap: 'innerHTML', // How to swap the content
+                }).then(response => {
+                    history.pushState({}, '', '/game/');
+                });
+                break;
+            case 'reset':
+                gameFinished(data.winner);
+                break;
+            case 'timer_update':
+                let divTimer = document.getElementById("timer");
+                divTimer.style.display = "flex";
+                divTimer.innerHTML = data.timer;
+                playerTurn = data.playerTurn;
+                playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
+                let user, opp;
+                if (data.player1.id == userId)
+                {
+                    user = data.player1;
+                    opp = data.player2;
+                }
+                else
+                {
+                    user = data.player2;
+                    opp = data.player1;
+                }
+                curHeader.innerHTML = "Current player: " + user.color;
+                const playerInfo = {
+                    img: user.img.startsWith("profile_pics") ? `/media/${user.img}` : user.img,
+                    username: user.username + " (" + user.color + ")"
+                };
+                try {
+                    const opponentInfo = {
+                        img: opp.img.startsWith("profile_pics") ? `/media/${opp.img}` : opp.img,
+                        username: opp.username + " (" + opp.color + ")"
+                    };
+                    updatePlayerInfo(playerInfo, opponentInfo);
+                } catch (e) {
+                    updatePlayerInfo(playerInfo, { img: "/media/profile_pics/default.png", username: "Waiting for opponent" });
+                }
+                updateBoard(data);
+                break;
+            case 'timeout':
+                if (data.winner == currentPlayer)
+                    console.log("You win due to timeout");
+                else
+                    console.log("You lose due to timeout");
+                connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: data.winner }));
+                break;
+            case 'roleGiving':
+                roleGiving(data);
+                break;
+            default:
+                board = data.board;
+                let playerPlayed = data.player;
+                let tile = document.getElementById(data.row + " " + data.column);
+                tile.classList.add(playerPlayed);
+                playerTurn = data.next_player;
+                playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
+    
+                if (checkWin(data.row, data.column)) {
+                    connect4WebSocket.send(JSON.stringify({ type:"reset", player_id: `${userId}`, winner: playerPlayed}));
+                    return;
+                }
+        }
+    }
 }
 
-connect4WebSocket.onclose = function(e) {
-    console.log("WebSocket connection closed");
-    setTimeout(() => {
-        connect4WebSocket = new WebSocket("wss://" + window.location.host + "/ws/game/connect4/" + gameId + "/");
-    }, 1000);
+function roleGiving(data)
+{
+    currentPlayer = data.role;
+    curHeader.innerHTML = "Current player: " + currentPlayer;
+    playerTurn = data.playerTurn;
+    playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
+    const playerInfo = {
+        img: data.playerInfo.img.startsWith("profile_pics") ? `/media/${data.playerInfo.img}` : data.playerInfo.img,
+        username: data.playerInfo.username + " (" + data.role + ")"
+    };
+    let opponent;
+    if (data.role == "yellow")
+        opponent = "red"
+    else
+        opponent = "yellow"
+    try {
+        const opponentInfo = {
+            img: data.opponentInfo.img.startsWith("profile_pics") ? `/media/${data.opponentInfo.img}` : data.opponentInfo.img,
+            username: data.opponentInfo.username + " (" + opponent + ")"
+        };
+        updatePlayerInfo(playerInfo, opponentInfo);
+    } catch (e) {
+        updatePlayerInfo(playerInfo, { img: "/media/profile_pics/default.png", username: "Waiting for opponent" });
+    }
+    firstMove = false;
+    // check if the board is empty
+    updateBoard(data);
+}
+
+function updateBoard(data) {
+    board = data.board;
+    for (var row = 0; row < 6; row++) {
+        for (var col = 0; col < 7; col++) {
+            if (board[row][col] == 'red') {
+                document.getElementById(row + " " + col).classList.add("red");
+            } else if (board[row][col] == 'yellow') {
+                document.getElementById(row + " " + col).classList.add("yellow");
+            }
+        }
+    }
 }
 
 var board;
@@ -37,120 +222,15 @@ function updatePlayerInfo(playerInfo, opponentInfo) {
     document.getElementById('player2-name').innerText = opponentInfo.username;
 }
 
-connect4WebSocket.onerror = function(error) {
-    console.error("WebSocket error:", error);
-}
-
-connect4WebSocket.onmessage = async function(e) {
-    console.log("After receiving")
-    let data = JSON.parse(e.data);
-    console.log(data)
-    switch (data.type) {
-        case 'error':
-            handleError(data.error_message);
-            console.log(data.error_message);
-            break;
-        case 'roomFull':
-            sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-            console.log("Room is full");
-            await sleep(3000);
-            htmx.ajax('GET', '/game/game/', {
-                target: '#main-content', // The target element to update
-                swap: 'innerHTML', // How to swap the content
-            }).then(response => {
-                history.pushState({}, '', '/game/game/');
-            });
-            break;
-        case 'reset':
-            gameFinished(data.winner);
-            declareWinner(data.winner);
-            break;
-        case 'timer_update':
-            let divTimer = document.getElementById("timer");
-            divTimer.style.display = "flex";
-            divTimer.innerHTML = data.timer;
-            break;
-        case 'timeout':
-            if (data.winner == currentPlayer)
-                console.log("You win due to timeout");
-            else
-                console.log("You lose due to timeout");
-            connect4WebSocket.send(JSON.stringify({ type: "reset", player_id: `${userId}`, winner: data.winner }));
-            break;
-        case 'roleGiving':
-            currentPlayer = data.role;
-            playerTurn = data.playerTurn;
-            curHeader.innerHTML = "Current player: " + currentPlayer;
-            playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
-            board = data.board;
-            const playerInfo = {
-                img: data.playerInfo.img.startsWith("profile_pics") ? `/media/${data.playerInfo.img}` : data.playerInfo.img,
-                username: data.playerInfo.username + " (" + data.role + ")"
-            };
-
-            if (data.role == "yellow")
-                opponent = "red"
-            else
-                opponent = "yellow"
-            try {
-                const opponentInfo = {
-                    img: data.opponentInfo.img.startsWith("profile_pics") ? `/media/${data.opponentInfo.img}` : data.opponentInfo.img,
-                    username: data.opponentInfo.username + " (" + opponent + ")"
-                };
-                updatePlayerInfo(playerInfo, opponentInfo);
-            } catch (e) {
-                updatePlayerInfo(playerInfo, { img: "/media/profile_pics/default.png", username: "Waiting for opponent" });
-            }
-            firstMove = false;
-            // check if the board is empty
-            for (var row = 0; row < 6; row++) {
-                for (var col = 0; col < 7; col++) {
-                    if (board[row][col] == 'red') {
-                        document.getElementById(row + " " + col).classList.add("red");
-                    } else if (board[row][col] == 'yellow') {
-                        document.getElementById(row + " " + col).classList.add("yellow");
-                    }
-                }
-            }
-            break;
-        default:
-            board = data.board;
-            let playerPlayed = data.player;
-            let tile = document.getElementById(data.row + " " + data.column);
-            tile.classList.add(playerPlayed);
-            playerTurn = data.next_player;
-            playerTurnHeader.innerHTML = "Player turn: " + playerTurn;
-
-            if (checkWin(data.row, data.column)) {
-                connect4WebSocket.send(JSON.stringify({ type:"reset", player_id: `${userId}`, winner: playerPlayed}));
-                return;
-            }
-            playerMove(data.column, playerTurn);
-    }
-}
-
-const turnTimeLimit = 30000;
-
-function playerMove() {
-    checkPlayer = playerTurn == "red" ? "yellow" : "red";
-    // startTurnTimer(checkPlayer);
-}
-
-function declareWinner(winner) {
-    console.log(`${winner} wins due to timeout!`);
-}
-
-playerMove();
-
-function gameFinished(winner) {
+async function gameFinished(winner) {
     document.getElementById('timer').innerText = '';
     localStorage.removeItem('remainingTime');
     localStorage.removeItem('currentPlayer');
     console.log(`${winner} wins!`);
-    let divOpponentDisconnected = document.getElementById("overlay");
+    let overlay = document.getElementById("overlay");
     document.getElementById("timer").style.display = "none";
     // const timerText = document.getElementById("timer-text");
-    const reconnect = document.getElementById("reconnect");
+    // const reconnect = document.getElementById("reconnect");
     const cancel = document.getElementById("cancel");
     const winnerText = document.getElementById("winnerText");
     if (winner == currentPlayer)
@@ -163,7 +243,61 @@ function gameFinished(winner) {
         winnerText.innerHTML = "You lose";
         winnerText.style.color = "red";
     }
-    [reconnect, cancel, divOpponentDisconnected, winnerText].forEach(el => el.style.display = "flex");
+    if (winner == "draw")
+    {
+        winnerText.innerHTML = "Draw!";
+        winnerText.style.color = "white";
+    }
+    [cancel, overlay, winnerText].forEach(el => el.style.display = "flex");
+    cancelAfterSwapListener = (event) => {
+        console.log("cancel afterswap called");
+        if (event.detail.pathInfo.path === '/game/') {
+            console.log("cancel redirection called");
+            history.pushState({}, '', '/game/');
+            htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
+            // htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
+        }
+    };
+    
+    cancel.addEventListener("click", () => {
+        htmx.on('htmx:afterSwap', cancelAfterSwapListener);
+        htmx.ajax('GET', '/game/', {
+            target: '#main-content', // The target element to update
+            swap: 'innerHTML', // How to swap the content
+        });
+    });
+    // reconnectAfterSwapListener = (event) => {
+    //     console.log("reconnect afterswap called");
+    //     if (event.detail.pathInfo.path === '/game/ranked/') {
+    //         console.log("reconnect redirection called");
+    //         history.pushState({}, '', '/game/ranked/');
+    //         let intervalId = setInterval(() => {
+    //             let divConnect4 = document.getElementById("wrap");
+    //             if (divConnect4) {
+    //                 clearInterval(intervalId);
+    //                 createSocket("connect4");
+    //                 const playerDiv = document.getElementById("player-btn");
+    //                 const opponentDiv = document.getElementById("opps-btn");
+    //                 const gameDiv = document.getElementById("game-type");
+    //                 const vsDiv = document.getElementById("vs-text");
+    //                 const waitingDiv = document.getElementById("waiting-btn");
+    //                 [playerDiv, opponentDiv, gameDiv, vsDiv].forEach(el => el.style.display = "none");
+    //                 [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
+    //             }
+    //         }, 100);
+    //         htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
+    //         htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
+    //     }
+    // };
+    
+    // reconnect.addEventListener("click", () => {
+    //     console.log("reconnect clicked");
+    //     htmx.on('htmx:afterSwap', reconnectAfterSwapListener);
+    //     htmx.ajax('GET', '/game/ranked/', {
+    //         target: '#main-content', // The target element to update
+    //         swap: 'innerHTML', // How to swap the content
+    //     });
+    // });
 }
 
 function checkWin(row, col) {
@@ -279,8 +413,10 @@ function handleError(message)
 }
 
 document.addEventListener('htmx:beforeSwap', function(event) {
-    connect4WebSocket.close();
+    if (connect4WebSocket && connect4WebSocket.readyState === WebSocket.OPEN)
+        connect4WebSocket.close();
     console.log("htmx:beforeSwap event listener matchMakingSocket close");
-});
+}, {once: true});
 
+connect4Load();
 setGame();

@@ -18,6 +18,38 @@
     background-attachment: fixed;
 }
 
+#leaderboard-content .select-game-history {
+    width: 70%;
+    margin: auto;
+    height: 60px;
+    margin-bottom: 70px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#leaderboard-content .select-game-history-option {
+    background-color: var(--to-teal-3-rgba);
+    padding: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: ease-in-out 0.3s;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+#leaderboard-content .select-game-history-option:hover {
+    background-color: var(--to-teal-5-rgba);
+}
+
+#leaderboard-content .select-game-history-option.active {
+    background-color: var(--to-teal-5-rgba);
+}
+
 #leaderboard-content .podium-leaderboard {
     width: 50%;
     height: fit-content;

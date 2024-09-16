@@ -1,5 +1,3 @@
-
-
 async function loadProfile() {
 
 	handlerUpdatePP();
@@ -38,7 +36,7 @@ async function APIupdatePP(file) {
 				'X-CSRFToken': getCookie('csrftoken'),
 			},
 			mode: 'same-origin',
-			body: formData,
+			body: formData, 
 		});
 		resp = await resp.json();
 		resolve(resp);
@@ -150,11 +148,24 @@ async function toggleEditPanel() {
 			try {
 				let username = editData.form.username.value;
 				let email = editData.form.email.value;
+				if (username == '' || email == '') {
+					let errorBox = document.getElementById('error-content');
+					errorBox.textContent = 'Please fill in all fields';
+					return;
+				}
+				if (!validateEmailUpdate(email)) {
+					let errorBox = document.getElementById('error-content');
+					errorBox.textContent = 'Invalid email';
+					return;
+				}
 				let resp = await APIudpateData(username, email);
 				if (resp.success == false) {
 					let errorBox = document.getElementById('error-content');
 					errorBox.textContent = resp.error;
 					return;
+				} else {
+					let errorBox = document.getElementById('error-content');
+					errorBox.textContent = 'Your profil has been updated';
 				}
 				document.getElementById('username').textContent = resp.new_username;
 				document.getElementById('username-profil').textContent = resp.new_username;
@@ -292,7 +303,18 @@ async function innerShowProgress(games, type, currentUser) {
 		progressButton.style.display = 'block';
         let href = (type === 'connect4' ? `/progress/connect4?user=${currentUser}` : `/progress/pong?user=${currentUser}`);
 		console.log(href);
-		progressButton.innerHTML = `<a id="progress-link" hx-get="${href}" hx-target="#main-content" hx-push-url="true" href="${href}" class="btn">Show Progress</a>`
+		progressButton.innerHTML = `<a id="progress-link" hx-get="${href}" hx-target="#main-content" hx-push-url="true" href="${href}" class="btn">Show My Progress</a>`
+		let progressLink = document.getElementById('progress-link');
+		progressLink.addEventListener('click', async (e) => {
+			e.preventDefault();
+			let href = e.currentTarget.href;
+			htmx.ajax('GET', href, {
+				target: '#main-content', // The target element to update
+				swap: 'innerHTML', // How to swap the content
+			}).then(response => {
+				history.pushState({}, '', href);
+			});
+		});
 	} catch (e) {
 		console.error(e);
 	}
@@ -317,4 +339,11 @@ async function loadStats(type) {
 	} catch (e) {
 		console.error(e);
 	}
+}
+
+// ===================== CHECK UPDATE DATA	 =====================
+
+function validateEmailUpdate(email) {
+	const re = /\S+@\S+\.\S+/;
+	return re.test(email);
 }

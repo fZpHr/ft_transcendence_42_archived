@@ -99,13 +99,13 @@ async function toggleSubmitForm() {
                         }
                         if (result.success) {
                             htmx.ajax('GET', result.redirect_url || '/', {
-                                target: '#main-content', // The target element to update
-                                swap: 'innerHTML', // How to swap the content
-                            }).then(response => {
+                                target: '#main-content',
+                                swap: 'innerHTML',
+                            }, {once: true}).then(response => {
                                 history.pushState({}, '', result.redirect_url || '/');
                             });
                         } else {
-                            event.errorBox.innerHTML = error;
+                            event.errorBox.innerHTML = 'Invalid credentials. Please try again.';
                             event.errorBox.style.display = 'block';
                         }
                     } catch (error) {
@@ -163,12 +163,15 @@ async function toggleChangeForm() {
     });
 }
 
-
 async function toggle42Login() {
     const btn42 = document.getElementById('btn-42');
-
+    
     btn42.addEventListener('click', () => {
-        window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-484f3af86d262f1a98fc094a4116618c1c856647f7eb4232272966a9a3e83193&redirect_uri=https%3A%2F%2F10.12.249.33%2Fapi%2Fregister-42%2F&response_type=code';
+        const hostname = window.location.hostname;
+        const redirectUri = `https://${hostname}:42424/api/register-42/`;
+        const clientId = 'u-s4t2ud-74438314e8cff2be68aee7a119f4c95bff6ba35b11a2bf5c2627a31a869c9f28';
+        const authUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+        window.location.href = authUrl;
     });
 }
 
@@ -178,7 +181,8 @@ async function toogleFiledInputs(inputs) {
             checkIfInputIsFiled(input);
             if (input.type === 'email') {
                 checkEmail(input);
-            } else if (input.type === 'password') {
+            } else if (input.id === 'login-pass' || input.id === 'register-pass') {
+                console.log('password');
                 checkPassword(input);
             }
         });
@@ -192,6 +196,7 @@ async function toggleShowPasswords() {
     for (let i = 0; i != events.length; i++) {
         if (events[i].event && events[i].button) {
             events[i].event.addEventListener('click', function () {
+                console.log(events[i]);
                 const type = events[i].button.getAttribute('type') === 'password' ? 'text' : 'password';
                 events[i].button.setAttribute('type', type);
                 events[i].event.innerHTML = type == 'password' ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
@@ -233,6 +238,7 @@ async function checkEmail(input) {
 // for password
 
 async function checkPassword(input) {
+    console.log('checkPassword');
     let validIndicator = input.parentElement.querySelector('.valid-indicator');
     if (validatePassword(input.value)) {
         validIndicator.innerHTML = '<i class="fa-solid fa-check-circle"></i>';

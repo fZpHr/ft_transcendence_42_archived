@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+
 {% load static %}
 {% block title %}Login{% endblock %}
 {% block content %}
@@ -22,10 +22,6 @@
         {% include 'login/other_connexion.html' %}
     </div>
 </div>
-
 {% include 'login/demo_section.html' %}
 <script src="{% static 'login/js/login.js' %}"></script>
-{% endblock %}
-
-{% block extra_scripts %}
 {% endblock %}

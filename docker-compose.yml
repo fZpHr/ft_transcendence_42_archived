@@ -142,6 +142,7 @@ services:
       - .env
     volumes:
       - ./data/logs/web/:/usr/src/app/logs/
+      - ./common/web/conf/:/usr/src/app/
     # restart: on-failure
     networks:
       transcendence:

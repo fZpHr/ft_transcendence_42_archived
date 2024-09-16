@@ -17,12 +17,17 @@ def login_required(view_func):
 
 @login_required
 def leaderboard(request):
-    allPlayer = Player.objects.all().order_by('eloPong').values().reverse()[:10]
-    for player in allPlayer:
+    allPlayerPong = Player.objects.all().order_by('eloPong').values().reverse()[:10]
+    allPlayerConnect4 = Player.objects.all().order_by('eloConnect4').values().reverse()[:10]
+    for player in allPlayerPong:
+        if not 'http' in player['img']:
+            player['img'] = settings.MEDIA_URL + player['img']
+    for player in allPlayerConnect4:
         if not 'http' in player['img']:
             player['img'] = settings.MEDIA_URL + player['img']
     context = {
-        'leaderboard': allPlayer,
+        'leaderboardPong': allPlayerPong,
+        'leaderboardConnect4': allPlayerConnect4,
     }
     if (request.htmx):
         return render(request, 'leaderboard/leaderboard.html', context)
