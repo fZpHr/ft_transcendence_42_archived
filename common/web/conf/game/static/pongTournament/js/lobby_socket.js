@@ -13,7 +13,6 @@ async function setUserToLog(userId) {
 
 async function setUserToLogout(userId) {
     try {
-        console.log('user logout =>', userId);
         let a= 'player-'+ userId
         let userBox = document.getElementById(a);
         let playerStatus = userBox.children[1];
@@ -86,7 +85,6 @@ async function connectLobbySocket(roomName) {
         wsLobby = new WebSocket(`wss://${window.location.host}/ws/lobby/${roomName}/`);
         
         wsLobby.onopen = function () {
-            // console.log('[WebSocket Lobby] => Connection established to room =>', roomName);
             let msg = userId + ' | ping';
             sendToWsLobby('ping', msg);
         };
@@ -98,7 +96,6 @@ async function connectLobbySocket(roomName) {
         };
         
         wsLobby.onclose = function (e) {
-            console.log('oui   ');
             console.log('[WebSocket] => Connection closed:', e);
         };
 

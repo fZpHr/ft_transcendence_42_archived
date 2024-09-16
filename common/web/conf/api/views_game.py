@@ -54,7 +54,9 @@ def createLobby(request):
     try:
         user = request.user
         owner = Player.objects.get(username=user.username)
+        lobbyName = request.GET.get('lobbyName')
         lobby = Lobby.objects.create(owner=owner)
+        lobby.name = lobbyName
         lobby.players.add(owner)
         lobby.save()
         return Response({"lobby": lobby.UUID}, status=200)
