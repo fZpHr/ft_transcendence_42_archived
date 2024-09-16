@@ -23,11 +23,11 @@
 				<a hx-get="{% url 'profil' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'profil' %}">Profil</a>
 			</li>
 			<li class="nav-item">
-				<a hx-get="{% url 'logout' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'logout' %}">Log out</a>
+				<a id="logout" hx-get="{% url 'logout' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'logout' %}">Log out</a>
 			</li>
 			{% else %}
 			<li class="nav-item">
-				<a id="login-nav" hx-get="{% url 'login' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'login' %}">Login</a>
+				<a id="login-nav" hx-ext="logout-redirect" hx-get="{% url 'login' %}" hx-target="#main-content" hx-push-url="true" class="nav-link" href="{% url 'login' %}">Login</a>
 			</li>
 			{% endif %}
 		</ul>

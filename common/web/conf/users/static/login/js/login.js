@@ -98,6 +98,7 @@ async function toggleSubmitForm() {
                             errorElement.style.display = 'none';
                         }
                         if (result.success) {
+                            userIsAuthenticated = true;
                             htmx.ajax('GET', result.redirect_url || '/', {
                                 target: '#main-content',
                                 swap: 'innerHTML',
@@ -165,6 +166,9 @@ async function toggleChangeForm() {
 
 async function toggle42Login() {
     const btn42 = document.getElementById('btn-42');
+    if (!btn42) {
+        return;
+    }
     
     btn42.addEventListener('click', () => {
         const hostname = window.location.hostname;

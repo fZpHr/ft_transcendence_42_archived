@@ -53,6 +53,7 @@ function createSocket(gameType) {
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
           }).then(response => {
+            console.log(response)
             history.pushState({}, '', '/game/' + data.game_type + '?id=' + data.game_id);
           });
         });
@@ -62,10 +63,11 @@ function createSocket(gameType) {
     }
   };
 
+  let countdown = null;
   function countdownText()
   {
     let count = 5;
-    let countdown = setInterval(() => {
+    countdown = setInterval(() => {
       if (count === 0) {
         clearInterval(countdown);
         console.log("Redirecting to game page");
@@ -73,6 +75,7 @@ function createSocket(gameType) {
           target: '#main-content', // The target element to update
           swap: 'innerHTML', // How to swap the content
         }).then(response => {
+          console.log(response)
           history.pushState({}, '', '/game/');
         })
       }
@@ -134,15 +137,28 @@ function createSocket(gameType) {
     } else {
       loadingElement.textContent = 'Waiting for players.';
     }
-  
   }
+
+  document.body.addEventListener('htmx:historyRestore', function(evt) {
+    console.log("Back button or forward button pressed");
+    matchMakingSocket.close();
+    heartbeat = clearInterval(heartbeat);
+    clearInterval(loadingText);
+    if (countdown) {
+        clearInterval(countdown);
+    }
+    history.pushState({}, '', '/game/');
+  }, {once: true});
   
   document.addEventListener('htmx:beforeSwap', function(event) {
     /* TODO remove all event listeners here*/
-    matchMakingSocket.close();
     console.log("htmx:beforeSwap event listener matchMakingSocket close");
+    matchMakingSocket.close();
     heartbeat = clearInterval(heartbeat);
     clearInterval(loadingText);
+    if (countdown) {
+      clearInterval(countdown);
+    }
   }, {once: true});
 }
 
@@ -155,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     target: '#main-content', // The target element to update
     swap: 'innerHTML', // How to swap the content
   }).then(response => {
+    console.log(response)
     history.pushState({}, '', '/game/');
   });
 });
