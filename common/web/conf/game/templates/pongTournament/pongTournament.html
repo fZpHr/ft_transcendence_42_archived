@@ -15,5 +15,15 @@
     <div id="pongTournament-btn">
         <span>Create new lobby</span>
     </div>
+    <div class="lobby-form" id="pongTournament-form">
+        <div class="lobby-form-head">
+            <span>Create your Tournament</span>
+            <span id="cancel-form"><i class="fas fa-xmark"></i></span>
+        </div>
+        <div class="lobby-form-main">
+            <input id="lobby-name" type="text" placeholder="tournamentName" value="tournamentName">
+            <button id="submit-lobby">Create</button>
+        </div>
+    </div>
     <script src="{% static 'pongTournament/js/pongTournament.js' %}"></script>
 </div>

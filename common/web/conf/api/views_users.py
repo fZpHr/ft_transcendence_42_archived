@@ -225,15 +225,9 @@ def getNumberOfGames(request):
 
         id = request.query_params["user"]
         typeGame = request.query_params["type"]
-        logger.info(f"=========> DEBOG FOR PLAYER {id}")
-        logger.info(f"=========>=========>Type: {typeGame}")
-
-
         player = Player.objects.get(id=id)
         games = (Game.objects.filter(player1=player, finish=True, type=typeGame) | Game.objects.filter(player2=player, finish=True, type=typeGame))
-        logger.info(f"=========>=========>Games: {games}")
         games_count = games.count()
-        logger.info(f"=========>=========>Games count: {games_count}")
         return Response({'value': games_count}, status=200)
     except Player.DoesNotExist:
         return Response({"error": "Player not found"}, status=404)

@@ -20,3 +20,20 @@
     width: 250px;
     height: 250px;
 }
+
+#btnSetWinner {
+    background-color: var(--to-teal-3-rgba);
+    color: var(--text-color);
+    width: 100px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    transition: ease-in-out 0.3s;
+}
+
+#btnSetWinner:hover {
+    color: var(--to-teal-3-rgba);
+    background-color: var(--text-color);
+}

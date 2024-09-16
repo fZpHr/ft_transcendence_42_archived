@@ -184,7 +184,6 @@ async function innerSocialUser(socialUsers) {
         anchors.forEach(anchor => {
             anchor.addEventListener('click', async (event) => {
                 event.preventDefault();
-                console.log(event.currentTarget.href);
                 let href = event.currentTarget.href;
                 htmx.ajax('GET', href, {
                     target: '#main-content', // The target element to update
@@ -255,7 +254,6 @@ async function toggleSocialMenu() {
         }
         APIclearNotifSocial();
         await updateAllNotif();
-        console.log('Social menu toggled and remove notif');
     } catch (error) {
         console.error('Failed to toggleSocialMenu', error);
     }

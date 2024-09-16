@@ -37,7 +37,6 @@ def joinGame(request):
         for game in tournament_games:
             if game.players.filter(id=currentPlayer.id).exists() :
                 game_id = game.id
-                logger.info("Player is in game with id: {game_id}")
 
         return HttpResponse("Player is not in any of the tournament's games. Proceed with joining logic.")
     except Lobby.DoesNotExist:
@@ -66,10 +65,7 @@ def pong3D(request):
 @login_required
 def gameHome(request):
     if (request.htmx):
-        logger.info("htmx")
-        logger.info(request)
         return render(request, "home/home.html")
-    logger.info("no htmx")
     return render(request, "home/home_full.html")
 
 # view valide
@@ -100,11 +96,7 @@ def pongPrivGame(request):
         return render(request, "pongPrivGame/pongPrivGame.html", {"error": "Game not found"})
     player.img = player.img.name.startswith('profile_pics/') and '/media/' + player.img.name or player.img
     opponent.img = opponent.img.name.startswith('profile_pics/') and '/media/' + opponent.img.name or opponent.img
-    logger.info('DEBOG PRIVGAME')
-    logger.info(invitGame[0].game_id.UUID)
     privGame = Game.objects.get(UUID=invitGame[0].game_id.UUID)
-    logger.info('DEBOG GET PRIVGAME')
-    logger.info(privGame)
     data = {
         'player' : {
             'id': player.id,
@@ -124,7 +116,6 @@ def pongPrivGame(request):
             'p2Id' : privGame.player2.id,
         }
     }
-    logger.info(data)
     return render(request, "pongPrivGame/pongPrivGame.html", data)
 
 @login_required
@@ -148,30 +139,38 @@ def pongTournamentLobby(request):
                     player.img = '/media/' + img_path
         ia_players = lobby.ai_players.all()
         if request.htmx:
-            logger.info("htmx")
             return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
-        logger.info("no htmx")
         return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
     except Lobby.DoesNotExist:
         if request.htmx:
-            logger.info("htmx")
             return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
-        logger.info("no htmx")
         return render(request, "pongTournament/pongTournament_full.html", {"error": "Lobby not found"})
     except Exception as e:
         if request.htmx:
-            logger.info("htmx")
             return render(request, "pongTournament/pongTournament.html", {"error": "An unexpected error occurred"})
-        logger.info("no htmx")
         return render(request, "pongTournament/pongTournament_full.html", {"error": "An unexpected error occurred"})
 
 @login_required
 def pongTournamentGame(request):
     try:
-        gameId = request.GET.get('gameId', 'default_value')
-        logger.info("==============> %s", gameId)
+        user = request.user
+        player = Player.objects.get(username=user.username)
+        lobbyUUID = request.GET.get('lobby_id', 'default_value')
+        tournament = Tournament.objects.get(UUID_LOBBY=lobbyUUID)
+        games = Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament)
+
+        gameId = -1
+        for game in games:
+            if game.players.filter(id=player.id).exists() or game.ai_players.filter(id=player.id).exists():
+                if game.winner_player is None and game.winner_ai is None:
+                    gameId = game.id
+                    break
+        
+        if gameId == -1:
+            return render(request, "pongTournament/pongTournament_full.html", {"error": "Game not found"})
+        
+
         game = Game_Tournament.objects.get(id=gameId)
-        logger.info("==============> %s", game)
         participantsPlayer = game.players.all()
         participantsAI = game.ai_players.all()
         participants = []
@@ -183,12 +182,11 @@ def pongTournamentGame(request):
             })
         for player in participantsAI:
             participants.append({
-                'id': '-1',
+                'id': player.id,
                 'username': 'ia',
                 'img': 'ia'
             })
 
         return render(request, "pongTournament/pongTournamentGame.html", {'userId': 0, 'game': game, 'participants': participants})
     except Exception as e:
-        logger.info(e)
         return render(request, "pongTournament/pongTournament.html", {"error": "Game not found"})

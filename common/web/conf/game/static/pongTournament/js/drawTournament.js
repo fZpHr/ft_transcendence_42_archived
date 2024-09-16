@@ -1,3 +1,60 @@
+
+// =================== Lobby part ===================
+
+async function deleteLobbyBody() {
+    try {
+        let lobbyBody = document.getElementById('slop-content');
+        lobbyBody.innerHTML = '';
+        let loader = document.getElementById('loader-container');
+        loader.style.display = 'block';
+    } catch (error) {
+        console.error('Failed to deleteLobbyBody', error);
+    }
+
+}
+
+
+async function loadCanvaTournament(tournamentINfo, NbrPlayer) {
+    try {
+        await innerCanvaTournament();
+        let ctx = await initCanvas();
+        await drawTournament(ctx, tournamentINfo.gameTournament, NbrPlayer);
+        
+        let loader = document.getElementById('loader-container');
+        loader.style.display = 'none';
+        
+        await displayCanvaTournament();
+        console.log('tournament is draw');
+    } catch (error) {
+        console.error('Failed to innerCanvaTournament', error);
+    }
+}
+
+async function innerCanvaTournament() {
+    try {
+        let element = document.getElementById('lobby-body');
+        element.innerHTML = `
+            <div id="tournamentConainterOrga" style="display: none;">
+            <canvas width="1000" height="600" style="background-color: black;" id="tournamentOrganized"></canvas>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Failed to innerCanvaTournament', error);
+    }
+}
+
+async function displayCanvaTournament() {
+    try {
+        let tournamentBoxOrga = document.getElementById('tournamentConainterOrga');
+        tournamentBoxOrga.style.display = 'block';
+    } catch (error) {
+        console.error('Failed to displayCanvaTournament', error);
+    }
+}
+
+
+// =================== Cava part ===================
+
 async function initCanvas() {
     try {
         const canvas = document.getElementById('tournamentOrganized');
@@ -28,7 +85,6 @@ async function getProduitFacteurPremier(nbr) {
 
 function getNbrPartyByTour(nbrParticipants, tour, DFP) {
     if (DFP.length === 0) {
-        console.log('DFP is empty');
         return 0;
     }
 
@@ -46,7 +102,6 @@ function getNbrPartyByTour(nbrParticipants, tour, DFP) {
 
 function getNbrPlayerForGamePerTour(nbrParticipants, tour, DFP) {
     if (DFP.length === 0) {
-        console.log('DFP is empty');
         return 0;
     }
 
@@ -67,7 +122,6 @@ function getNbrPlayerForGamePerTour(nbrParticipants, tour, DFP) {
 
 function getNbrGame(nbrParticipants, DFP) {
     if (DFP.length === 0) {
-        console.log('DFP is empty');
         return 0;
     }
     let nbrGame = 0;
@@ -80,13 +134,16 @@ function getNbrGame(nbrParticipants, DFP) {
     return Math.floor(nbrGame);
 }
 
-async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
+async function drawTournament(ctx, gameTournament, NbrPlayer) {
     let canvasWidth = ctx.canvas.width;
     let canvasHeight = ctx.canvas.height;
 
+    console.log('===========DRAW TOURNAMENT===========');
+    console.log('NbrPlayer', NbrPlayer);
+    console.log('gameTournament', gameTournament);
+
     let factor = await getProduitFacteurPremier(NbrPlayer);
-    let tournament = tournamentorganized.tournament;
-    let gamesTab = tournament.games;
+    let gamesTab = gameTournament;
     let nbrRound = factor.length;
     let currentCanvasWidth = canvasWidth;
     let currentCanvasHeight = canvasHeight;
@@ -94,6 +151,7 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
     let currentStartY = 0;   
     let splitWidth = 2 * factor.length - 1;    
     let splitHeight;
+
     
     for (let i = 0; i < nbrRound; i++) {
         let nbrGameForTour = getNbrPartyByTour(NbrPlayer, i + 1, factor);
@@ -108,7 +166,6 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
         for (let j = 0; j < nbrGameForTour; j++) {
             let xstart;
             let game = gamesTab.shift();
-        
             nbrPlayerPerGame = getNbrPlayerForGamePerTour(NbrPlayer, i + 1, factor);
             ystep = (currentCanvasHeight / splitHeight) / nbrPlayerPerGame;
             if (j % 2 == 0) {
@@ -134,16 +191,45 @@ async function drawTournament(ctx, tournamentorganized, NbrPlayer) {
 
 async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jumpHeight, nbrParticipants, directionArrow, canvasWidth, splitWidth) {
     try {
+        console.log('   g[id] => ', game.id+ ' | g[layer] =>' + game.layer + ' | g[next_game] =>' + game.next_game);
+        // console.log('   game[player] => ', game.players);
+        // console.log('   game[winner_player] => ', game.winner_player);
+        // console.log('   game[winner_ai] => ', game.winner_ai);
+        
         let firstPoints = jumpHeight + (ystep / 2);
         let lastPoints = firstPoints;
+        let winnerType;
+
+        if (game.winner_player != null)
+            winnerType = 'player';
+        else if (game.winner_ai != null)
+            winnerType = 'ai';
+        else
+            winnerType = 'none';
+
+
         for (let i = 0; i < nbrParticipants; i++) {
             let yplayer = jumpHeight + (ystep / 2) + ystep * i;
             let len = canvasWidth / splitWidth / 2;
-            
+            let playerImg = 'https://png.pngtree.com/png-clipart/20191121/original/pngtree-sign-waiting-download-on-internet-icon-flat-style-png-image_5153330.jpg'
+            if (game.players.length > 0) {
+                playerImg = game.players[i].img;
+                playerImg = playerImg.startsWith('profile_pics') ? '/media/' + playerImg : playerImg;
+            }
             lastPoints = yplayer;
             
+
             drawConnexionGame(ctx, currentStartX, yplayer, len ,directionArrow, roundNum, nbrRound, i % 2 == 0);
-            drawPlayer(ctx, "https://cdn.intra.42.fr/users/27082b5f4fe8df2f838153a15ea9e679/bberkrou.jpg", currentStartX, yplayer);
+            if (winnerType != 'none') {
+                if (winnerType == 'player' && game.winner_player == game.players[i].id) {
+                    drawCircle(ctx, currentStartX, yplayer, 30, 'green');
+                } else if (winnerType == 'ai' && game.winner_ai == game.players[i].id) {
+                    drawCircle(ctx, currentStartX, yplayer, 30, 'green');
+                } else {
+                    drawCircle(ctx, currentStartX, yplayer, 30, 'red');
+                }
+            }
+            drawPlayer(ctx, playerImg, currentStartX, yplayer);
         }
         if (roundNum == nbrRound - 1) {
             drawLine(ctx, currentStartX, firstPoints, currentStartX, lastPoints);
@@ -174,38 +260,46 @@ async function drawLine(ctx, x, y, x2, y2) {
 async function drawConnexionGame(ctx, x, y, len, directionArrow, roundNum, nbrRound, isLeft) {
     try {
         ctx.beginPath();
-        if (roundNum != 0 && roundNum != nbrRound - 1) {
+        ctx.strokeStyle = 'white';
+
+        if (roundNum !== 0 && roundNum !== nbrRound - 1) {
             ctx.moveTo(x - len, y);
             ctx.lineTo(x + len, y);
-            ctx.strokeStyle = 'white';
-            ctx.stroke();
-        } else if (roundNum == 0) {
+        } else if (roundNum === 0) {
             if (directionArrow) {
                 ctx.moveTo(x, y);
                 ctx.lineTo(x + len, y);
-                ctx.strokeStyle = 'white';
-                ctx.stroke();
             } else {
                 ctx.moveTo(x, y);
                 ctx.lineTo(x - len, y);
-                ctx.strokeStyle = 'white';
-                ctx.stroke();
             }
         } else {
             if (isLeft) {
                 ctx.moveTo(x, y);
                 ctx.lineTo(x - len, y);
-                ctx.strokeStyle = 'white';
-                ctx.stroke();
             } else {
                 ctx.moveTo(x, y);
                 ctx.lineTo(x + len, y);
-                ctx.strokeStyle = 'white';
-                ctx.stroke();
             }
         }
+
+        ctx.stroke();
     } catch (error) {
         console.error('Failed to drawConnexionGame', error);
+    }
+}
+
+async function drawCircle(ctx, x, y, radius, color) {
+    try {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 10; // Ajustez cette valeur pour plus ou moins de flou
+        ctx.fill();
+        ctx.shadowBlur = 0; // Réinitialiser l'effet de flou pour les dessins suivants
+    } catch (error) {
+        console.error('Failed to drawCircle', error);
     }
 }
 
