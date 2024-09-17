@@ -1,6 +1,4 @@
 
-// menus.js
-
 // ============================== MAIN ==============================
 
 var user;
@@ -100,6 +98,7 @@ async function hideNotifSubMenus() {
 
 // =============================== MENU toggle ================================
 
+var boolChat = true;
 async function toggleRadialMenu() {
     try {        
         let radialMenu = document.getElementById('radial-menu');
@@ -113,15 +112,19 @@ async function toggleRadialMenu() {
             innerSubMenus();
             displaySubMenus();
             disableNotifSubMenus();
-            radialMenu.addEventListener('click', async function (e) {
-                if (e.target.id === 'chat-btn') {
-                    toggleChatMenu();
-                    hideNotifSubMenus();
-                } else if (e.target.id === 'social-btn') {
-                    toggleSocialMenu();
-                    hideNotifSubMenus();
-                }
-            });
+            if (boolChat)
+            {
+                radialMenu.addEventListener('click', async function (e) {
+                    if (e.target.id === 'chat-btn') {
+                        toggleChatMenu();
+                        hideNotifSubMenus();
+                    } else if (e.target.id === 'social-btn') {
+                        toggleSocialMenu();
+                        hideNotifSubMenus();
+                    }
+                });
+                boolChat = false;
+            }
         }
     } catch (error) {
         console.error('Failed to toggleRadialMenu', error);
