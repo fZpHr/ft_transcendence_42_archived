@@ -95,6 +95,9 @@ def sendInvite(request):
         logger.info(f"player: {player}")
         friend = Player.objects.get(id=id)
         logger.info(f"friend: {friend}")
+        relationship = Friends.objects.filter(player_id=player.id, friend_id=friend.id)
+        if not relationship.exists() or relationship[0].status != 3:
+            return JsonResponse({"message": "You are not friends with this user."}, status=201)
         if GameInvitation.objects.filter(player1=player, player2=friend).exists():
             logger.info("GameInvitation exists")
             gameid = GameInvitation.objects.get(player1=player, player2=friend).game_id.UUID
@@ -139,11 +142,14 @@ def sendInvite(request):
 @login_required
 def sendMessage(request):
     try:        
-        id = request.data.get('contactId')
+        contactId = request.data.get('contactId')
         content = request.data.get('message')
         user = request.user
         player = Player.objects.get(username=user)
-        friend = Player.objects.get(id=id)
+        friend = Player.objects.get(id=contactId)
+        relationship = Friends.objects.filter(player_id=player.id, friend_id=friend.id)
+        if not relationship.exists() or relationship[0].status != 3:
+            return JsonResponse({"message": "You are not friends with this user."}, status=201)
         Messages.objects.create(sender=player, receiver=friend, content=content)
         Notification.objects.create(sender=player, type=1, recipient=friend, content=f"New message from {player.username}")
         return JsonResponse({"message": "Message sent successfully"}, status=200)
