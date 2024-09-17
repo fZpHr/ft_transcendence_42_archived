@@ -65,9 +65,9 @@ async function APIgetNbrSocialNotif(userId) {
     });
 }
 
-async function APIcreateLobby(userId) {
+async function APIcreateLobby(userId, lobbyName) {
 	return new Promise(async (resolve, reject) => {
-		let lobbyTournament = await getFetchAPI(`/api/createLobby?userId=${userId}`);
+		let lobbyTournament = await getFetchAPI(`/api/createLobby?userId=${userId}&lobbyName=${lobbyName}`);
 		resolve(lobbyTournament);
 	});
 }
@@ -117,6 +117,27 @@ async function APIgetConnect4GameForUser(userId) {
 async function APIgetPongGameForUser(userId) {
 	return new Promise(async (resolve, reject) => {
 		let game = await getFetchAPI(`/api/getPongGameForUser?userId=${userId}`);
+		resolve(game);
+	});
+}
+
+async function APIfinishGameOnlyIa(lobbyUUID) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/finishGameOnlyIa?lobbyUUID=${lobbyUUID}`);
+		resolve(game);
+	});
+}
+
+async function APIgetLobbyIsLocked(lobbyUUID) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/getLobbyIsLocked?lobbyUUID=${lobbyUUID}`);
+		resolve(game);
+	});
+}
+
+async function APIremoveLobby(lobbyUUID) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/removeLobby?lobbyUUID=${lobbyUUID}`);
 		resolve(game);
 	});
 }
@@ -227,10 +248,31 @@ async function APIaddIaToLobby(lobbyUUID) {
 	});
 }
 
+async function APIsetWinnerAtTournamentGame(idGame, idWinner, isIa) {
+	return fetch("/api/setWinnerAtTournamentGame/", {
+		method: "POST",
+		headers: {
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ idGame, idWinner, isIa }),
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Network response was not ok ' + response.statusText);
+		}
+		return response.json();
+	})
+	.catch(error => {
+		console.error("Failed to add player to lobby:", error);
+		throw error;
+	});
+}
+
+
 async function getFetchAPI(url) {
 	return new Promise(async (resolve, reject) => {
 		try {
-			console.log(url)
 			let response = await fetch(url, {
 				method: "GET",
 				headers: {

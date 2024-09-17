@@ -22,6 +22,11 @@ from functools import reduce
 from api.login_required import login_required
 
 
+import logging
+
+logger = logging.getLogger('print')
+
+
 @api_view(['GET'])
 @login_required
 def getHistoryGame(request):
@@ -49,7 +54,9 @@ def createLobby(request):
     try:
         user = request.user
         owner = Player.objects.get(username=user.username)
+        lobbyName = request.GET.get('lobbyName')
         lobby = Lobby.objects.create(owner=owner)
+        lobby.name = lobbyName
         lobby.players.add(owner)
         lobby.save()
         return Response({"lobby": lobby.UUID}, status=200)
@@ -63,12 +70,19 @@ def getAllLobby(request):
         user = request.user
         player = Player.objects.get(username=user.username)
         tab = []
-        lobbys = Lobby.objects.all()
-        lobbys.order_by('created_at')
+        lobbys = Lobby.objects.all().order_by('created_at')
         for lobby in lobbys:
             if player in lobby.players.all():
-                tab.append(lobby.UUID)
-
+                nbr_players = len(lobby.players.all())
+                nbr_players += len(lobby.ai_players.all())
+                lobby_info = {
+                    'UUID': lobby.UUID,
+                    'name': lobby.name,
+                    'isLocked': lobby.locked,
+                    'nbr_players': nbr_players,
+                    'owner': lobby.owner.id,
+                }
+                tab.append(lobby_info)
         return Response({"data": tab}, status=200)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
@@ -149,33 +163,26 @@ def getAllParticipants(lobby):
     player_participants = lobby.players.all()
     ia_participants = lobby.ai_players.all()
     participants = []
-    
     for player in player_participants:
         participant = {
             'id': player.id,
-            'isIA': False
+            'isIA': False,
+            'username': player.username,
+            'img': player.img
         }
         participants.append(participant)
     
     for ia in ia_participants:
         participant = {
             'id': ia.id,
-            'isIA': True
+            'isIA': True,
+            'username': 'ia',
+            'img': 'https://www.forbes.fr/wp-content/uploads/2017/01/intelligence-artificielle-872x580.jpg.webp'
         }
         participants.append(participant)
     random.shuffle(participants)
     return participants
 
-
-def createGame(participants, gameIndex):
-    game = {
-        'gameIndex': gameIndex,
-        'winner': None,
-        'players': []
-    }
-    for participant in participants:
-        game['players'].append(participant)
-    return game
 
 def decompositionProduitFactorPremier(n):
     facteurs = []
@@ -227,25 +234,158 @@ def makeMatchMakingTournament(lobby, UUIDTournament):
     for i in range(nbrOtherGame):
         Game_Tournament.objects.create(UUID_TOURNAMENT=Tournament.objects.get(UUID=UUIDTournament))
 
+def get_nbr_party_by_tour(nbr_participants, tour, DFP):
+    if len(DFP) == 0:
+        return 0
+
+    nbr_game = 0
+    index_DFP = len(DFP) - 1
+    i = 0
+    while index_DFP >= 0 and i < tour:
+        nbr_game = nbr_participants / DFP[index_DFP]
+        nbr_participants = nbr_participants / DFP[index_DFP]
+        index_DFP -= 1
+        i += 1
+    return int(nbr_game)
+
+def getAllGamesAtTurn(indexFirstGame, turn, DFP, nbrParticipants):
+    try :
+        # logger.info('====================> GET ALL GAMES AT TURN')
+        # logger.info(f"      indexFirstGame [{indexFirstGame}]")
+        # logger.info(f"      turn [{turn}]")
+        # logger.info(f"      DFP [{DFP}]")
+        # logger.info(f"      nbrParticipants [{nbrParticipants}]")
+        gameTab = []
+        nbrGame = 0
+        for i in range(turn):
+            nbrGame += get_nbr_party_by_tour(nbrParticipants, i, DFP)
+        indexFirstGame += nbrGame
+        nbrGame = get_nbr_party_by_tour(nbrParticipants, turn, DFP)
+        for i in range(nbrGame):
+            gameTab.append(Game_Tournament.objects.get(id=indexFirstGame + i))
+            # logger.info(f"      game [{Game_Tournament.objects.get(id=indexFirstGame + i)}]")
+        # logger.info('====================> END OF GET ALL GAMES AT TURN')
+        return gameTab
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+def count_divisions_by_n(number, n):
+    count = 0
+    while number > n:
+        number /= n
+        count += 1
+    return count
+
+def setNextGameForGame(currentGame, nextGames, cptLeft, cptRight):
+    try :
+        nextGameId = None
+        logger.info('====================> SET NEXT GAME FOR GAME')
+        # logger.info(f"      nextGames [{nextGames}]")
+        # logger.info(f"      nextGamesCOUnt [{len(nextGames)}]")
+        logger.info(f"      DEBOG => cptLeft [{cptLeft}] - cptRight [{cptRight}]")
+        if not nextGames:
+            logger.info('   NO NEXT GAME')
+            return
+        if len(nextGames) == 1:
+            currentGame.next_game = nextGames[0]
+            currentGame.save()
+            return
+        logger.info(f"      currentGame.id [{currentGame.id}]")
+        if (currentGame.id % 2) == 0:
+            for nGame in nextGames:
+                if nGame.id % 2 == 0 and nGame.id != currentGame.id :
+                    if cptLeft <= 2:
+                        nextGameId = nGame.id
+                    else:
+                        cpt = count_divisions_by_n(cptLeft, 2)  
+                        logger.info(f"      nbrDivBy2 Left [{cpt}]")
+                        logger.info(f"      nGame.id[{nGame.id}] + cpt*2[{cpt * 2}] = [{nGame.id + ( cpt * 2)}]")
+                        nextGameId = nGame.id + ( cpt * 2)
+                    break
+        else:
+            for nGame in nextGames:
+                if nGame.id % 2 != 0 and nGame.id != currentGame.id:
+                    if cptRight <= 2:
+                        nextGameId = nGame.id
+                    else:
+                        cpt = count_divisions_by_n(cptRight, 2)
+                        logger.info(f"      nbrDivBy2 right [{cpt}]")
+                        logger.info(f"      nGame.id[{nGame.id}] + cpt*2[{cpt * 2}] = [{nGame.id + ( cpt * 2)}]")
+                        nextGameId = nGame.id + ( cpt * 2)
+                    break
+        if nextGameId:
+            logger.info(f"      nextGameId [{nextGameId}]")
+            currentGame.next_game = Game_Tournament.objects.get(id=nextGameId)
+            currentGame.save()
+        logger.info('====================> END SET NEXT GAME FOR GAME')
+    except Exception as e:
+        logger.info(f'   ERROR{e}')
+        return Response({"error": str(e)}, status=500)
+
+def setNextGamePerGame(lobby):
+    try :
+        logger.info('====================> SET NEXT GAME')
+        participants = getAllParticipants(lobby)
+        nbrParticipants = len(participants)
+        DFP = decompositionProduitFactorPremier(nbrParticipants)
+        games = Game_Tournament.objects.filter(UUID_TOURNAMENT__UUID_LOBBY=lobby)
+        games = games.order_by('id')
+        nbrTour = len(DFP)
+        gameIndex = games.first().id
+        firstGameId = gameIndex
+
+        logger.info(f"  games [{games}]")
+        logger.info(f"  nbrParticipants [{nbrParticipants}]")
+        logger.info(f"  DFP [{DFP}]")
+        logger.info(f"  nbrTour [{nbrTour}]")
+        logger.info(f"  gameIndex [{gameIndex}]")
+
+        cptLeft = 0
+        cptRight = 0
+
+
+        for i in range(1, nbrTour):
+            nextGames = getAllGamesAtTurn(firstGameId, i + 1, DFP, nbrParticipants)
+            nbrGameByTour = get_nbr_party_by_tour(nbrParticipants, i, DFP)
+            logger.info(f"  nbr game for [{i}]: {nbrGameByTour}")
+            for j in range(nbrGameByTour):
+                Currentgame = games.get(id=gameIndex)
+                Currentgame.layer = i
+                Currentgame.save()
+                # logger.info(f"      Currentgame [{Currentgame}]")
+                # logger.info(f"      nextGames [{nextGames}]")
+                if (Currentgame.id % 2) == 0:
+                    cptLeft += 1
+                else:
+                    cptRight += 1
+                setNextGameForGame(Currentgame, nextGames, cptLeft, cptRight)
+                gameIndex += 1
+            cptLeft = 0
+            cptRight = 0
+        logger.info('====================> END OF SET NEXT GAME')  
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+
 @csrf_exempt
 @api_view(['POST'])
 @login_required
 def lockLobby(request):
     try:
+        logger.info('====================> LOCK LOBBY')
+        logger.info(f"   CALL")
         lobbyUUID = request.data.get('lobbyUUID')
         lobby = Lobby.objects.get(UUID=lobbyUUID)
         lobby.locked = True
         lobby.save()
-        # delte all tournamenet game
-        if Tournament.objects.filter(UUID_LOBBY=lobby).exists():
-            return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
-        if Game_Tournament.objects.filter(UUID_TOURNAMENT__UUID_LOBBY=lobby).exists():
-            return Response({"error": "Tournament already exists for lobby with id {lobbyUUID}"}, status=200)
-
-        Tournament.objects.create(UUID_LOBBY=lobby)
-        tournament = Tournament.objects.get(UUID_LOBBY=lobby)
-        makeMatchMakingTournament(lobby, tournament.UUID)
-        # Initialize tournamentOrganized as a dictionary
+        if not Tournament.objects.filter(UUID_LOBBY=lobby).exists() or not Game_Tournament.objects.filter(UUID_TOURNAMENT__UUID_LOBBY=lobby).exists():
+            Tournament.objects.create(UUID_LOBBY=lobby)
+            tournament = Tournament.objects.get(UUID_LOBBY=lobby)
+            makeMatchMakingTournament(lobby, tournament.UUID)
+            setNextGamePerGame(lobby)
+        else:
+            tournament = Tournament.objects.get(UUID_LOBBY=lobby)
+            setNextGamePerGame(lobby) #A RETIRER
         tournamentOrganized = {}
         tournamentOrganized['UUID'] = tournament.UUID
         tournamentOrganized['games'] = []
@@ -256,13 +396,14 @@ def lockLobby(request):
             gameData['id'] = game.id
             gameData['winner_player'] = game.winner_player.id if game.winner_player else None
             gameData['winner_ai'] = game.winner_ai.id if game.winner_ai else None
+            gameData['next_game'] = game.next_game.id if game.next_game else None
+            gameData['layer'] = game.layer
             gameData['players'] = []
             for player in game.players.all():
                 gameData['players'].append(player.id)
             for ia in game.ai_players.all():
                 gameData['players'].append(ia.id)
             tournamentOrganized['games'].append(gameData)
-
         return Response({"tournament": tournamentOrganized}, status=200)
     except Lobby.DoesNotExist:
         return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
@@ -274,7 +415,7 @@ def lockLobby(request):
 # ============================================ UTILS ============================================
 # ===============================================================================================
 
-
+@csrf_exempt
 @api_view(['GET'])
 @login_required
 def getTournamentInfo(request):
@@ -282,36 +423,150 @@ def getTournamentInfo(request):
         UUID_TOURNAMENT = request.GET.get('tournamentUUID')
         tournament = Tournament.objects.get(UUID=UUID_TOURNAMENT)
         games = Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament)
+        games = games.order_by('id')
         tournamentOrganized = {}
         tournamentOrganized['UUID'] = tournament.UUID
         tournamentOrganized['games'] = []
+
         for game in games:
             gameData = {}
             gameData['id'] = game.id
             gameData['winner_player'] = game.winner_player.id if game.winner_player else None
             gameData['winner_ai'] = game.winner_ai.id if game.winner_ai else None
+            gameData['next_game'] = game.next_game.id if game.next_game else None
+            gameData['layer'] = game.layer
             gameData['players'] = []
             for player in game.players.all():
-                gameData['players'].append(player.id)
+                logger.info(player)
+                
+                gameData['players'].append({
+                    'id': player.id,
+                    'is_ai': False,
+                    'username': player.username,
+                    'img': str(player.img)
+                })
+                
             for ia in game.ai_players.all():
-                gameData['players'].append(ia.id)
+                gameData['players'].append({
+                    'id': ia.id,
+                    'is_ai': True,
+                    'username': 'ia',
+                    'img': 'https://www.forbes.fr/wp-content/uploads/2017/01/intelligence-artificielle-872x580.jpg.webp'
+                })
             tournamentOrganized['games'].append(gameData)
-        return Response({"tournament": tournamentOrganized}, status=200)
+
+        return Response({"gameTournament": tournamentOrganized['games']}, status=200)
     except Tournament.DoesNotExist:
         return Response({"error": f"Tournament does not exist for lobby with id {UUID_TOURNAMENT}"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-    
 
+@csrf_exempt
+@api_view(['POST'])
+@login_required
+def setWinnerAtTournamentGame(request):
+    try :
+        id = request.data.get('contactId')
+
+        gameId = request.data.get('idGame')
+        winnerId = request.data.get('idWinner')
+        isAI = request.data.get('isIa')
+        game = Game_Tournament.objects.get(id=gameId)
+        if isAI == 'True':
+            winner = AIPlayer.objects.get(id=winnerId)
+            game.winner_ai = winner
+        else:
+            winner = Player.objects.get(id=winnerId)
+            game.winner_player = winner
+        game.save()
+        nextGame = game.next_game
+        if nextGame :
+            if isAI == 'True':
+                nextGame.ai_players.add(winner)
+            else:
+                nextGame.players.add(winner)
+        return Response({"game": game.id}, status=200)
+    except Game_Tournament.DoesNotExist:
+        return Response({"error": f"Game with id {gameId} does not exist"}, status=404)
+    except Player.DoesNotExist:
+        return Response({"error": f"Player with id {winnerId} does not exist"}, status=404)
+    except AIPlayer.DoesNotExist:
+        return Response({"error": f"AIPlayer with id {winnerId} does not exist"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+
+def getCurrentLayer(tournament):
+    games = Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament)
+    games = games.order_by('id')
+    for game in games:
+        if game.winner_ai is None and game.winner_player is None:
+            return game.layer
+    return -1
+
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def finishGameOnlyIa(request):
+    try:
+        logger.info('====================> finishGameOnlyIa')
+        lobbyUUID = request.GET.get('lobbyUUID')
+        lobby = Lobby.objects.get(UUID=lobbyUUID)
+        tournament = Tournament.objects.get(UUID_LOBBY=lobby)
+        layer = getCurrentLayer(tournament)
+        logger.info(f"   layer [{layer}]")
+        games = Game_Tournament.objects.filter(UUID_TOURNAMENT=tournament)
+        games = games.filter(layer=layer)
+        for game in games:
+            if game.players.count() == 0 and game.ai_players.count() == 2:
+                logger.info(f"          gameWiniS")
+                game.winner_ai = game.ai_players.first()
+                game.save()
+                nextGame = game.next_game
+                if nextGame:
+                    nextGame.ai_players.add(game.winner_ai)
+
+        return Response({"message": "All games with only IA player have been finished"}, status=200)
+    except Lobby.DoesNotExist:
+        return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
+    except tournament.DoesNotExist:
+        return Response({"error": f"Tournament with id {lobbyUUID} does not exist"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def getLobbyIsLocked(request):
+    try :
+        logger.info('====================> GET LOBBY IS LOCKED')
+        lobbyUUID = request.GET.get('lobbyUUID')
+        logger.info(f"   lobbyUUID [{lobbyUUID}]")
+        lobby = Lobby.objects.get(UUID=lobbyUUID)
+        logger.info(f"   lobby [{lobby}]")
+        logger.info(f"   locked [{lobby.locked}]")
+        return Response({"locked": lobby.locked}, status=200)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def removeLobby(request):
+    try :
+        lobbyUUID = request.GET.get('lobbyUUID')
+        lobby = Lobby.objects.get(UUID=lobbyUUID)
+        lobby.delete()
+        lobby.save()
+        return Response({"message": "Lobby has been deleted"}, status=200)
+    except Lobby.DoesNotExist:
+        return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 
 # ===============================================================================================
 # ============================================ GAME MANDA ============================================
 # ===============================================================================================
-
-import logging
-
-logger = logging.getLogger('print')
-
 
 @api_view(['GET'])
 @login_required
@@ -324,7 +579,6 @@ def getPongGameForUser(request):
         
         match_data_list = []
         for game in games:
-            logger.info(game.type)
             game.player1.img.name = '/media/' + game.player1.img.name if game.player1.img.name.startswith("profile_pics/") else game.player1.img.name
             game.player2.img.name = '/media/' + game.player2.img.name if game.player2.img.name.startswith("profile_pics/") else game.player2.img.name
             total_seconds = game.time
@@ -358,8 +612,6 @@ def getConnect4GameForUser(request):
         
         match_data_list = []
         for game in games:
-            logger.info(game.UUID)
-            logger.info(game.type)
             game.player1.img.name = '/media/' + game.player1.img.name if game.player1.img.name.startswith("profile_pics/") else game.player1.img.name
             game.player2.img.name = '/media/' + game.player2.img.name if game.player2.img.name.startswith("profile_pics/") else game.player2.img.name
             total_seconds = game.time

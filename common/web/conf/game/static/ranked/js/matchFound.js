@@ -30,6 +30,7 @@ function updateGameInfo(data)
             target: '#main-content', // The target element to update
             swap: 'innerHTML', // How to swap the content
           }).then(response => {
+            console.log(response)
             history.pushState({}, '', `/game/${data.game_type}?id=${data.game_id}`);
         })
       }

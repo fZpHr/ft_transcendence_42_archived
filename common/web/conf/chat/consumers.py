@@ -23,20 +23,15 @@ class NotifConsumer(AsyncWebsocketConsumer):
         async def connect(self):
             self.room_name = self.scope[
                 'url_route']['kwargs']['room_name']
-            self.room_group_name = f'notif_{self.room_name}'
-    
-            logger.info(f"[WebSocket NOTIF] : Connecting to room {self.room_name}")
-    
+            self.room_group_name = f'notif_{self.room_name}'    
             await self.channel_layer.group_add(
                 self.room_group_name,
                 self.channel_name
             )
     
             await self.accept()
-            logger.info(f"[WebSocket NOTIF] : Connection established for room {self.room_name}")
     
         async def disconnect(self, close_code):
-            logger.info(f"[WebSocket NOTIF] : Disconnecting from room {self.room_name} with close code {close_code}")
             await self.channel_layer.group_discard(
                 self.room_group_name,
                 self.channel_name
@@ -49,7 +44,6 @@ class NotifConsumer(AsyncWebsocketConsumer):
             link = text_data_json['link']
             notifType = text_data_json['notifType']
             userDestination = text_data_json['userDestination']
-            logger.info(f"[WebSocket NOTIF] : Received message: {ID_Game} in room {self.room_name}")
 
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -64,7 +58,6 @@ class NotifConsumer(AsyncWebsocketConsumer):
             )
 
         async def notif_message(self, event):
-            logger.info(f"[WebSocket NOTIF] : Sending message: to room {self.room_name}")
 
             await self.send(text_data=json.dumps({
                 'notifType': event['notifType'],
@@ -86,7 +79,6 @@ class SocialConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'social_{self.room_name}'
 
-        logger.info(f"[WebSocket SOCIAL] : Connecting to room {self.room_name}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -94,10 +86,8 @@ class SocialConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        logger.info(f"[WebSocket SOCIAL] : Connection established for room {self.room_name}")
 
     async def disconnect(self, close_code):
-        logger.info(f"[WebSocket SOCIAL] : Disconnecting from room {self.room_name} with close code {close_code}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -107,7 +97,6 @@ class SocialConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         updateId = text_data_json['updateId']
         senderId = text_data_json['senderId']
-        logger.info(f"[WebSocket SOCIAL] : Received updateId: {updateId} in room {self.room_name}")
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -121,7 +110,6 @@ class SocialConsumer(AsyncWebsocketConsumer):
     async def social_updateId(self, event):
         updateId = event['updateId']
         senderId = event['senderId']
-        logger.info(f"[WebSocket SOCIAL] : Sending updateId: {updateId} to room {self.room_name}")
 
         await self.send(text_data=json.dumps({
             'updateId': updateId,
@@ -139,7 +127,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
 
-        logger.info(f"[WebSocket CHAT] : Connecting to room {self.room_name}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -147,10 +134,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        logger.info(f"[WebSocket CHAT] : Connection established for room {self.room_name}")
 
     async def disconnect(self, close_code):
-        logger.info(f"[WebSocket CHAT] : Disconnecting from room {self.room_name} with close code {close_code}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -161,7 +146,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         senderId = text_data_json['senderId']
         contactId = text_data_json['contactId']
-        logger.info(f"[WebSocket CHAT] : Received message: {message} in room {self.room_name}")
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -177,7 +161,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         senderId = event['senderId']
         contactId = event['contactId']
-        logger.info(f"[WebSocket CHAT] : Sending message: {message} to room {self.room_name}")
 
         await self.send(text_data=json.dumps({
             'message': message,
@@ -213,7 +196,6 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'lobby_{self.room_name}'
 
-        logger.info(f"[WebSocket LOBBY] : Connecting to room {self.room_name}")
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -221,10 +203,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        logger.info(f"[WebSocket LOBBY] : Connection established for room {self.room_name}")
 
     async def disconnect(self, close_code):
-        logger.info(f"[WebSocket LOBBY] : Disconnecting from room {self.room_name} with close code {close_code}")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -242,7 +222,6 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
                 message = text_data_json['message']
                 userId = text_data_json['userId']
-                logger.info(f"[WebSocket LOBBY] : Received message: {message} in room {self.room_name}")
 
                 await self.channel_layer.group_send(
                     self.room_group_name,
@@ -253,8 +232,6 @@ class LobbyConsumer(AsyncWebsocketConsumer):
                         'message': message,
                     }
                 )
-            else:
-                logger.info(f"[WebSocket LOBBY] : Received message: {text_data_json} in room {self.room_name}")
         except json.JSONDecodeError as e:
             logger.error(f"[WebSocket LOBBY] : JSON decode error: {e}")
         except Exception as e:
@@ -266,7 +243,6 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             eventType = event['eventType']
             message = event['message']
 
-            logger.info(f"[WebSocket LOBBY] : Sending message: {message} to room {self.room_name}")
 
             await self.send(text_data=json.dumps({
                 'userId': userId,
@@ -279,36 +255,24 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def lock_lobby(self, text_data):
         try:
             text_data_json = json.loads(text_data)
-            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 1] {text_data_json}")
-            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 2] {self.room_name}")
 
             # Lock the lobby in the database
             lobby = await sync_to_async(Lobby.objects.get)(UUID=self.room_name)
             await sync_to_async(lobby.lock)()
-            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 3] {lobby.UUID}")
 
             # Assuming you have logic to create games and determine their URLs
             tournament = await sync_to_async(Tournament.objects.get)(UUID_LOBBY=lobby.UUID)
-            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 4] {tournament.UUID}")
             games = await sync_to_async(get_games)(tournament.UUID)
-            logger.info(f"[WebSocket LOBBY] : ======== [ETAPE 5] {games}")
 
             # Create a mapping of players to game URLs
             player_game_urls = {}
             for game in games:
-                logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 6.0] {game.id}")
                 players = await sync_to_async(get_player)(game.id)
-                logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 6.1] {players}")
                 for player in players:
-                    logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 6.2] {player.username}")
                     player_game_urls[player.id] = f'/game/pong/tournament/game/?gameId={game.id}'
-                    logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 6.3] {player_game_urls[player.id]}")
-                logger.info(f"---------------------------------")
-            logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 7] {player_game_urls}")
 
             # Send the redirection message to all players
             for player_id, game_url in player_game_urls.items():
-                logger.info(f"[WebSocket LOBBY] : ========= [ETAPE 8] Redirecting user {player_id} to {game_url}")
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {

@@ -5,7 +5,6 @@ let wssGame = null;
 async function handleWsGameMessage(data) {
     try {
         if (data.userId === userId) {
-            console.log('ignorted')
             return;
         }
         let eventTypes = { 

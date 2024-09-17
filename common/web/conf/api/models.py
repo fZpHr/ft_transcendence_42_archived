@@ -72,12 +72,13 @@ class Notification(models.Model):
 
 class Lobby(models.Model):
     UUID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    owner = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='owner', null=True, blank=True)
+    owner = models.ForeignKey('Player', related_name='owner', null=True, blank=True, on_delete=models.SET_NULL)
     players = models.ManyToManyField('Player', related_name='lobbies')
     ai_players = models.ManyToManyField('AIPlayer', related_name='lobbies', blank=True)
     locked = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+    name = models.CharField(max_length=255, unique=False, null=False, default='Lobby')
+
     def lock(self):
         self.locked = True
         self.save()
@@ -90,6 +91,8 @@ class Game_Tournament(models.Model):
     winner_player = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='won_games', null=True, blank=True)
     winner_ai = models.ForeignKey('AIPlayer', on_delete=models.CASCADE, related_name='won_games', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    next_game = models.ForeignKey('Game_Tournament', on_delete=models.CASCADE, related_name='previous_game', null=True, blank=True)
+    layer = models.IntegerField(default=0)
 
 class Tournament(models.Model):
     UUID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

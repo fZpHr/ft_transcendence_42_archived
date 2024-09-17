@@ -13,7 +13,6 @@ async function setUserToLog(userId) {
 
 async function setUserToLogout(userId) {
     try {
-        console.log('user logout =>', userId);
         let a= 'player-'+ userId
         let userBox = document.getElementById(a);
         let playerStatus = userBox.children[1];
@@ -27,18 +26,15 @@ async function setUserToLogout(userId) {
 
 async function handleWsLobbyMessage(data) {
     try {
-        // console.log('data', data);
-        console.log('data', data);
-        console.log('userId', userId);
         if (data.eventType === 'redirect') {
-            if (data.userId && data.userId === userId) {
-                redirect(data);
-                return;
-            }
+            redirect(data);
             return ;
         }
+        if (data.eventType === 'lock') {
+            lock(data);
+            return;
+        }
         if (data.userId && data.userId === userId) {
-            console.log('ignorted')
             return;
         }
         let eventTypes = { 
@@ -46,7 +42,8 @@ async function handleWsLobbyMessage(data) {
             'pong': pong,
             'leave': leave,
             'addPlayer': addPlayer,
-            'addIa': addIa
+            'addIa': addIa,
+            'lock': lock,
         }; 
         eventTypes[data.eventType](data);
     } catch (error) {
@@ -88,7 +85,6 @@ async function connectLobbySocket(roomName) {
         wsLobby = new WebSocket(`wss://${window.location.host}/ws/lobby/${roomName}/`);
         
         wsLobby.onopen = function () {
-            console.log('[WebSocket Lobby] => Connection established to room =>', roomName);
             let msg = userId + ' | ping';
             sendToWsLobby('ping', msg);
         };
@@ -100,27 +96,22 @@ async function connectLobbySocket(roomName) {
         };
         
         wsLobby.onclose = function (e) {
-            console.error('[WebSocket] => Connection closed:', e);
+            console.log('[WebSocket] => Connection closed:', e);
         };
 
         wsLobby.onerror = function (error) {
             console.error('[WebSocket] => Error:', error);
         };
+
+        document.addEventListener('htmx:beforeSwap', function(event) {
+            console.log('DEBOG WS===================> ' + wsLobby);
+            if (wsLobby && wsLobby.readyState === WebSocket.OPEN) {
+                wsLobby.close();
+            }
+            console.log("htmx:beforeSwap event listener matchMakingSocket close");
+        }, {once: true});
     } catch (error) {
         console.error('[WebSocket] => Connection failed', error);
-    }
-}
-
-function disconnectLobbySocket() {
-    try {
-        console.log('[WebSocket] => Disconnecting...');
-        console.log(userId);
-        wsLobby.send(JSON.stringify({
-            'message': 'disconnect',
-            'senderId': userId
-        }));
-    } catch (error) {
-        console.error('Error in disconnectWebSocket:', error);
     }
 }
 
@@ -184,13 +175,27 @@ async function redirect(data) {
         console.log('[WS-G]=> (' + data.message + ')');
         console.log('redirecting');
         console.log(data.message);
-        htmx.ajax('GET', data.message, {
-            target: '#main-content', // The target element to update
-            swap: 'innerHTML', // How to swap the content
-        }).then(response => {
-            history.pushState({}, '', data.message);
-        });
 
+        window.location.href = data.message;
+        // htmx.ajax('GET', data.message, {
+        //     target: '#main-content',
+        //     swap: 'innerHTML',
+        // }).then(response => {
+        //     history.pushState({}, '', data.message);
+        // });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function lock(data) {
+    try {
+        console.log('[WS-G]=> (' + data.message + ')');
+        tournamentINfo = await APIgetTournamentInfo(data.message);
+        let NbrPlayer = document.getElementsByClassName('player-present').length;
+        deleteLobbyBody();
+        loadCanvaTournament(tournamentINfo, NbrPlayer);
     } catch (error) {
         console.error(error);
     }
@@ -240,3 +245,6 @@ async function innerNewIA() {
         console.error('Failed to innerNewIA', error);
     }
 }
+
+// =============================== LOBBY WS UTILS ================================
+

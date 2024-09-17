@@ -4,14 +4,14 @@
 
 async function updateInviteStatusUI(status) {
     try {
-        console.log('status:', status);
+        // console.log('status:', status);
         let chatMessages = document.getElementById('chat-messages');
         let gameInvites = chatMessages.getElementsByClassName('game-invite');
         for (let i = 0; i < gameInvites.length; i++) {
-            console.log('gameInvites[i]:', gameInvites[i]);
+            // console.log('gameInvites[i]:', gameInvites[i]);
             let gameInvite = gameInvites[i];
             let chooseGamesDiv = gameInvite.getElementsByClassName('choose-games')[0];
-            console.log('status:', status);
+            // console.log('status:', status);
             status == 2 ? chooseGamesDiv.innerHTML = '<button class="btn btn-join" data-tooltip="Join lobby">Join</button>' : chooseGamesDiv.innerHTML = '<span>Declined</span>';
         }
     } catch (error) {
@@ -23,7 +23,7 @@ function handlersInviteResp(contactId) {
     try {
         let chatMessages = document.getElementById('chat-messages');
         chatMessages.addEventListener('click', async (event) => {
-            console.log('event.target:', event.target);
+            // console.log('event.target:', event.target);
             if (event.target.classList.contains('btn-update')) {
                 
                 let status = event.target.getAttribute('data-tooltip');
@@ -139,7 +139,7 @@ function removeGameInvites() {
 function getInvitationStatus(msgDiv, message) {
     let chooseGamesDiv = document.createElement('div');
     chooseGamesDiv.className = 'choose-games';
-    console.log('message:', message);
+    // console.log('message:', message);
     const statusActions = {
         0: '<span>Pending</span>',
         1: '<button class="btn btn-update" data-tooltip="Accept game"><i class="fa-solid fa-check"></i></button>'
@@ -238,7 +238,7 @@ async function innerChatUsers(chatUsers) {
 
 async function innerChatChanel(contactId, contactUser) {
     try {
-        console.log('inner chanel call', contactId, contactUser);
+        // console.log('inner chanel call', contactId, contactUser);
         var chatContainer = document.getElementById('chat-panel');
         chatContainer.innerHTML = `
             <div id="chat-header">
@@ -347,7 +347,7 @@ async function handleCloseChatChanel(contactId) {
         const deleteBtn = document.getElementById('delete-btn');
         backBtn.addEventListener('click', async function () {
             await APIclearNotifChatFor(contactId);
-            console.log('click');
+            // console.log('click');
             wsChat.close();
             toggleChatMenu(contactId);
         });
@@ -480,9 +480,9 @@ async function toggleChanelChat(contactId) {
         let userMsg = await APIgetMessages(contactId);
         let roomName = 'chat_';
         contactId > userId ? roomName += userId + '_' + contactId : roomName += contactId + '_' + userId;
-        console.log(roomName);
+        // console.log(roomName);
         roomName = await APIgetHashRoom(roomName);
-        console.log(roomName);
+        // console.log(roomName);
         let wsChat = await connectWebSocket(roomName.roomName);
         let contactUser = await APIgetUserById(contactId);
         innerChatChanel(contactId, contactUser);

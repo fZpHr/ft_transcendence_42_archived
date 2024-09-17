@@ -6,9 +6,6 @@ A FAIRE
 
 ________________________________BUG________________________________
 
-========================== STATS ==========================
-    - visited (les stats ne peuve pas etre vus par les autre user) @bberkrou
-
 ========================== PRIVGAME ==========================
     - MaKE READY btn WS fonctionne pas @bberkrou @totoph
 
@@ -23,11 +20,6 @@ ________________________________BUG________________________________
 
 ________________________________A FAIRE________________________________
 
-========================== VIEW RESPONSIVE ==========================
-    - Home (animation) @bberkrou
-    - tournoi @bberkrou
-    - connect4 @bberkrou
-    - CustomeGame @bberkrou
 
 ========================== PARTI A FAIRE ==========================
     - IA @bcaroll
@@ -35,7 +27,7 @@ ________________________________A FAIRE________________________________
     - REMOTE @totoph
     - Tournoie @bberkrou
     - connecter Ranked pong (ALL)
-    - CustomGame @totoph
+    - CustomGame @totoph @bberkrou
 
 EMILE CHERCHE DES BUGS STP (si tu menvoie caca par mp avant demain je te pae une cannette)
 
@@ -51,7 +43,14 @@ ________________________________BUG________________________________
     - visitedProfil (error view)
     - invite Game (error js)
 
+========================== VIEW RESPONSIVE ==========================
+    - Home (animation) @bberkrou
+    - tournoi @bberkrou
+    - connect4 @bberkrou
+    - CustomeGame @bberkrou
 
+========================== STATS ==========================
+    - visited (les stats ne peuve pas etre vus par les autre user) @bberkrou
 
 ========================== VIEW RESPONSIVE ==========================
     - PrivGamePong && LocalGamePOng @bberkrou
