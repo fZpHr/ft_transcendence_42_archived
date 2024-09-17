@@ -14,9 +14,10 @@ function updatePlayerInfo(player, gameType, isOpponent = false)
 
 function updateGameInfo(data)
 {
-    console.log('ICI MON GRAND');
+    const playerDiv = document.getElementById("participant-box");
     updatePlayerInfo(data.player, data.game_type);
     updatePlayerInfo(data.opponent, data.game_type, true);
+    playerDiv.style.display = "flex";
 
     document.getElementById("vs-text").style.display = "flex";
     document.getElementById("waiting-btn").style.display = "none";

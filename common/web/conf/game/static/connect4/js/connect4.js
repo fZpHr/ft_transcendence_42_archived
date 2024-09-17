@@ -1,6 +1,3 @@
-import { div } from "three/webgpu";
-import { createSocket } from "../../ranked/js/socket.js";
-
 var connect4WebSocket;
 var reconnectAfterSwapListener;
 var cancelAfterSwapListener;
@@ -15,7 +12,7 @@ async function connect4Load()
     let link = "ws/game/connect4/" + gameId + "/";
     if (regex.test(link) == false)
     {
-        console.log("Invalid link");
+        console.log("Invalid link", link);
         let divGameNotExist = document.getElementById("overlay");
         divGameNotExist.style.display = "flex";
         divGameNotExist.innerText = "Game does not exist... Redirecting to game page";
@@ -54,13 +51,10 @@ async function connect4Load()
     }
     
     connect4WebSocket.onmessage = async function(e) {
-        console.log("After receiving")
         let data = JSON.parse(e.data);
-        console.log(data)
         switch (data.type) {
             case 'error':
                 handleError(data.error_message);
-                console.log(data.error_message);
                 break;
             case 'Game is full':
                 console.log("Game is full");
@@ -266,38 +260,6 @@ async function gameFinished(winner) {
             swap: 'innerHTML', // How to swap the content
         });
     });
-    // reconnectAfterSwapListener = (event) => {
-    //     console.log("reconnect afterswap called");
-    //     if (event.detail.pathInfo.path === '/game/ranked/') {
-    //         console.log("reconnect redirection called");
-    //         history.pushState({}, '', '/game/ranked/');
-    //         let intervalId = setInterval(() => {
-    //             let divConnect4 = document.getElementById("wrap");
-    //             if (divConnect4) {
-    //                 clearInterval(intervalId);
-    //                 createSocket("connect4");
-    //                 const playerDiv = document.getElementById("player-btn");
-    //                 const opponentDiv = document.getElementById("opps-btn");
-    //                 const gameDiv = document.getElementById("game-type");
-    //                 const vsDiv = document.getElementById("vs-text");
-    //                 const waitingDiv = document.getElementById("waiting-btn");
-    //                 [playerDiv, opponentDiv, gameDiv, vsDiv].forEach(el => el.style.display = "none");
-    //                 [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
-    //             }
-    //         }, 100);
-    //         htmx.off('htmx:afterSwap', cancelAfterSwapListener); // Remove the event listener
-    //         htmx.off('htmx:afterSwap', reconnectAfterSwapListener); // Remove the event listener
-    //     }
-    // };
-    
-    // reconnect.addEventListener("click", () => {
-    //     console.log("reconnect clicked");
-    //     htmx.on('htmx:afterSwap', reconnectAfterSwapListener);
-    //     htmx.ajax('GET', '/game/ranked/', {
-    //         target: '#main-content', // The target element to update
-    //         swap: 'innerHTML', // How to swap the content
-    //     });
-    // });
 }
 
 function checkWin(row, col) {
@@ -319,9 +281,6 @@ function checkWin(row, col) {
     // Check column
     count = 0;
     for (i = 0; i < 6; i++) {
-        console.log("row", i, col)
-        console.log("currentPlayer", currentPlayer)
-        console.log("board", board[i][col])
         if (board[i][col] == currentPlayer) {
             count++;
             if (count == 4) {
@@ -388,7 +347,6 @@ function setGame()
                 let [tileRow, tileCol] = tile.id.split(" ").map(Number)
                 if (!checkAvailableTile(tileRow, tileCol))
                 {
-                    console.log("wronggg");
                     return
                 }
                 if (!tile.classList.contains("red") && !tile.classList.contains("yellow") && currentPlayer == playerTurn)

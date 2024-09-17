@@ -139,7 +139,9 @@ function createSocket(gameType) {
     }
   }
 
-  document.body.addEventListener('htmx:historyRestore', function(evt) {
+  const divRanked = document.getElementById("participant-box");
+  divRanked.addEventListener('htmx:historyRestore', function(evt) {
+    evt.preventDefault();
     console.log("Back button or forward button pressed");
     matchMakingSocket.close();
     heartbeat = clearInterval(heartbeat);

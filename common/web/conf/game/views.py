@@ -50,7 +50,7 @@ def joinGame(request):
 def ranked(request):
     if (request.htmx):
         return render(request, "ranked/ranked.html")
-    return render(request, "ranked/ranked_full.html")
+    return render(request, "home/home_full.html")
 
 @login_required
 def connect4(request):

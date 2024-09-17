@@ -34,4 +34,4 @@ document.getElementById("connect4-ranked-btn").addEventListener("click", async f
             [divConnect4, waitingDiv].forEach(el => el.style.display = "flex");
         }
     }, 100);
-  });
+});
