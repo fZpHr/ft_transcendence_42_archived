@@ -318,8 +318,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         if command == "start":
             self.server.ws = self
             self.server.ball.pos.x = 0.5
-            self.server.state = "playing"
-            logger.info(f"[WebSocket GAME] : Starting game BG thread")
+            self.server.state = "starting"
             return 
         
 		

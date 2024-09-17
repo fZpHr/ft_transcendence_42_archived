@@ -32,22 +32,33 @@ class Engine:
         
 
     async def moveBall(self):
-            # logger.info("move ball")
             await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
     
     async def checkCollision(self):
-        logger.info("check collision")
+        if self.ball.pos.x > 20:
+            self.ball.acc.x *= -1
+            await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
+        if self.ball.pos.x < -20:
+            self.ball.acc.x *= -1
+            await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
+        logger.info(f"check collision\ny: {self.ball.pos.y} acc.y: {self.ball.acc.y}\nx: {self.ball.pos.x} acc.x: {self.ball.acc.x}")
          
 	
     async def checkBall(self):
         logger.info("ici")
         self.ball.acc.x = 0.1
         self.ball.acc.y = 0
+        self.ball.pos.x = 0
+        self.ball.pos.y = 0
         while True:
             if self.state == "waiting":
                 continue
+            if self.state == "starting":
+                await self.moveBall()
+                self.state = "playing"
+            self.ball.pos.y += self.ball.acc.y
+            self.ball.pos.x += self.ball.acc.x
             # logger.info("==================================================")
-            await self.moveBall()
             await self.checkCollision()
             time.sleep(1 / 60)
             # time.sleep(2)
