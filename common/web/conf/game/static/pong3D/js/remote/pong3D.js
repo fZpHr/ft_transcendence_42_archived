@@ -122,7 +122,6 @@ async function startGame(players, game, { up, down, userId }) {
 	game.floor.add(paddle_2_grp);
 	game.floor.add(sphere.collisionLight);
 	// game.floor.add(game.nameMesh);
-	game.scene.add(sphereGroup);
 
 
 	for (const data of sphere.torus)
@@ -149,12 +148,17 @@ async function startGame(players, game, { up, down, userId }) {
 	game.ball = sphere;
 
 	createLights();
-	game.renderer.setAnimationLoop(animate);
+
+
 
 	toggleMovePlayer(userId);
-	function animate() {
+
+	let msg = userId + ' | start';
+	sendToWsGame('start', msg);
+	console.log("starting js" + userId);
+
+	game.animate = () => {
 		sphere.moveTorus(0.05);
-		game.handleCamera();
 		if (move_up) {
 			let msg = userId + ' | up';
 			sendToWsGame('move', msg);
@@ -166,8 +170,12 @@ async function startGame(players, game, { up, down, userId }) {
 			movePaddles(game, userId, 'down');
 		}
 		if (game.render) {
+			console.log("rendering");
+			game.handleCamera();
 			sphere.move(game.ball.acceleration);
 			game.checkCollision(ground);
+			let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
+			// sendToWsGame('info', msg);
 		}
 		game.renderer.render(game.scene, game.camera.camera3D);
 	}
@@ -198,18 +206,18 @@ async function startGame(players, game, { up, down, userId }) {
 	}
 
 
-	async function onWindowResize() {
-		game.camera.camera3D.aspect = window.innerWidth / window.innerHeight;
-		game.camera.camera3D.updateProjectionMatrix();
+	// async function onWindowResize() {
+	// 	game.camera.camera3D.aspect = window.innerWidth / window.innerHeight;
+	// 	game.camera.camera3D.updateProjectionMatrix();
 
-		game.renderer.setSize(window.innerWidth, window.innerHeight);
+	// 	game.renderer.setSize(window.innerWidth, window.innerHeight);
 
-		// ground.groundMirror.getRenderTarget().setSize(
-		// 	window.innerWidth * window.devicePixelRatio,
-		// 	window.innerHeight * window.devicePixelRatio
-		// );
-	}
-	window.addEventListener('resize', onWindowResize());
+	// 	// ground.groundMirror.getRenderTarget().setSize(
+	// 	// 	window.innerWidth * window.devicePixelRatio,
+	// 	// 	window.innerHeight * window.devicePixelRatio
+	// 	// );
+	// }
+	// window.addEventListener('resize', onWindowResize());
 	async function toggleMovePlayer(userId) {
 		try {
 			document.addEventListener('keydown', function (event) {

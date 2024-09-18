@@ -5,21 +5,21 @@ import logging
 from .ball import Ball
 import json
 
-
 logger = logging.getLogger('print')
+
 class Engine:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.thread	= threading.Thread(target=asyncio.run, args=(self.checkBall(),))
-        self.thread.start()
         self.ball = Ball()
         self.players = []
+        self.radius = 40
         self.ws = None
         self.state = "waiting"
 
     async def sendtoPlayers(self, message, eventType):
         for player in self.players:
-            # logger.info(f"send to {player}")
+            logger.info(f"send to {player} {message}")
             await self.ws.channel_layer.group_send(
             self.ws.room_group_name,
             {
@@ -32,16 +32,20 @@ class Engine:
         
 
     async def moveBall(self):
-            await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
+            await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y, "start": False}), "moveBall")
     
     async def checkCollision(self):
-        if self.ball.pos.x > 20:
+        distanceFromCenter = (self.ball.pos.x * self.ball.pos.x + self.ball.pos.y * self.ball.pos.y) ** 0.5
+        # logger.info(f"check collision\ny: {self.ball.pos.y} acc.y: {self.ball.acc.y}\nx: {self.ball.pos.x} acc.x: {self.ball.acc.x}\ndistanceFromCenter: {distanceFromCenter}")
+        if distanceFromCenter + self.ball.radius >= self.radius:
             self.ball.acc.x *= -1
-            await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
-        if self.ball.pos.x < -20:
-            self.ball.acc.x *= -1
-            await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
-        logger.info(f"check collision\ny: {self.ball.pos.y} acc.y: {self.ball.acc.y}\nx: {self.ball.pos.x} acc.x: {self.ball.acc.x}")
+            await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y, "start": False}), "moveBall")
+        # if self.ball.pos.x > 20:
+        #     self.ball.acc.x *= -1
+        #     await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
+        # if self.ball.pos.x < -20:
+        #     self.ball.acc.x *= -1
+        #     await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
          
 	
     async def checkBall(self):
@@ -50,16 +54,12 @@ class Engine:
         self.ball.acc.y = 0
         self.ball.pos.x = 0
         self.ball.pos.y = 0
+        await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y, "start": True}), "moveBall")
+        self.state = "playing"
         while True:
-            if self.state == "waiting":
-                continue
-            if self.state == "starting":
-                await self.moveBall()
-                self.state = "playing"
-            self.ball.pos.y += self.ball.acc.y
             self.ball.pos.x += self.ball.acc.x
-            # logger.info("==================================================")
+            self.ball.pos.y += self.ball.acc.y
             await self.checkCollision()
+            # logger.info("==================================================")
             time.sleep(1 / 60)
-            # time.sleep(2)
             

@@ -311,19 +311,26 @@ class GameConsumer(AsyncWebsocketConsumer):
         userId = text_data_json['userId']
         eventType = text_data_json['eventType']
         message = text_data_json['message']
-        logger.info(f"[WebSocket GAME] : Received message: {message} in room {self.room_name}")
+        # logger.info(f"[WebSocket GAME] : Received message: {message} in room {self.room_name}")
 
         command = message.split(" | ")[1]
-        logger.info(command)
-        if command == "start":
+        if command == "start" and (self.server.players.__len__() == 2) and (self.server.state == "waiting"):
+            logger.info(f"=======================================\nreceived start from game {self.server.players.__len__()}")
             self.server.ws = self
-            self.server.ball.pos.x = 0.5
-            self.server.state = "starting"
+            self.server.thread.start()
             return 
         
+        if command == "info":
+            # self.server.ball.pos.x = float(message.split(' | ')[2])
+            # self.server.ball.pos.y = float(message.split(' | ')[4])
+            # logger.info(f"received info from game for ball | x: {message.split(' | ')[2]} z: {message.split(' | ')[4]} distance: {message.split(' | ')[5]}")
+            return
 		
         if command == "ready":
             self.server.players.append(userId)
+            logger.info(f"received ready from game {self.server.players.__len__()}")
+            for player in self.server.players:
+                logger.info(f"player: {player}")
             # return 
 
         await self.channel_layer.group_send(
@@ -341,7 +348,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         eventType = event['eventType']
         message = event['message']
 
-        logger.info(f"[WebSocket GAME] : Sending message: {message} to room {self.room_name}")
+        # logger.info(f"[WebSocket GAME] : Sending message: {message} to room {self.room_name} to user {userId}")
 
         await self.send(text_data=json.dumps({
             'userId' : userId,

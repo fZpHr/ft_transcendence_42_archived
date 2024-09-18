@@ -99,6 +99,7 @@ async function handleWsGameMessage(data) {
 			'move': move, // envoie deplacement {up, down} a laute
 			'start': start, // commencer le jeu (pas utiliser ni utils pour le moment)
 			'moveBall': moveBall, // deplacement de la balle pas encore fait 
+			'info': info, // info sur le jeu {start, end}
 			'end': end
 		}; // pas impelementer
 		eventTypes[data.eventType](data);
@@ -119,7 +120,7 @@ async function connectWsGame(roomName) {
 
 		wssGame.onmessage = function (event) {
 			let data = JSON.parse(event.data);
-			// console.log(data)
+			console.log(data)
 			handleWsGameMessage(data);
 		};
 
@@ -193,8 +194,6 @@ async function ready(data) {
 		if (p1Ready && p2Ready) {
 			console.log("ready here")
 			startInstance();
-			let msg = userId + ' | start';
-			sendToWsGame('start', msg);
 		}
 	} catch (error) {
 		console.error(error);
@@ -219,6 +218,8 @@ async function leave(data) {
 async function start(data) {
 	try {
 		console.log('[WS-G]=>(' + data.message + ')');
+		console.log("starting bg");
+		game.setRender();
 	} catch (error) {
 		console.error(error);
 	}
@@ -246,9 +247,19 @@ async function move(data) {
 async function moveBall(data) {
 	try {
 		var data = JSON.parse(data.message);
+		if (data.start == true)
+			game.setRender();
 		game.ball.acceleration.x = parseFloat(data.x);
 		game.ball.acceleration.y = parseFloat(data.y);
 		// moveSphere(game, parseFloat(data.message));
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+async function info(data) {
+	try {
+		console.log('[WS-G]=>(' + data.message + ')');
 	} catch (error) {
 		console.error(error);
 	}
@@ -284,8 +295,6 @@ async function toggleMakeReady() {
 			if (p1Ready && p2Ready) {
 				console.log("cdc")
 				startInstance();
-				let msg = userId + ' | start';
-				sendToWsGame('start', msg);
 			}
 		});
 	} catch (error) {
