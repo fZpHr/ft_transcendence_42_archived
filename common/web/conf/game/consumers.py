@@ -317,14 +317,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         if command == "start" and (self.server.players.__len__() == 2) and (self.server.state == "waiting"):
             logger.info(f"=======================================\nreceived start from game {self.server.players.__len__()}")
             self.server.ws = self
-            self.state = "playing"
+            self.server.state = "playing"
             self.server.thread.start()
             return 
         
         if command == "info":
             # self.server.ball.pos.x = float(message.split(' | ')[2])
             # self.server.ball.pos.y = float(message.split(' | ')[4])
-            logger.info(f"received info from game for ball | x: {message.split(' | ')[2]} z: {message.split(' | ')[4]} distance: {message.split(' | ')[5]}")
+            # logger.info(f"received info from game for ball | x: {message.split(' | ')[2]} z: {message.split(' | ')[4]} distance: {message.split(' | ')[5]}")
             return
 		
         if command == "ready":

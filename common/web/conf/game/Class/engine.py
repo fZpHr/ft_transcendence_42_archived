@@ -36,7 +36,7 @@ class Engine:
     
     async def checkCollision(self):
         distanceFromCenter = float(self.ball.pos.x * self.ball.pos.x + self.ball.pos.y * self.ball.pos.y) ** 0.5
-        logger.info(f"check collision\ny: {self.ball.pos.y} acc.y: {self.ball.acc.y}\nx: {self.ball.pos.x} acc.x: {self.ball.acc.x}\ndistanceFromCenter: {distanceFromCenter}")
+        # logger.info(f"check collision\ny: {self.ball.pos.y} acc.y: {self.ball.acc.y}\nx: {self.ball.pos.x} acc.x: {self.ball.acc.x}\ndistanceFromCenter: {distanceFromCenter}")
         if distanceFromCenter + self.ball.radius >= self.radius:
             self.ball.acc.x *= -1
             await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y, "start": False}), "moveBall")
