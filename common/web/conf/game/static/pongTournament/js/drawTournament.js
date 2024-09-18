@@ -191,10 +191,7 @@ async function drawTournament(ctx, gameTournament, NbrPlayer) {
 
 async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jumpHeight, nbrParticipants, directionArrow, canvasWidth, splitWidth) {
     try {
-        console.log('   g[id] => ', game.id+ ' | g[layer] =>' + game.layer + ' | g[next_game] =>' + game.next_game);
-        // console.log('   game[player] => ', game.players);
-        // console.log('   game[winner_player] => ', game.winner_player);
-        // console.log('   game[winner_ai] => ', game.winner_ai);
+        // console.log('   g[id] => ', game.id+ ' | g[layer] =>' + game.layer + ' | g[next_game] =>' + game.next_game);
         
         let firstPoints = jumpHeight + (ystep / 2);
         let lastPoints = firstPoints;
@@ -212,7 +209,11 @@ async function drawGame(ctx, roundNum, nbrRound, game, currentStartX, ystep, jum
             let yplayer = jumpHeight + (ystep / 2) + ystep * i;
             let len = canvasWidth / splitWidth / 2;
             let playerImg = 'https://png.pngtree.com/png-clipart/20191121/original/pngtree-sign-waiting-download-on-internet-icon-flat-style-png-image_5153330.jpg'
-            if (game.players.length > 0) {
+
+            if (nbrParticipants == game.players.length) {
+                playerImg = game.players[i].img;
+                playerImg = playerImg.startsWith('profile_pics') ? '/media/' + playerImg : playerImg;
+            } else if (game.players.length > 0 && i < nbrParticipants - game.players.length) {
                 playerImg = game.players[i].img;
                 playerImg = playerImg.startsWith('profile_pics') ? '/media/' + playerImg : playerImg;
             }
