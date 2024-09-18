@@ -118,9 +118,9 @@
     position: relative;
 }
 
-/* .player-slot:hover {
-    transform: scale(1.05);
-} */
+#pongTournamentLobby-content .player-slot#new-player-slot {
+    background-color: red;
+}
 
 #pongTournamentLobby-content .player-slot .player-data {
     width: 70%;
@@ -225,6 +225,8 @@
 
 #newplayer-btn {
     display: none;
+    justify-content: center;
+    align-items: center;
 }
 
 #newplayer-btn.active {
@@ -485,11 +487,9 @@
     #pongTournamentLobby-content .slop-content {
         width: 90%;
         gap: 10px 5%;
-        overflow: hidden;
     }
 
     #pongTournamentLobby-content .player-slot {
-        overflow: hidden;
         width: 47%;
     }
 }
@@ -547,6 +547,9 @@
         width: 100%;
         height: 50%;
         justify-content: center;
+    }
+    #pongTournamentLobby-content .player-found {
+        top: 70px;
     }
 }
 

@@ -325,6 +325,8 @@ function toggleChosePlayer() {
 async function updateLockAtRedirect() {
     try {
         let lockLobby = document.getElementById('lock-lobby');
+        if (!lockLobby)
+            return;
         let parrentBox = lockLobby.parentNode;
         lockLobby.remove();
         let redirect = document.createElement('button');

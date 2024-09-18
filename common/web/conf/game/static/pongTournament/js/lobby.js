@@ -13,7 +13,9 @@ async function domloaded() {
 async function innerCanvaIfLockLobby() {
     try {
         let element = document.getElementById('lobby-body');
-        let isLocked = element.getAttribute('data-locked');
+        let isLocked = await APIgetLobbyIsLocked(lobbyUUID);
+        isLocked = isLocked.locked;
+        console.log('isLocked', isLocked);
         if (isLocked) {
             let NbrPlayer = document.getElementsByClassName('player-present').length;
             console.log('NbrPlayer', NbrPlayer);
