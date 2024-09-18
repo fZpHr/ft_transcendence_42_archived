@@ -296,6 +296,35 @@ textarea:active {
     color: #fff;
 }
 
+.error-parent {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+}
+
+.error-parent-invite {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.error-message {
+    background-color: red;
+    color: #fff;
+}
+
+.error-parent i {
+    cursor: pointer;
+    margin-right: 10px;
+    animation: slideInFromRight 0.5s ease;
+}
+
+.error-parent-invite i{
+    cursor: pointer;
+    margin-right: 10px;
+    animation: slideInFromRight 0.5s ease;
+}
+
 .game-invite {
     border-radius: 10px;
     padding: 0px;

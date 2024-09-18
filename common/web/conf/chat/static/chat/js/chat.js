@@ -73,6 +73,11 @@ function handlersGameInvite(contactId, wsChat) {
                     contactId: contactId,
                 }),
             });
+            if (resp.status === 201)
+            {
+                errorInviteHandler();
+                return;
+            }
             resp = await resp.json();
             let message = 'Game invite';
             sendWebSocketMessage(message, userId, contactId , wsChat);
@@ -91,12 +96,35 @@ function handlersGameInvite(contactId, wsChat) {
             chooseGamesDiv.innerHTML += '<span>Pending</span>';
             msgDiv.appendChild(chooseGamesDiv);
             chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; 
         });
     } catch (error) {
         console.error('Failed to handlersGameInvite:', error);
     }
 }
 
+function errorInviteHandler() {
+    removeGameInvites();
+    let chatMessages = document.getElementById('chat-messages');
+    var parentDiv = document.createElement('div');
+    parentDiv.classList.add('error-parent-invite');
+    parentDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color: #ff0000;"></i>';
+    var msgDiv = document.createElement('div');
+    msgDiv.className = 'message';
+    msgDiv.classList.add('error-message');
+    msgDiv.classList.add('game-invite');
+    let gameDiv = document.createElement('div');
+    gameDiv.className = 'game-invite-head';
+    gameDiv.innerHTML = '<img src="https://d1tq3fcx54x7ou.cloudfront.net/uploads/store/tenant_161/download/366/image/large-041f064dd94c96b097973e5d41a9c45f.jpg" alt="game-inv-img">';
+    msgDiv.appendChild(gameDiv);
+    let chooseGamesDiv = document.createElement('div');
+    chooseGamesDiv.className = 'choose-games';
+    chooseGamesDiv.innerHTML += '<span>Error</span>';
+    msgDiv.appendChild(chooseGamesDiv);
+    parentDiv.appendChild(msgDiv);
+    chatMessages.appendChild(parentDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight; 
+}
 // ============================== CHAT utils ==============================
 
 
@@ -315,9 +343,20 @@ async function handleOpenChatPannel() {
 async function handleCloseChatChanel(contactId) {
     try {
         const backBtn = document.getElementById('back-btn');
+        const blockBtn = document.getElementById('block-btn');
+        const deleteBtn = document.getElementById('delete-btn');
         backBtn.addEventListener('click', async function () {
             await APIclearNotifChatFor(contactId);
-            // console.log('click');
+            wsChat.close();
+            toggleChatMenu(contactId);
+        });
+        blockBtn.addEventListener('click', async function () {
+            await APIclearNotifChatFor(contactId);
+            wsChat.close();
+            toggleChatMenu(contactId);
+        });
+        deleteBtn.addEventListener('click', async function () {
+            await APIclearNotifChatFor(contactId);
             wsChat.close();
             toggleChatMenu(contactId);
         });
@@ -375,6 +414,10 @@ async function progressSendMessages(contactId, wsChat) {
                     message: message,
                 }),
             });
+            if (resp.status === 201) {
+                handlerErrorMessages(messageInput, message);
+                return;
+            }
             resp = await resp.json();
             sendWebSocketMessage(message, userId, contactId , wsChat);
             messageInput.value = '';
@@ -393,6 +436,25 @@ async function progressSendMessages(contactId, wsChat) {
     } catch (error) {
         console.error('Failed to progressSendMessages', error);
     }
+}
+
+function handlerErrorMessages(messageInput, message) {
+    messageInput.value = '';
+    let chatMessages = document.getElementById('chat-messages');
+    var parentDiv = document.createElement('div');
+    var msgDiv = document.createElement('div');
+
+    msgDiv.className = 'message';
+
+    parentDiv.classList.add('error-parent');
+    parentDiv.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color: #ff0000;"></i>';
+
+    msgDiv.innerText = message;
+    msgDiv.classList.add('error-message');
+
+    parentDiv.appendChild(msgDiv);
+    chatMessages.appendChild(parentDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight; 
 }
 
 function handlersSendMessage(contactId, wsChat) {

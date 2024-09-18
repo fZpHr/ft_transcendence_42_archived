@@ -39,6 +39,9 @@ async function sendWebSocketMessage(message, senderId, contactId, wsChat) {
             'senderId': senderId,
             'contactId': contactId
         };
+        if (wsChat.readyState !== wsChat.OPEN) {
+            return;
+        }
         wsChat.send(JSON.stringify(data));
     } catch (error) {
         console.error('Error in sendWebSocketMessage:', error);
@@ -111,7 +114,9 @@ async function connectWebSocket(roomName) {
             addMessageToChat(data['message'], data['senderId'], data['contactId']);
         };
         
-        wsChat.onclose = function (e) {};
+        wsChat.onclose = function (e) {
+            console.log('[WebSocket] => connection closed:', e);
+        };
 
         wsChat.onerror = function (error) {
             console.error('[WebSocket] => error:', error);

@@ -12,6 +12,8 @@ function getSocialStatus(user) {
     };
     
     const icon = statusIcons[user.friend_status] || '';
+    if (icon == '<i class="fa-solid fa-hourglass-start"></i>' || icon == '<i class="fa-regular fa-paper-plane"></i>')
+        return `<a href="#" class="add-friend" data-id="${user.id}" data-status="${user.friend_status}" disable>${icon}</a>`;
     return `<a href="#" class="add-friend" data-id="${user.id}" data-status="${user.friend_status}">${icon}</a>`;
 }
 
@@ -21,8 +23,7 @@ function getUdateStatus(friend_status) {
     } else if (friend_status == 2) {
         return '<i class="fa-regular fa-paper-plane"></i>';
     } else {
-        console.error('Error in getUdateStatus:', friend_status);
-        return 'pbs';
+        return '<i class="fa-solid fa-user-plus"></i>';
     }
     
 }
@@ -32,6 +33,9 @@ function getUdateStatus(friend_status) {
 async function updateUIStatusUserWS(friendStatus, socialUserId) {
     try {
         let userToUpdate = document.querySelector(`.add-friend[data-id="${socialUserId}"]`);
+        if (!userToUpdate) {
+            return;
+        }
         userToUpdate.innerHTML = getUdateStatus(friendStatus);
         userToUpdate.setAttribute('data-status', friendStatus == 0 ? 2 : 3);
     } catch (error) {
@@ -77,7 +81,6 @@ async function updateSocialStatus(event) {
         const link = event.target.closest('a');
         const socialUserId = link.getAttribute('data-id');
         const friendStatus = link.getAttribute('data-status');
-
         await APIupdateSocialStatus(socialUserId, friendStatus);
         sendToWebSocket(friendStatus, socialUserId);
         updateUserSocialUI(socialUserId, friendStatus);
@@ -149,8 +152,8 @@ async function innerSocialPannel() {
                 event.preventDefault();
                 let href = event.currentTarget.href;
                 htmx.ajax('GET', href, {
-                    target: '#main-content', // The target element to update
-                    swap: 'innerHTML', // How to swap the content
+                    target: '#main-content',
+                    swap: 'innerHTML',
                 }).then(response => {
                     history.pushState({}, '', href);
                 });
@@ -182,12 +185,13 @@ async function innerSocialUser(socialUsers) {
         `).join('');
         const anchors = userContainer.querySelectorAll('a');
         anchors.forEach(anchor => {
+            console.log(anchor);
             anchor.addEventListener('click', async (event) => {
                 event.preventDefault();
                 let href = event.currentTarget.href;
                 htmx.ajax('GET', href, {
-                    target: '#main-content', // The target element to update
-                    swap: 'innerHTML', // How to swap the content
+                    target: '#main-content',
+                    swap: 'innerHTML',
                 }).then(response => {
                     history.pushState({}, '', href);
                 });
@@ -228,6 +232,10 @@ async function handleOpenSocialPannel() {
 async function handleUpdateStatusUser() {
     try {
         document.querySelectorAll('.add-friend').forEach(link => {
+            if (link.getAttribute('disable') === '') {
+                console.log('You can\'t update this user');
+                return;
+            }
             link.addEventListener('click', updateSocialStatus);
         });
     } catch (error) {
