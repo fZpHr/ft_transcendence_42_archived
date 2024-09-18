@@ -155,6 +155,7 @@ async function startGame(players, game, { up, down, userId }) {
 
 	let msg = userId + ' | start';
 	sendToWsGame('start', msg);
+
 	console.log("starting js" + userId);
 
 	game.animate = () => {
@@ -175,7 +176,7 @@ async function startGame(players, game, { up, down, userId }) {
 			sphere.move(game.ball.acceleration);
 			game.checkCollision(ground);
 			let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
-			// sendToWsGame('info', msg);
+			sendToWsGame('info', msg);
 		}
 		game.renderer.render(game.scene, game.camera.camera3D);
 	}

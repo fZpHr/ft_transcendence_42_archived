@@ -219,7 +219,7 @@ async function start(data) {
 	try {
 		console.log('[WS-G]=>(' + data.message + ')');
 		console.log("starting bg");
-		game.setRender();
+		// game.setRender();
 	} catch (error) {
 		console.error(error);
 	}

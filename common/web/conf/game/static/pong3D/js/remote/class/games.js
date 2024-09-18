@@ -35,6 +35,7 @@ class Game {
 	}
 
 	async setRender() {
+		console.log("setup render");
 		const container = document.getElementById('container-pong3D');
 		this.renderer = new THREE.WebGLRenderer({ antialias: true });
 		this.renderer.setPixelRatio(window.devicePixelRatio);
