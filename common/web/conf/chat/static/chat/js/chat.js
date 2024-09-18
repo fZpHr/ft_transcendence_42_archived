@@ -347,19 +347,16 @@ async function handleCloseChatChanel(contactId) {
         const deleteBtn = document.getElementById('delete-btn');
         backBtn.addEventListener('click', async function () {
             await APIclearNotifChatFor(contactId);
-            // console.log('click');
             wsChat.close();
             toggleChatMenu(contactId);
         });
         blockBtn.addEventListener('click', async function () {
             await APIclearNotifChatFor(contactId);
-            console.log('click');
             wsChat.close();
             toggleChatMenu(contactId);
         });
         deleteBtn.addEventListener('click', async function () {
             await APIclearNotifChatFor(contactId);
-            console.log('click');
             wsChat.close();
             toggleChatMenu(contactId);
         });
