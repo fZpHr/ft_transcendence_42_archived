@@ -60,7 +60,9 @@ def connect4(request):
 
 @login_required
 def pong3D(request):
-    return render(request, "pong3D/pong3D.html")
+	if request.htmx:
+		return render(request, "pong3D/pong3D.html")
+	return render(request, "pong3D/pong3D_full.html")
 
 @login_required
 def gameHome(request):
@@ -84,10 +86,10 @@ def pongCustom(request):
 
 @login_required
 def pongPrivGame(request):
-    user = request.user
-    player = Player.objects.get(username=user.username)
-    opponentId = request.GET.get('opponent', 'default_value')
-    opponent = Player.objects.get(id=opponentId)
+    # user = request.user
+    # player = Player.objects.get(username=user.username)
+    # opponentId = request.GET.get('opponent', 'default_value')
+    # opponent = Player.objects.get(id=opponentId)
 
     invitGame = GameInvitation.objects.filter(player1=player, player2=opponent)
     if not invitGame:

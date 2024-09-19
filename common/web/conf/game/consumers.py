@@ -332,10 +332,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.room_name = None
         self.room_group_name = None
         self.server = server
-        self.players = []
 
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_name = self.scope['url_route']['kwargs']['game_id']
         self.room_group_name = f'game_{self.room_name}'
 
 
@@ -359,13 +358,38 @@ class GameConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
 
         command = message.split(" | ")[1]
-        if command == "start":
-            self.server.checkBall()
+        if command == "start" and (self.server.players.__len__() == 2) and (self.server.state == "waiting"):
+            logger.info(f"=======================================\nreceived start from game {self.server.players.__len__()}")
+            self.server.ws = self
+            self.server.state = "playing"
+            self.server.thread.start()
             return 
         
+        if command == "info":
+            # logger.info(f"received info from game {self.server.players[0]} - {userId}")
+            if userId == self.server.players[0]:
+                self.server.ball.pos.x = float(message.split(' | ')[2])
+                self.server.ball.pos.y = float(message.split(' | ')[3])
+                self.server.ball.acc.x *= -1
+                await self.server.sendtoPlayers(json.dumps({"x": self.server.ball.acc.x, "y": self.server.ball.acc.y, "start": False}), "moveBall")
+            return
+        
+        if command == "reset":
+            if userId == self.server.players[0]:
+            # logger.info(f"received reset from game {self.server.players[0]} - {userId}")
+                self.server.ball.pos.x = 0
+                self.server.ball.pos.y = 0
+                self.server.ball.acc.x = 0.1
+                self.server.ball.acc.y = 0
+                await self.server.sendtoPlayers(json.dumps({"x": self.server.ball.acc.x, "y": self.server.ball.acc.y, "start": False}), "resetBall")   
+            return
+		
         if command == "ready":
-            self.players.append(userId)
-            return 
+            self.server.players.append(userId)
+            logger.info(f"received ready from game {self.server.players.__len__()}")
+            for player in self.server.players:
+                logger.info(f"player: {player}")
+            # return 
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -388,10 +412,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             'eventType': eventType,
             'message': message,
         }))
-
-    # async def sendtoPlayers(message, eventType):
-    #     for data in self.players:
-            
 
 class RankedGameConsumer(AsyncWebsocketConsumer):
     waiting_list = []

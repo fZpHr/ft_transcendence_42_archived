@@ -105,6 +105,7 @@ def register_42(request, format=None):
     }
     headers = {"Content-Type": "application/json; charset=utf-8"}
     r = requests.post('https://api.intra.42.fr/oauth/token', headers=headers, json=body)
+    print(r)
     token = r.json()["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
     r = requests.get('https://api.intra.42.fr/v2/me', headers=headers, json=body)
