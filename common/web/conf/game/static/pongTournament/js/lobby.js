@@ -21,7 +21,7 @@ async function innerCanvaIfLockLobby() {
             console.log('NbrPlayer', NbrPlayer);
             tournamentorganized = await APIlockLobby(lobbyUUID);
             tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
-            deleteLobbyBody();
+            await deleteLobbyBody();
             loadCanvaTournament(tournamentINfo, NbrPlayer);
         }
     } catch (error) {

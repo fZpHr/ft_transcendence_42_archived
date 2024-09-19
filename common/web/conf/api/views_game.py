@@ -409,7 +409,50 @@ def lockLobby(request):
         return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+    
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def getPlayerInTournament(request):
+    try :
+        lobbyUUID = request.GET.get('lobbyUUID')
+        logger.info(f"   lobbyUUID [{lobbyUUID}]")
+        lobby = Lobby.objects.get(UUID=lobbyUUID)
+        players = []
+        player_participants = lobby.players.all()
+        ia_participants = lobby.ai_players.all()
+        for player in player_participants:
+            players.append({
+                'id': player.id,
+                'is_ai': False,
+                'username': player.username,
+                'img': str(player.img)
+            })
+        for ia in ia_participants:
+            players.append({
+                'id': ia.id,
+                'is_ai': True,
+                'username': 'ia',
+                'img': 'https://www.forbes.fr/wp-content/uploads/2017/01/intelligence-artificielle-872x580.jpg.webp'
+            })
+        return Response({"players": players}, status=200)
+    except Lobby.DoesNotExist:
+        return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def getOwnerIdAtLobby(request):
+    try :
+        lobbyUUID = request.GET.get('lobbyUUID')
+        lobby = Lobby.objects.get(UUID=lobbyUUID)
+        return Response({"ownerId": lobby.owner.id}, status=200)
+    except Lobby.DoesNotExist:
+        return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 
 # ===============================================================================================
 # ============================================ UTILS ============================================

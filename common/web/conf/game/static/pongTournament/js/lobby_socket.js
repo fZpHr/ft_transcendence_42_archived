@@ -194,7 +194,7 @@ async function lock(data) {
         console.log('[WS-G]=> (' + data.message + ')');
         tournamentINfo = await APIgetTournamentInfo(data.message);
         let NbrPlayer = document.getElementsByClassName('player-present').length;
-        deleteLobbyBody();
+        await deleteLobbyBody();
         loadCanvaTournament(tournamentINfo, NbrPlayer);
     } catch (error) {
         console.error(error);

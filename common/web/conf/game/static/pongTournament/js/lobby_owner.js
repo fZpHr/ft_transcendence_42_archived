@@ -13,8 +13,9 @@ async function innerCanvaIfLockLobby() {
 
             tournamentINfo = await APIgetTournamentInfo(tournamentorganized.tournament.UUID);
             console.log('======= OWNER ==== tournamentINfo', tournamentINfo);
-            deleteLobbyBody();
+            await deleteLobbyBody();
             loadCanvaTournament(tournamentINfo, NbrPlayer);
+            updateLockAtRedirect();
         }
     } catch (error) {
         console.error('Failed to innerCanvaIfLockLobby', error);

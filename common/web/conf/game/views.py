@@ -124,6 +124,7 @@ def pongTournament(request):
         return render(request, "pongTournament/pongTournament.html")
     return render(request, "pongTournament/pongTournament_full.html")
 
+
 @login_required
 def pongTournamentLobby(request):
     try:
@@ -138,6 +139,10 @@ def pongTournamentLobby(request):
                 if img_path.startswith('profile_pics/'):
                     player.img = '/media/' + img_path
         ia_players = lobby.ai_players.all()
+        if not players.filter(id=playerId).exists():
+            if request.htmx:
+                return render(request, "pongTournament/pongTournament.html")
+            return render(request, "pongTournament/pongTournament_full.html")
         if request.htmx:
             return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
         return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
@@ -167,9 +172,30 @@ def pongTournamentGame(request):
                     break
         
         if gameId == -1:
-            return render(request, "pongTournament/pongTournament_full.html", {"error": "Game not found"})
-        
-
+            try:
+                lobby = Lobby.objects.get(UUID=lobbyUUID)
+                players = lobby.players.all()
+                for player in players:
+                    if hasattr(player, 'img') and player.img:
+                        img_path = str(player.img)
+                        if img_path.startswith('profile_pics/'):
+                            player.img = '/media/' + img_path
+                ia_players = lobby.ai_players.all()
+                if not players.filter(id=player).exists():
+                    if request.htmx:
+                        return render(request, "pongTournament/pongTournament.html")
+                    return render(request, "pongTournament/pongTournament_full.html")
+                if request.htmx:
+                    return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
+                return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
+            except Lobby.DoesNotExist:
+                if request.htmx:
+                    return render(request, "pongTournament/pongTournament.html", {"error": "Lobby not found"})
+                return render(request, "pongTournament/pongTournament_full.html", {"error": "Lobby not found"})
+            except Exception as e:
+                if request.htmx:
+                    return render(request, "pongTournament/pongTournament.html", {"error": "An unexpected error occurred"})
+                return render(request, "pongTournament/pongTournament_full.html", {"error": "An unexpected error occurred"})
         game = Game_Tournament.objects.get(id=gameId)
         participantsPlayer = game.players.all()
         participantsAI = game.ai_players.all()

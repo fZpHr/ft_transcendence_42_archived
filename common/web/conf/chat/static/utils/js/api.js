@@ -72,6 +72,13 @@ async function APIcreateLobby(userId, lobbyName) {
 	});
 }
 
+async function APIgetOwnerIdAtLobby(lobbyUUID) {
+	return new Promise(async (resolve, reject) => {
+		let allLobby = await getFetchAPI(`/api/getOwnerIdAtLobby/?lobbyUUID=${lobbyUUID}`);
+		resolve(allLobby);
+	});
+}
+
 async function APIgetAllLobby() {
 	return new Promise(async (resolve, reject) => {
 		let allLobby = await getFetchAPI(`/api/getAllLobby`);
@@ -89,6 +96,13 @@ async function APIgetUserById(userId) {
 async function APIgetTournamentInfo(tournamentUUID) {
 	return new Promise(async (resolve, reject) => {
 		let game = await getFetchAPI(`/api/getTournamentInfo?tournamentUUID=${tournamentUUID}`);
+		resolve(game);
+	});
+}
+
+async function APIgetPlayerInTournament(lobbyUUID) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/getPlayerInTournament?lobbyUUID=${lobbyUUID}`);
 		resolve(game);
 	});
 }

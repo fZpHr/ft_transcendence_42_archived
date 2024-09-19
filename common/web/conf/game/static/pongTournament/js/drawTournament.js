@@ -13,6 +13,71 @@ async function deleteLobbyBody() {
 
 }
 
+async function deleteLobbyBody() {
+    try {
+        let lobbyBody = document.getElementById('pongTournamentLobby-content');
+        let ownerId = await APIgetOwnerIdAtLobby(lobbyUUID);
+        ownerId = ownerId.ownerId;
+        console.log(ownerId);
+        lobbyBody.innerHTML = `
+            <div class="aside-player">
+                <div class="title-lobby">
+                    <h1>Player</h1>
+                </div>
+                <div id="aside-box-player" class="box-players">
+                </div>
+            </div>
+            <span class="loader" id="loader-container"></span>
+            <section class="lobby-content"> 
+                <div class="title-lobby">
+                    <h1>Lobby</h1>
+                </div> 
+                <div class="lobby-body" id="lobby-body" data-locked="true">
+                </div>
+                <div class="lobby-footer">
+                    ${(userId == ownerId) ? '<button id="lock-lobby" class="lock-lobby">Redirect</button>' : ''}
+                    <div id="lobby_uuid" data-value="${lobbyUUID}">
+                        <span>Lobby UUID = ${lobbyUUID}</span>
+                    </div>
+                </div>
+            </section>
+        `;
+        let loader = document.getElementById('loader-container');
+        await innerPlayerInAside();
+        loader.style.display = 'block';
+    } catch (error) {
+        console.error('Failed to deleteLobbyBody', error);
+    }
+}
+
+async function innerPlayerInAside() {
+    try {
+        let boxPlayer = document.getElementById('aside-box-player');
+        let players = await APIgetPlayerInTournament(lobbyUUID);
+        players = players.players
+        for (let i = 0; i < players.length; i++) {
+            let player = players[i];
+            let playerImg = player.img;
+            playerImg = playerImg.startsWith('profile_pics') ? '/media/' + playerImg : playerImg;
+            boxPlayer.innerHTML += `
+                <div class="player-slot player-present" id="player-${player.id}">
+                    <div class="player-data">
+                        <img src="${playerImg}" alt="pp">
+                        <div class="player-status-online online"></div>
+                        <span>${player.username}</span>
+                    </div>
+                    <div class="player-status">
+                        ${(player.id == userId || player.is_ai) ? '<div class="waiting-player"></div>' : '<div class="pending-player"></div>'}
+                    </div>
+                </div>
+            `;
+        }
+        sendToWsLobby('ping', userId + ' | ping');
+    } catch {
+        console.error('error in innerplayerinaside');
+    }
+}
+
 
 async function loadCanvaTournament(tournamentINfo, NbrPlayer) {
     try {
@@ -20,10 +85,10 @@ async function loadCanvaTournament(tournamentINfo, NbrPlayer) {
         let ctx = await initCanvas();
         await drawTournament(ctx, tournamentINfo.gameTournament, NbrPlayer);
         
-        let loader = document.getElementById('loader-container');
-        loader.style.display = 'none';
         
         await displayCanvaTournament();
+        let loader = document.getElementById('loader-container');
+        loader.remove();
         console.log('tournament is draw');
     } catch (error) {
         console.error('Failed to innerCanvaTournament', error);

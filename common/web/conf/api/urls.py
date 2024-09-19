@@ -72,4 +72,7 @@ urlpatterns += [
     path('finishGameOnlyIa/', views_game.finishGameOnlyIa),
     path('getLobbyIsLocked/', views_game.getLobbyIsLocked),
     path('removeLobby/', views_game.removeLobby),
+    path('getPlayerInTournament/', views_game.getPlayerInTournament),
+    path('getOwnerIdAtLobby/', views_game.getOwnerIdAtLobby),
+
 ]
