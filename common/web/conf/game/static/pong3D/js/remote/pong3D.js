@@ -156,8 +156,6 @@ async function startGame(players, game, { up, down, userId }) {
 	let msg = userId + ' | start';
 	sendToWsGame('start', msg);
 
-	console.log("starting js" + userId);
-
 	game.animate = () => {
 		sphere.moveTorus(0.05);
 		if (move_up) {
@@ -175,11 +173,19 @@ async function startGame(players, game, { up, down, userId }) {
 			game.handleCamera();
 			sphere.move(game.ball.acceleration);
 			game.checkCollision(ground);
-			// let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
-			// sendToWsGame('info', msg);
 		}
 		game.renderer.render(game.scene, game.camera.camera3D);
 	}
+
+
+	game.sendCollision = () => {
+		let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
+		sendToWsGame('info', msg);
+	}
+	// setInterval(() => {
+	// 	let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
+	// 	sendToWsGame('info', msg);
+	// }, (1 / 60) * 1000);
 
 	async function createLights() {
 

@@ -42,7 +42,10 @@ class Game {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		container.appendChild(this.renderer.domElement);
 		this.setScene();
-		this.renderer.setAnimationLoop(this.animate);
+		// this.renderer.setAnimationLoop(this.animate);
+		setInterval(() => {
+			this.animate();
+		}, (1 / 60) * 1000);
 	}
 
 	async setScene() {
@@ -202,34 +205,36 @@ class Game {
 	}
 
 	async checkCollision(ground) {
-		let distanceFromCenter = Math.sqrt(this.ball.group.position.x * this.ball.group.position.x + this.ball.group.position.z * this.ball.group.position.z);;
+		let distanceFromCenter = Math.sqrt(this.ball.group.position.x * this.ball.group.position.x + this.ball.group.position.z * this.ball.group.position.z);
 		this.distanceFromCenter = distanceFromCenter;
-		// if ((distanceFromCenter + this.ball.radius >= ground.groundRadius)) {
-		//     await this.ball.bounce(ground);
-		//     if (this.ball.group.position.x >= this.players[1].paddle.limit_up.physic.position.x && (this.players[1].paddle.limit_up.physic.position.z >= this.ball.group.position.z && this.players[1].paddle.limit_down.physic.position.z <= this.ball.group.position.z)) {
-		//         let limitY1 = 41 * Math.sin(Math.PI / 12 - this.players[1].group.rotation.y);
-		//         let limitY2 = 41 * Math.sin(-Math.PI / 12 - this.players[1].group.rotation.y);
-		//         let minY = Math.min(limitY1, limitY2);
-		//         let maxY = Math.max(limitY1, limitY2);
-		//         if (!(this.ball.group.position.z >= minY && this.ball.group.position.z <= maxY)) {
-		//             this.ball.resetCenter(this.ball.bouncing.angle, this.ball.bouncing.speed);
-		//             this.players[0].score++;
-		//             this.updateScore(this.players[0].score, this.players[1].score);
-		//         }
-		//     }
+		if ((distanceFromCenter + this.ball.radius >= ground.groundRadius)) {
+			if (this.ball.group.position.x >= this.players[1].paddle.limit_up.physic.position.x && (this.players[1].paddle.limit_up.physic.position.z >= this.ball.group.position.z && this.players[1].paddle.limit_down.physic.position.z <= this.ball.group.position.z)) {
+				let limitY1 = 41 * Math.sin(Math.PI / 12 - this.players[1].group.rotation.y);
+				let limitY2 = 41 * Math.sin(-Math.PI / 12 - this.players[1].group.rotation.y);
+				let minY = Math.min(limitY1, limitY2);
+				let maxY = Math.max(limitY1, limitY2);
+				if (!(this.ball.group.position.z >= minY && this.ball.group.position.z <= maxY)) {
+					// this.ball.resetCenter(this.ball.bouncing.angle, this.ball.bouncing.speed);
+					// this.players[0].score++;
+					// this.updateScore(this.players[0].score, this.players[1].score);
+				} else return this.sendCollision();
+			} else
+				return this.sendCollision();
+			//     await this.ball.bounce(ground);
 
-		//     if ((this.ball.group.position.x <= this.players[0].paddle.limit_up.physic.position.x && this.ball.group.position.x <= 0) && (this.players[0].paddle.limit_up.physic.position.z >= this.ball.group.position.z && this.players[0].paddle.limit_down.physic.position.z <= this.ball.group.position.z)) {
-		//         let limitY1 = 41 * -Math.sin(Math.PI / 12 - this.players[0].group.rotation.y);
-		//         let limitY2 = 41 * -Math.sin(-Math.PI / 12 - this.players[0].group.rotation.y);
-		//         let minY = Math.min(limitY1, limitY2);
-		//         let maxY = Math.max(limitY1, limitY2);
-		//         if (!(this.ball.group.position.z >= minY && this.ball.group.position.z <= maxY)) {
-		//             this.ball.resetCenter(this.ball.bouncing.angle, -this.ball.bouncing.speed);
-		//             this.players[1].score++;
-		//             this.updateScore(this.players[0].score, this.players[1].score);
-		//         }
-		//     }
-		// }
+			if ((this.ball.group.position.x <= this.players[0].paddle.limit_up.physic.position.x && this.ball.group.position.x <= 0) && (this.players[0].paddle.limit_up.physic.position.z >= this.ball.group.position.z && this.players[0].paddle.limit_down.physic.position.z <= this.ball.group.position.z)) {
+				let limitY1 = 41 * -Math.sin(Math.PI / 12 - this.players[0].group.rotation.y);
+				let limitY2 = 41 * -Math.sin(-Math.PI / 12 - this.players[0].group.rotation.y);
+				let minY = Math.min(limitY1, limitY2);
+				let maxY = Math.max(limitY1, limitY2);
+				if (!(this.ball.group.position.z >= minY && this.ball.group.position.z <= maxY)) {
+					this.ball.resetCenter(this.ball.bouncing.angle, -this.ball.bouncing.speed);
+					this.players[1].score++;
+					this.updateScore(this.players[0].score, this.players[1].score);
+				} else this.sendCollision();
+			} else
+				return this.sendCollision();
+		}
 	}
 
 	// async movePaddles() {

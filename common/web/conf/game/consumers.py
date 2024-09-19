@@ -322,9 +322,22 @@ class GameConsumer(AsyncWebsocketConsumer):
             return 
         
         if command == "info":
-            # self.server.ball.pos.x = float(message.split(' | ')[2])
-            # self.server.ball.pos.y = float(message.split(' | ')[4])
-            # logger.info(f"received info from game for ball | x: {message.split(' | ')[2]} z: {message.split(' | ')[4]} distance: {message.split(' | ')[5]}")
+            # logger.info(f"received info from game {self.server.players[0]} - {userId}")
+            if userId == self.server.players[0]:
+                self.server.ball.pos.x = float(message.split(' | ')[2])
+                self.server.ball.pos.y = float(message.split(' | ')[3])
+                self.server.ball.acc.x *= -1
+                await self.server.sendtoPlayers(json.dumps({"x": self.server.ball.acc.x, "y": self.server.ball.acc.y, "start": False}), "moveBall")
+            return
+        
+        if command == "reset":
+            if userId == self.server.players[0]:
+            # logger.info(f"received reset from game {self.server.players[0]} - {userId}")
+                self.server.ball.pos.x = 0
+                self.server.ball.pos.y = 0
+                self.server.ball.acc.x = 0.1
+                self.server.ball.acc.y = 0
+                await self.server.sendtoPlayers(json.dumps({"x": self.server.ball.acc.x, "y": self.server.ball.acc.y, "start": False}), "resetBall")   
             return
 		
         if command == "ready":
