@@ -13,7 +13,7 @@ class Engine:
         self.thread	= threading.Thread(target=asyncio.run, args=(self.checkBall(),))
         self.ball = Ball()
         self.players = []
-        self.radius = 41
+        self.radius = 40
         self.ws = None
         self.state = "waiting"
 
@@ -32,10 +32,12 @@ class Engine:
     
     async def checkCollision(self):
         distanceFromCenter = float(self.ball.pos.x * self.ball.pos.x + self.ball.pos.y * self.ball.pos.y) ** 0.5
-        # logger.info(f"check collision\ny: {self.ball.pos.y} acc.y: {self.ball.acc.y}\nx: {self.ball.pos.x} acc.x: {self.ball.acc.x}\ndistanceFromCenter: {distanceFromCenter}")
+        logger.info(f"distanceFromCenter: {distanceFromCenter}")
+        logger.info(f"pos {self.ball.pos.x}, {self.ball.pos.y}")
         if distanceFromCenter + self.ball.radius >= self.radius:
-            self.ball.acc.x *= -1
             await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y, "start": False}), "moveBall")
+            # self.ball.bounce(self)
+            self.ball.acc.x *= -1
         # if self.ball.pos.x > 20:
         #     self.ball.acc.x *= -1
         #     await self.sendtoPlayers(json.dumps({"x": self.ball.acc.x, "y": self.ball.acc.y}), "moveBall")
@@ -58,5 +60,5 @@ class Engine:
             self.ball.pos.y += self.ball.acc.y
             await self.checkCollision()
             # logger.info("==================================================")
-            time.sleep(1 / 70)
+            time.sleep(1 / 45)
             

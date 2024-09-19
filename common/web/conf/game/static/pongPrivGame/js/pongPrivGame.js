@@ -250,7 +250,7 @@ async function moveBall(data) {
 		if (data.start == true)
 			game.setRender();
 		game.ball.acceleration.x = parseFloat(data.x);
-		game.ball.acceleration.y = parseFloat(data.y);
+		game.ball.acceleration.z = parseFloat(data.y);
 		// moveSphere(game, parseFloat(data.message));
 	} catch (error) {
 		console.error(error);

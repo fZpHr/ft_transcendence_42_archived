@@ -178,6 +178,8 @@ async function startGame(players, game, { up, down, userId }) {
 			// let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
 			// sendToWsGame('info', msg);
 		}
+		setTimeout(() => {
+		}, 1000 / 45);
 		game.renderer.render(game.scene, game.camera.camera3D);
 	}
 

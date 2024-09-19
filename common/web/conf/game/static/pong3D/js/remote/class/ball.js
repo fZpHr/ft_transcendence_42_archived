@@ -90,6 +90,7 @@ class Ball {
 
 	async move(acceleration) {
 		this.ballDirection.x = acceleration.x;
+		this.ballDirection.z = acceleration.y;
 		this.group.position.add(this.ballDirection);
 	}
 

@@ -202,10 +202,13 @@ class Game {
 	}
 
 	async checkCollision(ground) {
-		let distanceFromCenter = Math.sqrt(this.ball.group.position.x * this.ball.group.position.x + this.ball.group.position.z * this.ball.group.position.z);;
+		let distanceFromCenter = Math.sqrt(this.ball.group.position.x * this.ball.group.position.x + this.ball.group.position.z * this.ball.group.position.z);
 		this.distanceFromCenter = distanceFromCenter;
-		// if ((distanceFromCenter + this.ball.radius >= ground.groundRadius)) {
-		//     await this.ball.bounce(ground);
+		console.log("distanceFromCenter", distanceFromCenter);
+		console.log("COLISION!",this.ball.group.position.x, this.ball.group.position.z);
+		if ((distanceFromCenter + this.ball.radius >= ground.groundRadius)) {
+			// await this.ball.bounce(ground);
+		}
 		//     if (this.ball.group.position.x >= this.players[1].paddle.limit_up.physic.position.x && (this.players[1].paddle.limit_up.physic.position.z >= this.ball.group.position.z && this.players[1].paddle.limit_down.physic.position.z <= this.ball.group.position.z)) {
 		//         let limitY1 = 41 * Math.sin(Math.PI / 12 - this.players[1].group.rotation.y);
 		//         let limitY2 = 41 * Math.sin(-Math.PI / 12 - this.players[1].group.rotation.y);
