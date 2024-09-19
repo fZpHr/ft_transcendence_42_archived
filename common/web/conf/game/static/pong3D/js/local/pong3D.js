@@ -158,6 +158,18 @@ async function startGame(player1, player2, nameBord)
     game.ball = sphere;
     
     createLights();
+
+	let backGroundTexture = new THREE.CubeTextureLoader().load([
+		'/static/pong3D/js/local/img/px_eso0932a.jpg',
+		'/static/pong3D/js/local/img/nx_eso0932a.jpg',
+		'/static/pong3D/js/local/img/py_eso0932a.jpg',
+		'/static/pong3D/js/local/img/ny_eso0932a.jpg',
+		'/static/pong3D/js/local/img/pz_eso0932a.jpg',
+		'/static/pong3D/js/local/img/nz_eso0932a.jpg',
+	])
+	game.scene.background = backGroundTexture
+
+
     game.renderer.setAnimationLoop(animate);
 
 

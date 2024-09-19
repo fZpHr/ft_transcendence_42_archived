@@ -1,14 +1,6 @@
-{% extends 'base.html' %}
-
+{% load i18n %}
 {% load static %}
-{% block title %}pongPrivGame{% endblock %}
-
-{% block custom_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'pongPrivGame/css/pongPrivGame.css' %}">
-
-{% endblock %} 
-
-{% block content %}
 <div class="pongPrivGame-wrapper" id="container-pong3D">
 	<div class="video-background">
 		<video src="{% static 'home/img/pong-video.mp4' %}" autoplay loop muted></video>
@@ -54,10 +46,21 @@
         </div>
 	</section>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script type="module" src="{% static 'pongPrivGame/js/bundle.js' %}"></script>
-<!-- <script src="{% static 'pongPrivGame/js/pongPrivGame-WebSocket.js' %}"></script>
-<script src="{% static 'pongPrivGame/js/pongPrivGame-WS-action.js' %}"></script> -->
-{% endblock %}
+<script type="importmap">
+	{
+		"imports": {
+			"three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+			"renderpass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/RenderPass.js",
+			"effectcomposer": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/EffectComposer.js",
+			"unrealbloompass": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+			"fontloader": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/FontLoader.js",
+			"linematerial": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineMaterial.js",
+			"linegeometry": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/LineGeometry.js",
+			"line2": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/lines/Line2.js",
+			"timer": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/misc/Timer.js",
+			"orbitcontrols": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/controls/OrbitControls.js",
+			"cameracontrols": "https://cdn.jsdelivr.net/npm/camera-controls@2.8.5/dist/camera-controls.module.min.js"
+		}
+	}
+</script>
+<script src="{% static 'pongPrivGame/js/bundle.js' %}"></script>

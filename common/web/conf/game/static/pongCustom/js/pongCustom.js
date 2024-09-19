@@ -1,17 +1,12 @@
-import { CustomGame } from './class/CustomGame.js';
 import * as THREE from 'three';
+import { CustomGame } from './class/CustomGame.js';
 
 let game = new CustomGame();
 
 // document.addEventListener('DOMContentLoaded', function () {
 function customInit() {
 	toggleCustomManager();
-	
-	let startBtn = document.getElementById('start');
-	console.log('startBtn', startBtn);
-	startBtn.addEventListener('click', async function () {
-		game.init()
-	}, {once: true});
+	game.init();
 }
 // });
 
@@ -27,10 +22,10 @@ function hexToRgb(hex) {
 }
 
 async function toggleCustomBallUpdate() {
-    if (game.Customball)
-        game.showBall();
-    else
-        await game.createBall();
+	if (game.Customball)
+		game.showBall();
+	else
+		await game.createBall();
 	try {
 		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
 		inputs.forEach(input => {
@@ -60,6 +55,10 @@ async function toggleCustomBallUpdate() {
 }
 
 async function toggleCustomPlatformUpdate() {
+	if (game.Customplateau)
+		game.showPlateau();
+	else
+		await game.createPlateau();
 	try {
 		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
 		inputs.forEach(input => {
@@ -171,12 +170,13 @@ async function toggleCustomAnimationUpdate() {
 
 // ==================== SHOW CUSTOM ELEMENTS ====================
 
-async function toggleUpdateCAM() {
+async function toggleUpdateCAM_ball() {
 	try {
 		const cameraModes = ['rotate', 'focus ball', 'libre'];
 		let currentModeIndex = 0;
 
 		function updateCameraModeDisplay() {
+			console.log('updateCameraModeDisplay');
 			document.getElementById('camera-mode').textContent = cameraModes[currentModeIndex];
 			switch (currentModeIndex) {
 				case 1:
@@ -256,7 +256,7 @@ async function showCustomBall() {
         `;
 		toggleBackCustomManager();
 		toggleCustomBallUpdate();
-		toggleUpdateCAM();
+		toggleUpdateCAM_ball();
 	} catch (e) {
 		console.log(e)
 	}
@@ -304,7 +304,7 @@ async function showCustomPlatform() {
         `;
 		toggleBackCustomManager();
 		toggleCustomPlatformUpdate();
-		toggleUpdateCAM();
+		// toggleUpdateCAM();
 	} catch (e) {
 		console.log(e)
 	}
@@ -548,12 +548,11 @@ async function toggleBackCustomManager() {
 		let backBtn = document.getElementById('back_custom');
 		backBtn.addEventListener('click', async function () {
 			let dataBtn = backBtn.getAttribute('data-type');
-			if (dataBtn == "ball")
-            {
-                game.scene.remove(game.Customball.group);
-                game.creationBall = false;   
-            }
-            hideCustomBox();
+			if (dataBtn == "ball") {
+				game.scene.remove(game.Customball.group);
+				game.creationBall = false;
+			}
+			hideCustomBox();
 			showCustomManager();
 		});
 	} catch (e) {

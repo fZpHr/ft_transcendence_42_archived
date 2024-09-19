@@ -6,5 +6,6 @@ class Ball:
 
         self.pos: 		Vector = Vector(0, 0)
         self.acc: 		Vector = Vector(0, 0)
+        self.radius: 	float = 0.5
     
     
