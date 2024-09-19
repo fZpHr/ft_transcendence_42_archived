@@ -175,7 +175,7 @@ async function startGame(players, game, { up, down, userId }) {
 			game.handleCamera();
 			sphere.move(game.ball.acceleration);
 			game.checkCollision(ground);
-			let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
+			// let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
 			// sendToWsGame('info', msg);
 		}
 		game.renderer.render(game.scene, game.camera.camera3D);
