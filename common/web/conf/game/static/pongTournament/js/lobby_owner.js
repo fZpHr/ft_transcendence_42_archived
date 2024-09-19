@@ -325,16 +325,20 @@ function toggleChosePlayer() {
 
 async function updateLockAtRedirect() {
     try {
+        console.log('hree');
         let lockLobby = document.getElementById('lock-lobby');
         if (!lockLobby)
             return;
+        console.log('oui')
         let parrentBox = lockLobby.parentNode;
         lockLobby.remove();
         let redirect = document.createElement('button');
         redirect.className = 'lock-lobby';
         redirect.innerHTML = 'Redirect';
         parrentBox.appendChild(redirect);
+        console.log('debug', redirect);
         redirect.addEventListener('click', async function () {
+            console.log('clicked');
             let nbrPlayer = document.getElementsByClassName('player-present').length;
             let nbrPlayerReady = document.getElementsByClassName('waiting-player').length;
             if (nbrPlayer != nbrPlayerReady) {

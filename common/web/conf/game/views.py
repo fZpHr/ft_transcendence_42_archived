@@ -173,7 +173,11 @@ def pongTournamentGame(request):
         
         if gameId == -1:
             try:
+                playerId = request.user.username
+                playerId = Player.objects.get(username=playerId).id
                 lobby = Lobby.objects.get(UUID=lobbyUUID)
+                logger.info('debug HERE ----------------')
+                logger.info(lobby)
                 players = lobby.players.all()
                 for player in players:
                     if hasattr(player, 'img') and player.img:
@@ -181,10 +185,6 @@ def pongTournamentGame(request):
                         if img_path.startswith('profile_pics/'):
                             player.img = '/media/' + img_path
                 ia_players = lobby.ai_players.all()
-                if not players.filter(id=player).exists():
-                    if request.htmx:
-                        return render(request, "pongTournament/pongTournament.html")
-                    return render(request, "pongTournament/pongTournament_full.html")
                 if request.htmx:
                     return render(request, "pongTournament/pongTournamentLobby.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
                 return render(request, "pongTournament/pongTournamentLobby_full.html", {"lobby": lobby, "players": players, "ia_players": ia_players, 'userId': playerId})
