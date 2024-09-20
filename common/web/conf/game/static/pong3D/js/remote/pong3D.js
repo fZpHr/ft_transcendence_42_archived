@@ -146,6 +146,7 @@ async function startGame(players, game, { up, down, userId }) {
 	sphere.group = sphereGroup;
 
 	game.ball = sphere;
+	game.ground = ground;
 
 	createLights();
 
@@ -178,9 +179,16 @@ async function startGame(players, game, { up, down, userId }) {
 	}
 
 
-	game.sendCollision = () => {
-		let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
+	game.sendCollision = async () => {
+		console.log("collision");
+		let newVector = await game.ball.bounce();
+		let msg = userId + ' | info | ' + newVector.x + ' | ' + newVector.z;
 		sendToWsGame('info', msg);
+	}
+
+	game.reset = async () => {
+		let msg = userId + ' | reset';
+		sendToWsGame('reset', msg);
 	}
 	// setInterval(() => {
 	// 	let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;

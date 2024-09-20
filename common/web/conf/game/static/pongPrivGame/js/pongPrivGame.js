@@ -99,7 +99,8 @@ async function handleWsGameMessage(data) {
 			'move': move, // envoie deplacement {up, down} a laute
 			'start': start, // commencer le jeu (pas utiliser ni utils pour le moment)
 			'moveBall': moveBall, // deplacement de la balle pas encore fait 
-			'info': info, // info sur le jeu {start, end}
+			'info': info, // info sur le jeu {start, end},
+			'resetBall': resetBall, // reset la balle
 			'end': end
 		}; // pas impelementer
 		eventTypes[data.eventType](data);
@@ -120,7 +121,7 @@ async function connectWsGame(roomName) {
 
 		wssGame.onmessage = function (event) {
 			let data = JSON.parse(event.data);
-			console.log(data)
+			// console.log(data)
 			handleWsGameMessage(data);
 		};
 
@@ -237,7 +238,7 @@ async function end(data) {
 
 async function move(data) {
 	try {
-		console.log('[WS-G]=>(' + data.message + ')');
+		// console.log('[WS-G]=>(' + data.message + ')');
 		movePaddles(game, data.message.split(' | ')[0], data.message.split(' | ')[1]);
 	} catch (error) {
 		console.error(error);
@@ -250,8 +251,9 @@ async function moveBall(data) {
 		if (data.start == true)
 			game.setRender();
 		game.ball.acceleration.x = parseFloat(data.x);
-		game.ball.acceleration.y = parseFloat(data.y);
-		console.log("collision", new Date().getTime(), game.ball.group.position.x, game.ball.group.position.y);
+		game.ball.acceleration.z = parseFloat(data.y);
+		game.ball.move(game.ball.acceleration, game.ground);
+		// console.log("collision", new Date().getTime(), game.ball.group.position.x, game.ball.group.position.y);
 		// moveSphere(game, parseFloat(data.message));
 	} catch (error) {
 		console.error(error);
@@ -261,6 +263,15 @@ async function moveBall(data) {
 async function info(data) {
 	try {
 		console.log('[WS-G]=>(' + data.message + ')');
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+async function resetBall(data) {
+	try {
+		// console.log('[WS-G]=>(' + data.message + ')');
+		game.ball.resetCenter(game.ball.bouncing.speed)
 	} catch (error) {
 		console.error(error);
 	}

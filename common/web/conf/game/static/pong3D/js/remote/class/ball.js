@@ -88,12 +88,18 @@ class Ball {
 		}
 	}
 
-	async move(acceleration) {
-		this.ballDirection.x = acceleration.x;
+	async move(acceleration, ground) {
+		this.ballDirection.copy(acceleration);
+		if (ground != undefined) {
+			const normal = this.group.position.clone().normalize();
+			this.group.position.copy(normal.multiplyScalar(ground.groundRadius - this.radius));
+			this.collisionLight.position.set(this.group.position.x, 1, this.group.position.z);
+			return;
+		}
 		this.group.position.add(this.ballDirection);
 	}
 
-	async bounce(ground) {
+	async bounce() {
 		return new Promise(async (resolve, reject) => {
 			const normal = this.group.position.clone().normalize();
 			const dotProduct = this.ballDirection.dot(normal);
@@ -101,17 +107,17 @@ class Ball {
 			newVelocity.x += Math.abs(Math.random() * this.randomnessFactor - this.randomnessFactor / 2);
 			newVelocity.z += Math.abs(Math.random() * this.randomnessFactor - this.randomnessFactor / 2);
 			this.ballDirection.copy(newVelocity);
-			this.group.position.copy(normal.multiplyScalar(ground.groundRadius - this.radius));
-			this.collisionLight.position.set(this.group.position.x, 1, this.group.position.z);
-			resolve(true);
+			// this.group.position.copy(normal.multiplyScalar(ground.groundRadius - this.radius));
+			// this.collisionLight.position.set(this.group.position.x, 1, this.group.position.z);
+			resolve(newVelocity);
 		});
 	}
 
 
 	async resetCenter(speed) {
-		await this.genRandomsAngle();
+		// await this.genRandomsAngle();
 		this.ballDirection.x = 0.5;
-		this.ballDirection.z = Math.sin(this.bouncing.angle) * speed;
+		this.ballDirection.z = Math.sin(0.6) * speed;
 		this.group.position.set(0, 0, 0);
 	}
 }

@@ -213,13 +213,17 @@ class Game {
 				let limitY2 = 41 * Math.sin(-Math.PI / 12 - this.players[1].group.rotation.y);
 				let minY = Math.min(limitY1, limitY2);
 				let maxY = Math.max(limitY1, limitY2);
+				console.log(this.players[1].paddle.limit_up.physic.position.z, this.ball.group.position.z);
+				console.log(this.players[1].paddle.limit_down.physic.position.z, this.ball.group.position.z);
+				console.log(minY, maxY, this.ball.group.position.z);
 				if (!(this.ball.group.position.z >= minY && this.ball.group.position.z <= maxY)) {
 					// this.ball.resetCenter(this.ball.bouncing.angle, this.ball.bouncing.speed);
 					// this.players[0].score++;
 					// this.updateScore(this.players[0].score, this.players[1].score);
+					console.log("reset");
+					this.reset();
 				} else return this.sendCollision();
-			} else
-				return this.sendCollision();
+			}
 			//     await this.ball.bounce(ground);
 
 			if ((this.ball.group.position.x <= this.players[0].paddle.limit_up.physic.position.x && this.ball.group.position.x <= 0) && (this.players[0].paddle.limit_up.physic.position.z >= this.ball.group.position.z && this.players[0].paddle.limit_down.physic.position.z <= this.ball.group.position.z)) {
@@ -228,10 +232,12 @@ class Game {
 				let minY = Math.min(limitY1, limitY2);
 				let maxY = Math.max(limitY1, limitY2);
 				if (!(this.ball.group.position.z >= minY && this.ball.group.position.z <= maxY)) {
-					this.ball.resetCenter(this.ball.bouncing.angle, -this.ball.bouncing.speed);
-					this.players[1].score++;
-					this.updateScore(this.players[0].score, this.players[1].score);
-				} else this.sendCollision();
+					// this.ball.resetCenter(this.ball.bouncing.angle, -this.ball.bouncing.speed);
+					// this.players[1].score++;
+					// this.updateScore(this.players[0].score, this.players[1].score);
+					this.reset();
+					console.log("reset");
+				} else return this.sendCollision();
 			} else
 				return this.sendCollision();
 		}
