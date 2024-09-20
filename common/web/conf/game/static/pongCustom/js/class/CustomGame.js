@@ -63,16 +63,16 @@ class CustomGame {
 
     async createPlateau(){
         return new Promise(async(resolve, reject)=>{
-            this.Customplateau = new CustomPlateau(this);
-            await this.Customplateau.init();
+            this.CustomPlateau = new CustomPlateau(this);
+            await this.CustomPlateau.init();
             this.showPlateau();
             resolve(true);
         });
-    }
+    }	
 
     async showPlateau(){
         this.creationPlateau = true;
-        this.scene.add(this.Customplateau.floor);
+        this.scene.add(this.CustomPlateau.group);
     }
 
     async createScene() {
@@ -166,7 +166,7 @@ class CustomGame {
         if (this.creationBall)
             return (this.Customball.rendering());
         if (this.creationPlateau)
-            return (this.Customplateau.rendering());
+            return (this.CustomPlateau.rendering());
         this.cameraAngle += this.move_angle;
         this.camera.position.x = this.cameraDistance * Math.sin(this.cameraAngle);
         this.camera.position.z = this.cameraDistance * Math.cos(this.cameraAngle);

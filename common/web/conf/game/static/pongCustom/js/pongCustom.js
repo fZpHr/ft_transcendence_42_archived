@@ -3,12 +3,10 @@ import { CustomGame } from './class/CustomGame.js';
 
 let game = new CustomGame();
 
-// document.addEventListener('DOMContentLoaded', function () {
 function customInit() {
 	toggleCustomManager();
 	game.init();
 }
-// });
 
 // ==================== TOGGLE UPDATE CUSTOM ELEMENTS ====================
 
@@ -22,8 +20,10 @@ function hexToRgb(hex) {
 }
 
 async function toggleCustomBallUpdate() {
-	if (game.Customball)
+	if (game.Customball) {
 		game.showBall();
+		await updateCustomBallInput();
+	}
 	else
 		await game.createBall();
 	try {
@@ -41,7 +41,7 @@ async function toggleCustomBallUpdate() {
 				} else if (event.target.id === 'ball-Emissive-intensit') {
 					game.Customball.intensity = parseFloat(event.target.value);
 				} else if (event.target.id === 'ball-light-intensity') {
-					game.Customball.light.intensity = parseFloat(event.target.value);
+					game.Customballgame.light.intensity = parseFloat(event.target.value);
 				} else if (event.target.id === 'ball-light-color') {
 					let color = hexToRgb(event.target.value);
 					game.Customball.light.color = new THREE.Color(`rgb(${color.r},${color.g},${color.b})`).convertSRGBToLinear();
@@ -55,7 +55,7 @@ async function toggleCustomBallUpdate() {
 }
 
 async function toggleCustomPlatformUpdate() {
-	if (game.Customplateau)
+	if (game.CustomPlateau)
 		game.showPlateau();
 	else
 		await game.createPlateau();
@@ -65,18 +65,26 @@ async function toggleCustomPlatformUpdate() {
 			input.addEventListener('input', (event) => {
 				// game.Customball.group.remove(game.Customball.custom_ball);
 				if (event.target.id === 'platform-color') {
-					console.log('platform-color => ', event.target.value);
+					let colorPlateau = hexToRgb(event.target.value);
+					game.CustomPlateau.plateau_data.color = new THREE.Color(`rgb(${colorPlateau.r},${colorPlateau.g},${colorPlateau.b})`).convertSRGBToLinear();
+					// console.log('platform-color => ', event.target.value);
 				} else if (event.target.id === 'platform-size') {
-					console.log('platform-size => ', event.target.value);
+					game.CustomPlateau.radius = parseFloat(event.target.value);
+					// console.log('platform-size => ', event.target.value);
 				} else if (event.target.id === 'platform-reflexion') {
-					console.log('platform-reflexion => ', event.target.value);
+					game.CustomPlateau.plateau_data.color = parseFloat(event.target.value);
+					// console.log('platform-reflexion => ', event.target.value);
 				} else if (event.target.id === 'platform-light') {
+					game.CustomPlateau.emissiveIntensity = parseFloat(event.target.value);
 					console.log('platform-light => ', event.target.value);
 				} else if (event.target.id === 'border-color') {
-					console.log('border-color => ', event.target.value);
+					let colorBorder = hexToRgb(event.target.value);
+					game.CustomPlateau.wall.color = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
+					// console.log('border-color => ', event.target.value);
 				} else if (event.target.id === 'limiteur-color') {
-					console.log('limiteur-color => ', event.target.value);
+					// console.log('limiteur-color => ', event.target.value);
 				}
+				game.CustomPlateau.updatePlateau();
 				// console.log('event.target.id', event.target.id, 'event.target.value', event.target.value);
 				// game.Customball.updateBall();
 			});
@@ -87,6 +95,15 @@ async function toggleCustomPlatformUpdate() {
 }
 
 async function toggleCustomPaddleUpdate() {
+	if (game.CustomPaddle) {
+		if (game.CustomPlateau)
+			game.showPlateau();
+		else
+			await game.createPlateau();
+		game.showPaddle();
+	}
+	else
+		await game.createPaddle();
 	try {
 		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
 		inputs.forEach(input => {
@@ -165,6 +182,29 @@ async function toggleCustomAnimationUpdate() {
 		});
 	} catch (e) {
 		console.log(e)
+	}
+}
+
+// ==================== UPDATE CUSTOM INPUT ELEMENTS ====================
+
+async function updateCustomBallInput () {
+	try {
+		console.log('updateCustomBallINPUT===================>');
+		// let ballColor = document.getElementById('ball-color');
+		// ballColor.value = game.Customball.color;
+		let ballSize = document.getElementById('ball-size');
+		ballSize.value = game.Customball.radius;
+		let ballEmissiveInensit = document.getElementById('ball-Emissive-intensit');
+		ballEmissiveInensit.value = game.Customball.intensity;
+		let ballLightIntensity = document.getElementById('ball-light-intensity');
+		ballLightIntensity.value = game.Customball.light.intensity;
+		// let ballLightColor = document.getElementById('ball-light-color');
+		// ballLightColor.value = game.Customball.light.color;
+		let ballAccessory = document.getElementById('ball-accessory');
+		ballAccessory.value = game.Customball.option;
+		console.log('==================> END');
+	} catch {
+		console.error('error in updateCustomBallInput')
 	}
 }
 
@@ -268,7 +308,7 @@ async function showCustomPlatform() {
 		customBox.innerHTML = `
             <div class="title-custom">
                 <span>Platform</span>
-                <i class="fas fa-arrow-left" id="back_custom"></i>
+                <i class="fas fa-arrow-left" id="back_custom" data-type="plateau"></i>
             </div>
             <div class="custom-option">
                 <div class="custom-option-element color">
@@ -277,15 +317,15 @@ async function showCustomPlatform() {
                 </div>
                 <div class="custom-option-element">
                     <label for="platform-size">Size :</label>
-                    <input type="range" id="platform-size" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
+                    <input type="range" id="platform-size" class="size-input" min="20" max="60" step="1" value="41">
                 </div>
                 <div class="custom-option-element">
                     <label for="platform-reflexion">Reflexion :</label>
-                    <input type="range" id="platform-reflexion" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
+                    <input type="range" id="platform-reflexion" class="size-input" min="0" max="1" step="0.01" value="0">
                 </div>
                 <div class="custom-option-element">
                     <label for="platform-light">Light :</label>
-                    <input type="range" id="platform-light" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
+                    <input type="range" id="platform-light" class="size-input" min="0" max="20" step="0.2" value="0.5">
                 </div>
                 <div class="custom-option-element color">
                     <label for="border-color">Border :</label>
@@ -551,6 +591,13 @@ async function toggleBackCustomManager() {
 			if (dataBtn == "ball") {
 				game.scene.remove(game.Customball.group);
 				game.creationBall = false;
+			}
+			if (dataBtn == "plateau")
+			{
+				game.scene.remove(game.CustomPlateau.group);
+				game.creationPlateau = false;
+			} else {
+				console.log(dataBtn);	
 			}
 			hideCustomBox();
 			showCustomManager();
