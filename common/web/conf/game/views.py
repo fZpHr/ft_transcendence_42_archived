@@ -80,9 +80,13 @@ def pongLocal(request):
 
 @login_required
 def pongCustom(request):
+    dataUrl = request.GET.get('data-url', 'none')
+    context = {
+        'dataUrl': dataUrl
+    }
     if request.htmx:
-        return render(request, "pongCustom/pongCustom.html")
-    return render(request, "pongCustom/pongCustom_full.html")
+        return render(request, "pongCustom/pongCustom.html", context)
+    return render(request, "pongCustom/pongCustom_full.html", context)
 
 @login_required
 def pongPrivGame(request):

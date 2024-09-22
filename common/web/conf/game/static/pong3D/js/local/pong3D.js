@@ -5,11 +5,10 @@ import { Game } from './class/games.js'
 import { Player } from './class/player.js'
 // import { RGBELoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/RGBELoader.js';
 
-async function startGame(player1, player2, nameBord)
-{
+async function startGame(player1, player2, nameBord, customGame) {
     let element = [];
     let game = new Game();
-    
+
     let ground = new Plateau(
         { radius: 40, segments: 64, },
         { color: 0xb5b5b5 },
@@ -17,7 +16,7 @@ async function startGame(player1, player2, nameBord)
         { radius: 41, tube: 1, radialSegments: 32, tubularSegments: 200 },
         { color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 200, opacity: 0.5, roughness: 0.1, metalness: 1 }
     );
-    
+
     let player_1 = new Player(
         { radius: 41, tube: 1.1, radialSegments: 32, tubularSegments: 200, arc: Math.PI / 6 },
         { color: 0xffffff, opacity: 0.8, roughness: 0.1, metalness: 0, emissive: 0xffffff, emissiveIntensity: 100 },
@@ -92,33 +91,58 @@ async function startGame(player1, player2, nameBord)
         { up: parseInt(player2.ctrl_up), down: parseInt(player2.ctrl_down) },
         { name: player2.name, img: player2.img }
     )
-    
+
     const sphere = new Ball(
         {
-            radius: 0.5, widthSegments: 32, heightSegments: 32, color: 0x00ffff, emissive: 0x00ffff,
-            emissiveIntensity: 30, roughness: 0.7, metalness: 0.7
+            radius: customGame.custom_ball.size,
+            widthSegments: 32,
+            heightSegments: 32,
+            color: 0x00ffff,
+            emissive: 0x00ffff,
+
+            emissiveIntensity: customGame.custom_ball.emissiveIntensity,
+            roughness: 0.7,
+            metalness: 0.7
         },
-        { radius: 0.55, tube: 0.1, radialSegments: 32, tubularSegments: 200 },
-        { color: 0x000000, opacity: 0.8, roughness: 0.1, metalness: 0, emissive: 0x000000, emissiveIntensity: 50 },
-        { color: 0x00ffff, intensity: 150 },
-        { nbrTorus: 3 },
+        { 
+            radius: 0.55,
+            tube: 0.1,
+            radialSegments: 32,
+            tubularSegments: 200
+        },
+        {
+            color: 0x000000,
+            opacity: 0.8,
+            roughness: 0.1,
+            metalness: 0,
+            emissive: 0x000000,
+            emissiveIntensity: 50 
+        },
+        {
+            color: 0x00ffff,
+            intensity: customGame.custom_ball.lightIntensity,
+        },
+        {
+            nbrTorus: 3
+        },
         {
             coefficientOfRestitution: 1.05, randomnessFactor: 0.4,
             lights: { color: 0xff0000, intensity: 200, x: 0, y: -1, z: 0 }
         },
         { max: 0.5, min: -0.5, speed: 0.1 }
     );
-    
-    
+
+
+
     game.players.push(player_1);
     game.players.push(player_2);
     await game.setName(nameBord);
-    
+
     let sphereGroup = new THREE.Group();
     let limits = new THREE.Group();
     let paddle_1_grp = new THREE.Group();
     let paddle_2_grp = new THREE.Group();
-    
+
     game.floor.add(ground.groundMirror);
     game.floor.add(ground.plateau);
     game.floor.add(ground.circle3D);
@@ -128,47 +152,46 @@ async function startGame(player1, player2, nameBord)
     game.floor.add(sphere.collisionLight);
     game.floor.add(game.nameMesh);
     game.scene.add(sphereGroup);
-    
+
     element.push(game.floor);
     element.push(sphereGroup);
     element.push(game.nameMesh);
 
-    
+
     for (const data of sphere.torus)
         sphereGroup.add(data);
     sphereGroup.add(sphere.sphere3D);
     sphereGroup.add(sphere.light);
-    
+
     limits.add(player_1.paddle.limit_up.physic);
     limits.add(player_1.paddle.limit_down.physic);
     limits.add(player_2.paddle.limit_up.physic);
     limits.add(player_2.paddle.limit_down.physic);
-    
+
     paddle_1_grp.add(player_1.paddle.paddle3D);
     paddle_1_grp.add(player_1.paddle.limit_up.light);
     paddle_1_grp.add(player_1.paddle.limit_down.light);
     paddle_2_grp.add(player_2.paddle.paddle3D);
     paddle_2_grp.add(player_2.paddle.limit_up.light);
     paddle_2_grp.add(player_2.paddle.limit_down.light);
-    
+
     player_1.group = paddle_1_grp;
     player_2.group = paddle_2_grp;
     sphere.group = sphereGroup;
-    
+
     game.ball = sphere;
-    
+
     createLights();
 
-	let backGroundTexture = new THREE.CubeTextureLoader().load([
-		'/static/pong3D/js/local/img/px_eso0932a.jpg',
-		'/static/pong3D/js/local/img/nx_eso0932a.jpg',
-		'/static/pong3D/js/local/img/py_eso0932a.jpg',
-		'/static/pong3D/js/local/img/ny_eso0932a.jpg',
-		'/static/pong3D/js/local/img/pz_eso0932a.jpg',
-		'/static/pong3D/js/local/img/nz_eso0932a.jpg',
-	])
-	game.scene.background = backGroundTexture
-
+    let backGroundTexture = new THREE.CubeTextureLoader().load([
+        '/static/pong3D/js/local/img/px_eso0932a.jpg',
+        '/static/pong3D/js/local/img/nx_eso0932a.jpg',
+        '/static/pong3D/js/local/img/py_eso0932a.jpg',
+        '/static/pong3D/js/local/img/ny_eso0932a.jpg',
+        '/static/pong3D/js/local/img/pz_eso0932a.jpg',
+        '/static/pong3D/js/local/img/nz_eso0932a.jpg',
+    ])
+    game.scene.background = backGroundTexture
 
     game.renderer.setAnimationLoop(animate);
 
@@ -176,22 +199,21 @@ async function startGame(player1, player2, nameBord)
     function animate() {
         sphere.moveTorus(0.05);
         game.handleCamera();
-        if (game.render)
-        {
+        if (game.render) {
             sphere.move();
             game.checkCollision(ground);
             game.movePaddles();
         }
         game.renderer.render(game.scene, game.camera.camera3D);
     }
-    
+
     async function createLights() {
-    
+
         const numLights = 32;
         const lightRadius = 40;
         const lightColor = 0x00ffff;
         const lightIntensity = 150;
-    
+
         for (let i = 0; i < numLights; i++) {
             const angle = (i / numLights) * 2 * Math.PI;
             const x = lightRadius * Math.cos(angle);
@@ -209,14 +231,14 @@ async function startGame(player1, player2, nameBord)
             game.floor.add(light);
         }
     }
-    
-    
+
+
     async function onWindowResize() {
         game.camera.camera3D.aspect = window.innerWidth / window.innerHeight;
         game.camera.camera3D.updateProjectionMatrix();
-    
+
         game.renderer.setSize(window.innerWidth, window.innerHeight);
-    
+
         ground.groundMirror.getRenderTarget().setSize(
             window.innerWidth * window.devicePixelRatio,
             window.innerHeight * window.devicePixelRatio
@@ -224,14 +246,64 @@ async function startGame(player1, player2, nameBord)
     }
     window.addEventListener('resize', onWindowResize());
 
-    document.addEventListener('htmx:beforeSwap', function(event) {
+    document.addEventListener('htmx:beforeSwap', function (event) {
         // remove all event listener
         window.removeEventListener('resize', onWindowResize);
         game.renderer.setAnimationLoop(null);
         game.render = false;
         for (const data of element)
             game.scene.remove(data);
-    }, {once: true});
+    }, { once: true });
+
+
+
+    // CustomGameForBen
+
+    async function updateCustomGame() {
+        return (new Promise(async(resolve, reject) => {
+            try {
+                if (!customGame)
+                    return;
+                if (customGame.custom_ball)
+                    await updateCustomBall();
+                else
+                    console.log('NONE ERROR HERE');
+            } catch {
+                console.error('error in updateCustomGame');
+                resolve(true);
+            }
+            resolve(true);
+        }));
+    }
+
+    async function updateCustomBall() {
+        return (new Promise(async(resolve, reject) => {
+            try {
+                console.log('je passe par ici');
+                if (customGame.custom_ball.custom_animation)
+                    sphere.nbrTorus = 3;
+                else {
+                    sphere.nbrTorus = 0;
+                    console.log('je suis passer par la');
+                }
+                // if (customGame.custom_ball.color)
+                // 
+                // if (customGame.custom_ball.colorLight)
+                //     // 
+                // if (customGame.custom_ball.emissiveIntensity)
+
+                // if (customGame.custom_ball.lightIntensity)
+
+                if (customGame.custom_ball.size)
+                    sphere.radius = customGame.custom_ball.size;
+            } catch {
+                console.error('error in updateCustomBall');
+                resolve(true);
+            }
+            resolve(true);
+        }));
+    }
+
 }
 
 export {

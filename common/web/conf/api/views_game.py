@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from .models import Player, Friends, Messages, User, Lobby, AIPlayer, Tournament, Game_Tournament
+from .models import Player, Friends, Messages, User, Lobby, AIPlayer, Tournament, Game_Tournament, PongCustomGame
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import FormParser
 from .serializer import LoginEncoder, PlayerSerializer
@@ -563,6 +563,78 @@ def removeLobby(request):
         return Response({"error": f"Lobby with id {lobbyUUID} does not exist"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+# ===============================================================================================
+# ============================================ GAME Custom ============================================
+# ===============================================================================================
+
+@csrf_exempt
+@api_view(['POST'])
+@login_required
+def setPongCustomGame(request):
+    try:
+        idGame = request.data.get('idGame')
+        custom_data = request.data.get('data')
+        logger.info('idgame')
+        logger.info(idGame)
+        logger.info('custome data')
+        logger.info(custom_data)
+
+
+        pong_custom_game = PongCustomGame.objects.create(
+            custom_ball=custom_data.get('custom_ball'),
+            custom_plateau=custom_data.get('custom_plateau'),
+            custom_paddle=custom_data.get('custom_paddle'),
+            custom_map=custom_data.get('custom_map'),
+            custom_score=custom_data.get('custom_score'),
+            custom_animation=custom_data.get('custom_animation'),
+        )
+
+        if idGame == -1:
+            return JsonResponse({"customGame": {
+                "idCustom": pong_custom_game.id,
+                "custom_ball": pong_custom_game.custom_ball,
+                "custom_plateau": pong_custom_game.custom_plateau,
+                "custom_paddle": pong_custom_game.custom_paddle,
+                "custom_map": pong_custom_game.custom_map,
+                "custom_score": pong_custom_game.custom_score,
+                "custom_animation": pong_custom_game.custom_animation,
+            }}, status=200)
+        game = Game.objects.latest('created_at')
+        game.custom_game = pong_custom_game
+        game.save()
+
+        return JsonResponse({'status': 'success', 'message': 'Custom game saved.'}, status=200)
+
+    except Game.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Game not found.'}, status=500)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def getPongCustomData(request):
+    try:
+        idCustomGame = request.GET.get('idCustomGame')
+        if not idCustomGame:
+            return JsonResponse({"error": "L'ID du jeu personnalisé est requis"}, status=400)
+        pong_custom_game = PongCustomGame.objects.get(id=idCustomGame)
+        
+        custom_game_data = {
+            "idCustom": pong_custom_game.id,
+            "custom_ball": pong_custom_game.custom_ball,
+            "custom_plateau": pong_custom_game.custom_plateau,
+            "custom_paddle": pong_custom_game.custom_paddle,
+            "custom_map": pong_custom_game.custom_map,
+            "custom_score": pong_custom_game.custom_score,
+            "custom_animation": pong_custom_game.custom_animation,
+        }
+        return JsonResponse({"customGame": custom_game_data}, status=200)
+    except PongCustomGame.DoesNotExist:
+        return JsonResponse({"error": "Jeu personnalisé non trouvé"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 # ===============================================================================================
 # ============================================ GAME MANDA ============================================

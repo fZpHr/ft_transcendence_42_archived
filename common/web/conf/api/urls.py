@@ -72,4 +72,6 @@ urlpatterns += [
     path('finishGameOnlyIa/', views_game.finishGameOnlyIa),
     path('getLobbyIsLocked/', views_game.getLobbyIsLocked),
     path('removeLobby/', views_game.removeLobby),
+    path('setPongCustomGame/', views_game.setPongCustomGame),
+    path('getPongCustomData/', views_game.getPongCustomData),
 ]

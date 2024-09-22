@@ -123,9 +123,10 @@ function getGameUserInfo() {
 async function toggleCustomGame() {
     try {
         let customGame = document.getElementById('curstom-game');
-
+        
         customGame.addEventListener('click', function() {
             console.log('click custom game');
+            window.location.href = '/game/pong/custom/?data-url=/game/pong/local/?customId=';
         });
     } catch (error) {
         console.error(error);
@@ -136,16 +137,23 @@ async function toggleStartGame() {
     try {
         let startGameBox = document.getElementById('start-game');
         console.log('startGameBox => ', startGameBox);
-        startGameBox.addEventListener('click', function() {
+        startGameBox.addEventListener('click', async function() {
             let gameInfo = getGameUserInfo();
-            console.log('game user info => ', gameInfo);
+            // console.log('game user info => ', gameInfo);
             let player1 = gameInfo.player1;
             let player2 = gameInfo.player2;
             let box = document.getElementById('container-pong3D');
             let footer = document.getElementById('footer');
             footer.style.display = 'none';
             box.innerHTML = '';
-            startGame(player1, player2, gameInfo.nameBord);
+
+            // let customId = 
+            let customGame = await APIgetDataCustomGame(25);
+            console.log(customGame.customGame);
+            console.log(customGame.customGame.custom_ball);
+            // await updatePongData(customGame.customGame);
+
+            startGame(player1, player2, gameInfo.nameBord, customGame.customGame);
         });
     } catch (error) {
         console.error(error);
@@ -153,7 +161,6 @@ async function toggleStartGame() {
 }
 
 document.addEventListener('htmx:beforeSwap', function(event) {
-    /* TODO remove all event listeners here*/
     console.log("htmx:beforeSwap event listener");
 }, {once: true});
 

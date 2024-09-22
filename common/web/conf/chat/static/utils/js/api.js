@@ -143,6 +143,15 @@ async function APIremoveLobby(lobbyUUID) {
 }
 
 
+// pongCustome
+
+async function APIgetDataCustomGame(idCustomGame) {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/getPongCustomData?idCustomGame=${idCustomGame}`);
+		resolve(game);
+	});
+}
+
 function APIupdateSocialStatus(socialUserId, friendStatus) {
     return fetch("/api/updateSocialStatus/", {
         method: "POST",
@@ -256,6 +265,27 @@ async function APIsetWinnerAtTournamentGame(idGame, idWinner, isIa) {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({ idGame, idWinner, isIa }),
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Network response was not ok ' + response.statusText);
+		}
+		return response.json();
+	})
+	.catch(error => {
+		console.error("Failed to add player to lobby:", error);
+		throw error;
+	});
+}
+
+async function APIsaveCustomGame(data, idGame) {
+	return fetch("/api/setPongCustomGame/", {
+		method: "POST",
+		headers: {
+			"X-CSRFToken": getCookie("csrftoken"),
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ data, idGame}),
 	})
 	.then(response => {
 		if (!response.ok) {

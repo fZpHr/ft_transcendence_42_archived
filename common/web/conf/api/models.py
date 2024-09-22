@@ -8,6 +8,15 @@ import uuid
 
 # Create your models here.
 
+class PongCustomGame(models.Model):
+    id = models.AutoField(primary_key=True)
+    custom_ball = models.JSONField(null=True, blank=True)
+    custom_plateau = models.JSONField(null=True, blank=True)
+    custom_paddle = models.JSONField(null=True, blank=True)
+    custom_map = models.JSONField(null=True, blank=True)
+    custom_score = models.JSONField(null=True, blank=True)
+    custom_animation = models.JSONField(null=True, blank=True)
+
 class Player(models.Model):
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=255, unique=True)
@@ -52,6 +61,7 @@ class Game(models.Model):
     elo_before_player2 = models.IntegerField()
     elo_after_player1 = models.IntegerField(null=True) 
     elo_after_player2 = models.IntegerField(null=True)
+    custom_game = models.ForeignKey(PongCustomGame, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class GameInvitation(models.Model):
@@ -93,6 +103,7 @@ class Game_Tournament(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     next_game = models.ForeignKey('Game_Tournament', on_delete=models.CASCADE, related_name='previous_game', null=True, blank=True)
     layer = models.IntegerField(default=0)
+    custom_game = models.ForeignKey(PongCustomGame, on_delete=models.SET_NULL, null=True, blank=True)
 
 class Tournament(models.Model):
     UUID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -1,501 +1,33 @@
 import * as THREE from 'three';
 import { CustomGame } from './class/CustomGame.js';
 
+import * as pongCustomBall from './manager/pongCustomBall.js'
+import * as pongCustomPlatform from './manager/pongCustomPlatform.js'
+import * as pongCustomPaddle from './manager/pongCustomPaddle.js'
+import * as pongCustomScore from './manager/pongCustomScore.js'
+import * as pongCustomMap from './manager/pongCustomMap.js'
+import * as pongCustomAnimation from './manager/pongCustomAnimation.js'
+import * as pongCustomAccessory from './manager/pongCustomAccessory.js'
+
+
 let game = new CustomGame();
 
+
+// ===========================================================================
+// ==================== Init =================================================
+// ===========================================================================
+
+
 function customInit() {
-	toggleCustomManager();
 	game.init();
+	toggleCustomManager();
+	toggleSaveCustomGame();
 }
 
-// ==================== TOGGLE UPDATE CUSTOM ELEMENTS ====================
 
-function hexToRgb(hex) {
-	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	return result ? {
-		r: parseInt(result[1], 16),
-		g: parseInt(result[2], 16),
-		b: parseInt(result[3], 16)
-	} : null;
-}
-
-async function toggleCustomBallUpdate() {
-	if (game.Customball) {
-		game.showBall();
-		await updateCustomBallInput();
-	}
-	else
-		await game.createBall();
-	try {
-		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
-		inputs.forEach(input => {
-			input.addEventListener('input', (event) => {
-				game.Customball.group.remove(game.Customball.custom_ball);
-				if (event.target.id === 'ball-size') {
-					game.Customball.radius = parseFloat(event.target.value);
-				} else if (event.target.id === 'ball-color') {
-					let color = hexToRgb(event.target.value);
-					game.Customball.color = new THREE.Color(`rgb(${color.r},${color.g},${color.b})`).convertSRGBToLinear();
-				} else if (event.target.id === 'ball-accessory') {
-					game.Customball.option = event.target.value;
-				} else if (event.target.id === 'ball-Emissive-intensit') {
-					game.Customball.intensity = parseFloat(event.target.value);
-				} else if (event.target.id === 'ball-light-intensity') {
-					game.Customballgame.light.intensity = parseFloat(event.target.value);
-				} else if (event.target.id === 'ball-light-color') {
-					let color = hexToRgb(event.target.value);
-					game.Customball.light.color = new THREE.Color(`rgb(${color.r},${color.g},${color.b})`).convertSRGBToLinear();
-				}
-				game.Customball.updateBall();
-			});
-		});
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function toggleCustomPlatformUpdate() {
-	if (game.CustomPlateau)
-		game.showPlateau();
-	else
-		await game.createPlateau();
-	try {
-		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
-		inputs.forEach(input => {
-			input.addEventListener('input', (event) => {
-				// game.Customball.group.remove(game.Customball.custom_ball);
-				if (event.target.id === 'platform-color') {
-					let colorPlateau = hexToRgb(event.target.value);
-					game.CustomPlateau.plateau_data.color = new THREE.Color(`rgb(${colorPlateau.r},${colorPlateau.g},${colorPlateau.b})`).convertSRGBToLinear();
-					// console.log('platform-color => ', event.target.value);
-				} else if (event.target.id === 'platform-size') {
-					game.CustomPlateau.radius = parseFloat(event.target.value);
-					// console.log('platform-size => ', event.target.value);
-				} else if (event.target.id === 'platform-reflexion') {
-					game.CustomPlateau.plateau_data.color = parseFloat(event.target.value);
-					// console.log('platform-reflexion => ', event.target.value);
-				} else if (event.target.id === 'platform-light') {
-					game.CustomPlateau.emissiveIntensity = parseFloat(event.target.value);
-					console.log('platform-light => ', event.target.value);
-				} else if (event.target.id === 'border-color') {
-					let colorBorder = hexToRgb(event.target.value);
-					game.CustomPlateau.wall.color = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
-					// console.log('border-color => ', event.target.value);
-				} else if (event.target.id === 'limiteur-color') {
-					// console.log('limiteur-color => ', event.target.value);
-				}
-				game.CustomPlateau.updatePlateau();
-				// console.log('event.target.id', event.target.id, 'event.target.value', event.target.value);
-				// game.Customball.updateBall();
-			});
-		});
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function toggleCustomPaddleUpdate() {
-	if (game.CustomPaddle) {
-		if (game.CustomPlateau)
-			game.showPlateau();
-		else
-			await game.createPlateau();
-		game.showPaddle();
-	}
-	else
-		await game.createPaddle();
-	try {
-		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
-		inputs.forEach(input => {
-			input.addEventListener('input', (event) => {
-				// game.Customball.group.remove(game.Customball.custom_ball);
-				if (event.target.id === 'paddle-color') {
-					console.log('paddle-color => ', event.target.value);
-				} else if (event.target.id === 'paddle-size') {
-					console.log('paddle-size => ', event.target.value);
-				} else if (event.target.id === 'paddle-reflexion') {
-					console.log('paddle-reflexion => ', event.target.value);
-				} else if (event.target.id === 'paddle-light') {
-					console.log('paddle-light => ', event.target.value);
-				}
-				// console.log('event.target.id', event.target.id, 'event.target.value', event.target.value);
-				// game.Customball.updateBall();
-			});
-		});
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function toggleCustomMapUpdate() {
-	try {
-		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
-		inputs.forEach(input => {
-			input.addEventListener('input', (event) => {
-				// game.Customball.group.remove(game.Customball.custom_ball);
-				if (event.target.id === 'map-fond') {
-					console.log('map-fond => ', event.target.value);
-				}
-				// console.log('event.target.id', event.target.id, 'event.target.value', event.target.value);
-				// game.Customball.updateBall();
-			});
-		});
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function toggleCustomScoreUpdate() {
-	try {
-		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
-		inputs.forEach(input => {
-			input.addEventListener('input', (event) => {
-				// game.Customball.group.remove(game.Customball.custom_ball);
-				if (event.target.id === 'score-color') {
-					console.log('score-color => ', event.target.value);
-				} else if (event.target.id === 'score-light') {
-					console.log('score-light => ', event.target.value);
-				} else if (event.target.id === 'score-font') {
-					console.log('score-font => ', event.target.value);
-				}
-				// console.log('event.target.id', event.target.id, 'event.target.value', event.target.value);
-				// game.Customball.updateBall();
-			});
-		});
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function toggleCustomAnimationUpdate() {
-	try {
-		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
-		inputs.forEach(input => {
-			input.addEventListener('input', (event) => {
-				// game.Customball.group.remove(game.Customball.custom_ball);
-				if (event.target.id === 'animation-type') {
-					console.log('animation-type => ', event.target.value);
-				}
-				// console.log('event.target.id', event.target.id, 'event.target.value', event.target.value);
-				// game.Customball.updateBall();
-			});
-		});
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-// ==================== UPDATE CUSTOM INPUT ELEMENTS ====================
-
-async function updateCustomBallInput () {
-	try {
-		console.log('updateCustomBallINPUT===================>');
-		// let ballColor = document.getElementById('ball-color');
-		// ballColor.value = game.Customball.color;
-		let ballSize = document.getElementById('ball-size');
-		ballSize.value = game.Customball.radius;
-		let ballEmissiveInensit = document.getElementById('ball-Emissive-intensit');
-		ballEmissiveInensit.value = game.Customball.intensity;
-		let ballLightIntensity = document.getElementById('ball-light-intensity');
-		ballLightIntensity.value = game.Customball.light.intensity;
-		// let ballLightColor = document.getElementById('ball-light-color');
-		// ballLightColor.value = game.Customball.light.color;
-		let ballAccessory = document.getElementById('ball-accessory');
-		ballAccessory.value = game.Customball.option;
-		console.log('==================> END');
-	} catch {
-		console.error('error in updateCustomBallInput')
-	}
-}
-
-// ==================== SHOW CUSTOM ELEMENTS ====================
-
-async function toggleUpdateCAM_ball() {
-	try {
-		const cameraModes = ['rotate', 'focus ball', 'libre'];
-		let currentModeIndex = 0;
-
-		function updateCameraModeDisplay() {
-			console.log('updateCameraModeDisplay');
-			document.getElementById('camera-mode').textContent = cameraModes[currentModeIndex];
-			switch (currentModeIndex) {
-				case 1:
-					game.Customball.toggle_cam = true;
-					break;
-				case 2:
-					game.Customball.toggle_cam = false;
-					game.Customball.move_cam = false;
-					break;
-				case 0:
-					game.Customball.toggle_cam = false;
-					game.Customball.move_cam = true;
-					break;
-			}
-		}
-
-		document.getElementById('left-arrow').addEventListener('click', () => {
-			currentModeIndex = (currentModeIndex - 1 + cameraModes.length) % cameraModes.length;
-			updateCameraModeDisplay();
-		});
-
-		document.getElementById('right-arrow').addEventListener('click', () => {
-			currentModeIndex = (currentModeIndex + 1) % cameraModes.length;
-			updateCameraModeDisplay();
-		});
-
-		updateCameraModeDisplay();
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function showCustomBall() {
-	try {
-		let customBox = document.getElementById('custom-box');
-		customBox.innerHTML = `
-            <div class="title-custom">
-                <span>Ball</span>
-                <i class="fas fa-arrow-left" id="back_custom" data-type="ball"></i>
-            </div>
-            <div class="custom-option">
-                <div class="custom-option-element color">
-                    <label for="ball-color">Color :</label>
-                    <input type="color" id="ball-color" name="ball-color" value="#FFFFFF">
-                </div>  
-                <div class="custom-option-element">
-                    <label for="ball-size">Size :</label>
-                    <input type="range" class="size-input" id="ball-size" min="0.5" max="2" step="0.01" value="0.5">
-                </div>
-                <div class="custom-option-element">
-                    <label for="ball-Emissive-intensity">Emissive intensity :</label>
-                    <input type="range" class="size-input" id="ball-Emissive-intensit" min="10" max="300" step="1" value="10">
-                </div>
-                    <div class="custom-option-element">
-                    <label for="ball-light-intensity">Light intensity :</label>
-                    <input type="range" class="size-input" id="ball-light-intensity" min="10" max="400" step="1" value="10">
-                </div>
-                <div class="custom-option-element color">
-                    <label for="ball-light-color">Color Light :</label>
-                    <input type="color" id="ball-light-color" name="ball-light-color" value="#FFFFFF">
-                </div>  
-                <div class="custom-option-element">
-                    <label for="ball-accessory">Accessory :</label>
-                    <select id="ball-accessory">
-                        <option value="none" selected>None</option>
-                        <option value="option1">Option 1</option>
-                        <option value="option2">Option 2</option>
-                        <option value="option3">Option 3</option>
-                    </select>
-                </div>
-                <div class="change-cam">
-                    <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
-                    <span id="camera-mode">rotate</span>
-                    <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        `;
-		toggleBackCustomManager();
-		toggleCustomBallUpdate();
-		toggleUpdateCAM_ball();
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function showCustomPlatform() {
-	try {
-		let customBox = document.getElementById('custom-box');
-		customBox.innerHTML = `
-            <div class="title-custom">
-                <span>Platform</span>
-                <i class="fas fa-arrow-left" id="back_custom" data-type="plateau"></i>
-            </div>
-            <div class="custom-option">
-                <div class="custom-option-element color">
-                    <label for="platform-color">Fond color :</label>
-                    <input type="color" id="platform-color" name="platform-color" value="#FF0000">
-                </div>
-                <div class="custom-option-element">
-                    <label for="platform-size">Size :</label>
-                    <input type="range" id="platform-size" class="size-input" min="20" max="60" step="1" value="41">
-                </div>
-                <div class="custom-option-element">
-                    <label for="platform-reflexion">Reflexion :</label>
-                    <input type="range" id="platform-reflexion" class="size-input" min="0" max="1" step="0.01" value="0">
-                </div>
-                <div class="custom-option-element">
-                    <label for="platform-light">Light :</label>
-                    <input type="range" id="platform-light" class="size-input" min="0" max="20" step="0.2" value="0.5">
-                </div>
-                <div class="custom-option-element color">
-                    <label for="border-color">Border :</label>
-                    <input type="color" id="border-color" name="border-color" value="#FF0000">
-                </div>
-                <div class="custom-option-element color">
-                    <label for="limiteur-color">Boudth :</label>
-                    <input type="color" id="limiteur-color" name="limiteur-color" value="#FF0000">
-                </div>
-                <div class="change-cam">
-                    <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
-                    <span id="camera-mode">rotate</span>
-                    <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        `;
-		toggleBackCustomManager();
-		toggleCustomPlatformUpdate();
-		// toggleUpdateCAM();
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function showCustomPaddle() {
-	try {
-		let customBox = document.getElementById('custom-box');
-		customBox.innerHTML = `
-            <div class="title-custom">
-                <span>Paddle</span>
-                <i class="fas fa-arrow-left" id="back_custom"></i>
-            </div>
-            <div class="custom-option">
-                <div class="custom-option-element color">
-                    <label for="paddle-color">Color :</label>
-                    <input type="color" id="paddle-color" name="paddle-color" value="#FF0000">
-                </div>
-                <div class="custom-option-element">
-                    <label for="paddle-light">Light :</label>
-                    <input type="range" id="paddle-light" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
-                </div>
-                <div class="custom-option-element">
-                    <label for="paddle-reflexion">Reflexion :</label>
-                    <input type="range" id="paddle-reflexion" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
-                </div>
-                <div class="custom-option-element">
-                    <label for="paddle-size">Size :</label>
-                    <input type="range" id="paddle-size" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
-                </div>
-                <div class="change-cam">
-                    <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
-                    <span id="camera-mode">rotate</span>
-                    <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        `;
-		toggleBackCustomManager();
-		toggleCustomPaddleUpdate();
-		toggleUpdateCAM();
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function showCustomMap() {
-	try {
-		let customBox = document.getElementById('custom-box');
-		customBox.innerHTML = `
-            <div class="title-custom">
-                <span>Map</span>
-                <i class="fas fa-arrow-left" id="back_custom"></i>
-            </div>
-            <div class="custom-option">
-                <div class="custom-option-element">
-                    <label for="map-fond">Accessory :</label>
-                    <select id="map-fond">
-                        <option value="none" selected>None</option>
-                        <option value="option1">Option 1</option>
-                        <option value="option2">Option 2</option>
-                        <option value="option3">Option 3</option>
-                    </select>
-                </div>
-                <div class="change-cam">
-                    <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
-                    <span id="camera-mode">rotate</span>
-                    <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        `;
-		toggleBackCustomManager();
-		toggleCustomMapUpdate();
-		toggleUpdateCAM();
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function showCustomScore() {
-	try {
-		let customBox = document.getElementById('custom-box');
-		customBox.innerHTML = `
-            <div class="title-custom">
-                <span>Score</span>
-                <i class="fas fa-arrow-left" id="back_custom"></i>
-            </div>
-            <div class="custom-option">
-                <div class="custom-option-element color">
-                    <label for="score-color">Color :</label>
-                    <input type="color" id="score-color" name="score-color" value="#FF0000">
-                </div>
-                <div class="custom-option-element">
-                    <label for="score-light">Light :</label>
-                    <input type="range" id="score-light" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
-                </div>
-                <div class="custom-option-element">
-                    <label for="score-font">Fonts :</label>
-                    <select id="score-font">
-                        <option value="none" selected>None</option>
-                        <option value="option1">Option 1</option>
-                        <option value="option2">Option 2</option>
-                        <option value="option3">Option 3</option>
-                    </select>
-                </div>
-                <div class="change-cam">
-                    <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
-                    <span id="camera-mode">rotate</span>
-                    <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        `;
-		toggleBackCustomManager();
-		toggleCustomScoreUpdate();
-		toggleUpdateCAM();
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function showCustomAnimation() {
-	try {
-		let customBox = document.getElementById('custom-box');
-		customBox.innerHTML = `
-            <div class="title-custom">
-                <span>Animation</span>
-                <i class="fas fa-arrow-left" id="back_custom"></i>
-            </div>
-            <div class="custom-option">
-                <div class="custom-option-element">
-                    <label for="animation-type">Animation :</label>
-                    <select id="animation-type">
-                        <option value="none" selected>None</option>
-                        <option value="option1">Option 1</option>
-                        <option value="option2">Option 2</option>
-                        <option value="option3">Option 3</option>
-                    </select>
-                </div>
-                <div class="change-cam">
-                    <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
-                    <span id="camera-mode">rotate</span>
-                    <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        `;
-		toggleBackCustomManager();
-		toggleCustomAnimationUpdate();
-		toggleUpdateCAM();
-	} catch (e) {
-		console.log(e)
-	}
-}
+// ===========================================================================
+// ==================== Show =================================================
+// ===========================================================================
 
 async function showCustomManager() {
 	try {
@@ -506,14 +38,18 @@ async function showCustomManager() {
 	}
 }
 
-// ==================== Hide ELEMENTS ====================
+
+// ===========================================================================
+// ==================== Hide =================================================
+// ===========================================================================
+
 
 async function hideCustomBox() {
 	try {
 		let customBox = document.getElementById('custom-box');
 		customBox.innerHTML = '';
 	} catch (e) {
-		console.log(e)
+		console.error(e)
 	}
 }
 
@@ -522,67 +58,26 @@ async function hideCustomManager() {
 		let customOptionBtns = document.getElementById('all_custom');
 		customOptionBtns.style.display = 'none';
 	} catch (e) {
-		console.log(e)
+		console.error(e)
 	}
 }
 
-// ==================== TOGGLE CUSTOM ELEMENTS ====================
+
+// ===========================================================================
+// ==================== Toggle ===============================================
+// ===========================================================================
 
 
-async function toggleBall() {
-	try {
-		showCustomBall();
-		console.log('toggleBall');
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-async function togglePlatform() {
-	try {
-		showCustomPlatform();
-		console.log('togglePlatform');
-	} catch (e) {
-		ole.log(e)
-	}
-}
-
-async function togglePaddle() {
-	try {
-		showCustomPaddle();
-		console.log('togglePaddle');
-	} catch (e) {
-		ole.log(e)
-	}
-}
-
-async function toggleMap() {
-	try {
-		showCustomMap();
-		console.log('toggleMap');
-	} catch (e) {
-		ole.log(e)
-	}
-}
-
-async function toggleScore() {
-	try {
-		showCustomScore();
-		console.log('toggleScore');
-	} catch (e) {
-		ole.log(e)
-	}
-}
-
-async function toggleAnimation() {
-	try {
-		showCustomAnimation();
-		console.log('toggleAnimation');
-	} catch (e) {
-		ole.log(e)
-	}
-}
-
+/**
+ * Handles the functionality of the "Back" button in the custom manager interface.
+ *
+ * This function attaches a click event listener to the "Back" button (identified by ID `back_custom`).
+ * When clicked, it checks the `data-type` attribute of the button to determine whether to remove 
+ * the custom ball or plateau from the scene and reset their creation states. It also hides the 
+ * custom box, custom accessories, and shows the custom manager interface again.
+ *
+ * @returns {Promise<void>} - An async function that handles the back navigation logic.
+ */
 async function toggleBackCustomManager() {
 	try {
 		let backBtn = document.getElementById('back_custom');
@@ -600,6 +95,7 @@ async function toggleBackCustomManager() {
 				console.log(dataBtn);	
 			}
 			hideCustomBox();
+			pongCustomAccessory.hideCustomAccessory();
 			showCustomManager();
 		});
 	} catch (e) {
@@ -607,10 +103,19 @@ async function toggleBackCustomManager() {
 	}
 }
 
+/**
+ * Initializes event listeners for custom game elements.
+ *
+ * This function attaches click event listeners to elements with the class `custom-element`.
+ * When an element is clicked, the associated custom management function from the `tab` array 
+ * (such as `toggleBall`, `togglePlatform`, etc.) is invoked based on the element index.
+ *
+ * @returns {Promise<void>} - An async function that handles the custom element toggling process.
+ */
 async function toggleCustomManager() {
 	try {
 		let customElements = document.querySelectorAll('.custom-element');
-		let tab = [toggleBall, togglePlatform, togglePaddle, toggleMap, toggleScore, toggleAnimation];
+		let tab = [pongCustomBall.toggleBall, pongCustomPlatform.togglePlatform, pongCustomPaddle.togglePaddle, pongCustomMap.toggleMap, pongCustomScore.toggleScore, pongCustomAnimation.toggleAnimation];
 		for (let i = 0; i < customElements.length; i++) {
 			customElements[i].addEventListener('click', async function () {
 				hideCustomManager();
@@ -623,6 +128,255 @@ async function toggleCustomManager() {
 	} catch (e) {
 		console.log(e)
 	}
+}
+
+async function toggleSaveCustomGame() {
+	try {
+		let saveBtn = document.getElementById('save-custom-game');
+		if (!saveBtn)
+			return;
+		saveBtn.addEventListener('click', async function () {
+			let urls = saveBtn.getAttribute('data-url');
+
+			let data = await serializeCustomGame(game);
+			console.log('data Serialized =>', data);
+			let reps = await APIsaveCustomGame(data, -1);
+			console.log('reps =>', reps);
+			console.log('urls' , urls)
+			window.location = urls + reps.customGame.idCustom;
+		});
+	} catch {
+		console.error('error in toggleSaveCustomGame');
+	}
+}
+
+
+// ===========================================================================
+// ==================== Utils ================================================
+// ===========================================================================
+
+
+/**
+ * Converts a hex color code to an RGB object.
+ *
+ * This function takes a hex color code in the format `#RRGGBB` or `RRGGBB` and converts it 
+ * to an object with red (r), green (g), and blue (b) values.
+ *
+ * @param {string} hex - The hex color code to convert.
+ * @returns {Object|null} - An object with properties `r`, `g`, and `b` (0-255) if valid, or null if invalid.
+ */
+function hexToRgb(hex) {
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? {
+		r: parseInt(result[1], 16),
+		g: parseInt(result[2], 16),
+		b: parseInt(result[3], 16)
+	} : null;
+}
+
+function rgbToHex(r, g, b) {
+	r = Math.max(0, Math.min(255, r));
+	g = Math.max(0, Math.min(255, g));
+	b = Math.max(0, Math.min(255, b));
+
+	return '#' + ((1 << 24) + (r << 16) + (g << 8) + b)
+		.toString(16)
+		.slice(1)
+		.toUpperCase();
+}
+
+
+// ===========================================================================
+// ==================== Checker ==============================================
+// ===========================================================================
+
+
+/**
+ * Validates if a string is a valid hex color code.
+ *
+ * Checks if the input string matches the format `#RRGGBB`, where `RR`, `GG`, 
+ * and `BB` are hexadecimal digits (0-9, A-F).
+ *
+ * @param {string} hex - The string to validate as a hex color code.
+ * @returns {boolean} - Returns true if the string is a valid hex color code, otherwise false.
+ */
+function checkColor(hex) {
+	return /^#[0-9A-F]{6}$/i.test(hex);
+}
+
+/**
+ * Validates and adjusts a value based on the specified range and step.
+ *
+ * This function checks if the given value is within the specified range (min, max).
+ * If the value is outside the range, it updates the HTML input element's min, max, step,
+ * and resets the value to half of the max.
+ *
+ * @param {number} value - The current value of the input.
+ * @param {number} min - The minimum allowed value.
+ * @param {number} max - The maximum allowed value.
+ * @param {number} step - The step interval for the input.
+ * @param {string} elementId - The ID of the input element to update.
+ * @returns {boolean} - Returns true if the value is within range, otherwise false.
+ */
+function checkRange(value, min, max, step, elementId) {
+	if (value < min || value > max) {
+		let element = document.getElementById(elementId);
+		if (!element)
+			return false;
+		element.min = min;
+		element.max = max;
+		element.step = step;
+		element.value = (max * 0.5);
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Checks if a value exists within a list of options.
+ *
+ * This function verifies if the provided value is included in the array of possible options.
+ *
+ * @param {string} value - The value to check.
+ * @param {Array<string>} options - The list of valid options.
+ * @returns {boolean} - Returns true if the value exists in the options, otherwise false.
+ */
+function checkSelect(value, options) {
+	return (options.includes(value));
+}
+
+
+// ===========================================================================
+// ==================== SERIALIZE ============================================
+// ===========================================================================
+
+
+async function serializeCustomGame(game) {
+	try {
+		if (!game)
+			return null;
+		return {
+			custom_ball: await serializeCustomBall(),
+			custom_plateau: await serializeCustomPlateau(),
+			custom_paddle: await serializeCustomPaddle(),
+			custom_map: await serializeCustomMap(),
+			custom_score: await serializeCustomScore(),
+			custom_animation: await serializeCustomAnimation(),
+		};
+	} catch {
+		console.error('error in serializeCustomGame');
+	}
+}
+
+async function serializeCustomBall() {
+	try {
+		if (!game.Customball) {
+			return {
+				color: '#FFFFFF',
+				size: '0.5',
+				emissiveIntensity: '30',
+				lightIntensity: '150',
+				colorLight: '#FFFFFF',
+				accessory: null,
+			};
+		}
+		return {
+			color: game.Customball.color || '#FFFFFF',
+			size: game.Customball.radius || '0.5',
+			emissiveIntensity: game.Customball.intensity || '30',
+			lightIntensity: game.Customball.light.intensity || '150',
+			colorLight: game.Customball.light.color || '#FFFFFF',
+			accessory: game.Customball.option || null,
+		};
+	} catch {
+		console.error('error in serializeCustomBall')
+	}
+}
+
+async function serializeCustomPlateau() {
+	try {
+		if (!game.CustomPlateau)
+			return null;
+		return {
+			fontColor: null,
+			size: null,
+			reflexion: null,
+			light: null,
+			lightEmissive: null,
+			borderColor: null,
+			Bounth: null,
+		}
+	} catch {
+		console.error('error in serializeCustomPlateau')
+	}
+}
+
+async function serializeCustomPaddle() {
+	try {
+		if (!game.CustomPaddle)
+			return null;
+		return {
+			color: null,
+			light: null,
+			reflexion: null,
+			size: null,
+		}
+	} catch {
+		console.error('error in serializeCustomBall')
+	}
+}
+
+async function serializeCustomMap() {
+	try {
+		if (!game.CustomMap)
+			return null;
+		return {
+			background: null,
+		}
+	} catch {
+		console.error('error in serializeCustomBall')
+	}
+}
+
+async function serializeCustomScore() {
+	try {
+		if (!game.CustomScore)
+			return null;
+		return {
+			color: null,
+			light: null,
+			font: null,
+		}
+	} catch {
+		console.error('error in serializeCustomBall')
+	}
+}
+
+async function serializeCustomAnimation() {
+	try {
+		if (!game.CustomAnimation)
+			return null;
+		return {
+			animation: null,
+		}
+	} catch {
+		console.error('error in serializeCustomBall')
+	}
+}
+
+// ===========================================================================
+// ==================== Export ===============================================
+// ===========================================================================
+
+
+export {
+	game,
+	hexToRgb,
+	rgbToHex,
+	toggleBackCustomManager,
+	checkColor,
+	checkRange,
+	checkSelect,
 }
 
 customInit();

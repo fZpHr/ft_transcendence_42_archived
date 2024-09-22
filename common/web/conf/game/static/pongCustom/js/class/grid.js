@@ -1,29 +1,29 @@
 import * as THREE from 'three';
 export class InfiniteGridHelper extends THREE.Mesh {
-    constructor(size1 = 10, size2 = 100, color = new THREE.Color('white'), distance = 8000, axes = 'xzy') {
-      const planeAxes = axes.slice(0, 2);
-  
-      const geometry = new THREE.PlaneGeometry(2, 2, 1, 1);
-  
-      const material = new THREE.ShaderMaterial({
-        side: THREE.DoubleSide,
+  constructor(size1 = 10, size2 = 100, color = new THREE.Color('white'), distance = 8000, axes = 'xzy') {
+    const planeAxes = axes.slice(0, 2);
 
-		uniforms: {
-			uSize1: {
-				value: size1
-			},
-			uSize2: {
-				value: size2
-			},
-			uColor: {
-				value: color
-			},
-			uDistance: {
-				value: distance
-			}
-		},
-		transparent: true,
-		vertexShader: `
+    const geometry = new THREE.PlaneGeometry(2, 2, 1, 1);
+
+    const material = new THREE.ShaderMaterial({
+      side: THREE.DoubleSide,
+
+      uniforms: {
+        uSize1: {
+          value: size1
+        },
+        uSize2: {
+          value: size2
+        },
+        uColor: {
+          value: color
+        },
+        uDistance: {
+          value: distance
+        }
+      },
+      transparent: true,
+      vertexShader: `
            
            varying vec3 worldPosition;
 		   
@@ -42,7 +42,7 @@ export class InfiniteGridHelper extends THREE.Mesh {
            `,
 
 
-		fragmentShader: `
+      fragmentShader: `
            
            varying vec3 worldPosition;
            
@@ -84,13 +84,13 @@ export class InfiniteGridHelper extends THREE.Mesh {
            
            `,
 
-		extensions: {
-			derivatives: true
-		}
-      });
-  
-      super(geometry, material);
-  
-      this.frustumCulled = false;
-    }
+      extensions: {
+        derivatives: true
+      }
+    });
+
+    super(geometry, material);
+
+    this.frustumCulled = false;
   }
+}

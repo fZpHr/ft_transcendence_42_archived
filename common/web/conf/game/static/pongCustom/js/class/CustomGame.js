@@ -7,81 +7,85 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
 class CustomGame {
-    constructor() {
-        this.Customball = undefined;
-        this.Customplateau;
-        this.Custompaddle;
-        this.Custommap;
-        this.Customscore;
-        this.Customanimation;
+	constructor() {
+		this.Customball = undefined;
+		this.Customplateau;
+		this.Custompaddle;
+		this.Custommap;
+		this.Customscore;
+		this.Customanimation;
 
 
-        this.width;
+		this.width;
 		this.height;
+		this.mirrorRatio = {
+			textureWidth: 0,
+			textureHeight: 0
+		}
 		this.move_angle = 0.01;
 		this.cameraAngle = 0;
 		this.cameraDistance = 16 / 1.5;
 		this.cameraHeight = 16 / 1.5;
 
-        this.floor = new THREE.Group();
+		this.floor = new THREE.Group();
 
-        this.spotlight = [];
-        this.camera;
+		this.spotlight = [];
+		this.camera;
 
 
-        this.creationBall = false;
-        this.creationPlateau = false;
-        // this.init();
-    }
+		this.creationBall = false;
+		this.creationPlateau = false;
+		// this.init();
+	}
 
-    async init() {
-        await this.createScene();
-        await this.createMirror();
-        await this.createCamera();
-        await this.createSpotLight();
-        // this.Customplateau = new CustomPlateau();
-        // this.Custompaddle = new CustomPaddle();
-        // this.Custommap = new CustomMap();
-        // this.Customscore = new CustomScore();
-        // this.Customanimation = new CustomAnimation();
-        this.renderer.setAnimationLoop(this.rendering);
-    }
+	async init() {
+		await this.createScene();
+		await this.createMirror();
+		await this.createCamera();
+		await this.createSpotLight();
+		// this.Customplateau = new CustomPlateau();
+		// this.Custompaddle = new CustomPaddle();
+		// this.Custommap = new CustomMap();
+		// this.Customscore = new CustomScore();
+		// this.Customanimation = new CustomAnimation();
+		this.renderer.setAnimationLoop(this.rendering);
+	}
 
-    async createBall(){
-        return new Promise(async(resolve, reject)=>{
-            this.Customball = new CustomBall(this);
-            await this.Customball.init();
-            this.showBall();
-            resolve(true);
-        });
-    }
+	async createBall() {
+		return new Promise(async (resolve, reject) => {
+			this.Customball = new CustomBall(this);
+			await this.Customball.init();
+			this.showBall();
+			resolve(true);
+		});
+	}
 
-    async showBall(){
-        this.creationBall = true;
-        this.scene.add(this.Customball.group);
-    }
+	async showBall() {
+		this.createSpotLight();
+		this.creationBall = true;
+		this.scene.add(this.Customball.group);
+	}
 
-    async createPlateau(){
-        return new Promise(async(resolve, reject)=>{
-            this.CustomPlateau = new CustomPlateau(this);
-            await this.CustomPlateau.init();
-            this.showPlateau();
-            resolve(true);
-        });
-    }	
+	async createPlateau() {
+		return new Promise(async (resolve, reject) => {
+			this.CustomPlateau = new CustomPlateau(this);
+			await this.CustomPlateau.init();
+			this.showPlateau();
+			resolve(true);
+		});
+	}
 
-    async showPlateau(){
-        this.creationPlateau = true;
-        this.scene.add(this.CustomPlateau.group);
-    }
+	async showPlateau() {
+		this.creationPlateau = true;
+		this.scene.add(this.CustomPlateau.group);
+	}
 
-    async createScene() {
+	async createScene() {
 		return new Promise(async (resolve, reject) => {
 			const container = document.getElementById('render');
 			this.width = container.clientWidth;
 			this.height = container.clientHeight;
 
-			console.log(THREE.WebGLRenderer)
 			this.renderer = new THREE.WebGLRenderer({ antialias: true });
 			this.renderer.outputEncoding = THREE.sRGBEncoding;
 			this.grid = new InfiniteGridHelper(5, 10);
@@ -97,7 +101,7 @@ class CustomGame {
 		});
 	}
 
-    async createSpotLight() {
+	async createSpotLight() {
 		let nbr = 4;
 		let pos = [
 			{ x: 10, y: 15, z: 0 },
@@ -106,7 +110,11 @@ class CustomGame {
 			{ x: 0, y: 15, z: -10 },
 		]
 		for (const data of this.spotlight)
-			this.scene.remove(data);
+		{
+			this.scene.remove(data.light);
+			this.scene.remove(data.target);
+			data.light.dispose();
+		}
 		this.spotlight = [];
 		for (let i = 0; i != nbr; i++) {
 			let spotlight = new THREE.SpotLight(0xffffff, 250);
@@ -118,13 +126,19 @@ class CustomGame {
 			spotlight.shadow.camera.near = 500;
 			spotlight.shadow.camera.far = 4000;
 			spotlight.shadow.camera.fov = 70;
-			spotlight.target = this.scene;
-
+			
+			const targetObject = new THREE.Object3D();
+			targetObject.position.x = pos[i].x;
+			targetObject.position.z = pos[i].z;
+			
+			
+			this.spotlight.push({light: spotlight, target: targetObject, center: pos[i]});
 			this.scene.add(spotlight);
+			this.scene.add(targetObject);
 		}
 	}
 
-    async createCamera() {
+	async createCamera() {
 		return new Promise(async (resolve, reject) => {
 			this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
 			this.camera.position.set(0, 16 / 1.5, 16 / 1.5);
@@ -137,14 +151,15 @@ class CustomGame {
 
 	async createMirror() {
 		return new Promise(async (resolve, reject) => {
-			this.geometry = new THREE.CircleGeometry(40, 64);
+			this.geometry = new THREE.CircleGeometry(524, 64);
+			this.mirrorRatio.textureWidth = this.width * window.devicePixelRatio;
+			this.mirrorRatio.textureHeight = this.height * window.devicePixelRatio;
 			this.groundMirror = new Reflector(this.geometry, {
 				clipBias: 0.003,
-				textureWidth: this.width * window.devicePixelRatio,
-				textureHeight: this.height * window.devicePixelRatio,
+				textureWidth: this.mirrorRatio.textureWidth,
+				textureHeight: this.mirrorRatio.textureHeight,
 				color: 0xb5b5b5
 			});
-
 			this.plateauMaterial = new THREE.MeshPhysicalMaterial({
 				color: 0x000000, transparent: true, opacity: 0.5, wireframe: false, side: THREE.FrontSide, roughness: 0.7, metalness: 0.1, clearcoat: 1.0,
 				clearcoatRoughness: 1.0,
@@ -162,20 +177,22 @@ class CustomGame {
 		})
 	}
 
-    rendering = (async () => {
-        if (this.creationBall)
-            return (this.Customball.rendering());
-        if (this.creationPlateau)
-            return (this.CustomPlateau.rendering());
-        this.cameraAngle += this.move_angle;
-        this.camera.position.x = this.cameraDistance * Math.sin(this.cameraAngle);
-        this.camera.position.z = this.cameraDistance * Math.cos(this.cameraAngle);
-        this.camera.position.y = this.cameraHeight;
+	rendering = (async () => {
+		if (this.creationBall)
+			return (this.Customball.rendering());
+		if (this.creationPlateau)
+			return (this.CustomPlateau.rendering());
+		this.cameraAngle += this.move_angle;
+		this.camera.position.x = this.cameraDistance * Math.sin(this.cameraAngle);
+		this.camera.position.z = this.cameraDistance * Math.cos(this.cameraAngle);
+		this.camera.position.y = this.cameraHeight;
 		this.camera.lookAt(0, 1, 0);
 		this.renderer.render(this.scene, this.camera);
 	}).bind(this);
 }
 
+// ====================== Export ========================
+
 export {
-    CustomGame
+	CustomGame
 };

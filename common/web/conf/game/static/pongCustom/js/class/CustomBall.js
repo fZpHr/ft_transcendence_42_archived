@@ -57,6 +57,8 @@ class CustomBall {
 	async updateBall() {
 		this.group.remove(this.custom_ball);
 		this.group.remove(this.light);
+		this.custom_ball.material.dispose();
+		this.light.dispose();
 		await this.createBall();
 		await this.createLight();
 		await this.makeAccessory(this.option);
