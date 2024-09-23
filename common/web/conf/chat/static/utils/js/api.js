@@ -152,6 +152,38 @@ async function APIgetDataCustomGame(idCustomGame) {
 	});
 }
 
+async function APIgetSessionPongCustomGame() {
+	return new Promise(async (resolve, reject) => {
+		let game = await getFetchAPI(`/api/getSessionPongCustomGame`);
+		resolve(game);
+	});
+}
+
+function APIsaveCustomAtSession(pongCustom) {
+    return fetch("/api/setSessionPongCustomGame/", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pongCustom }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .catch(error => {
+        console.error("Failed to update social status:", error);
+        throw error;
+    });
+}
+
+
+//  OTHER
+
+
 function APIupdateSocialStatus(socialUserId, friendStatus) {
     return fetch("/api/updateSocialStatus/", {
         method: "POST",
@@ -172,6 +204,8 @@ function APIupdateSocialStatus(socialUserId, friendStatus) {
         throw error;
     });
 }
+
+
 
 async function APIaddPlayerToLobby(lobbyUUID, userId) {
 	return fetch("/api/addPlayerToLobby/", {

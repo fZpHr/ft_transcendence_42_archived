@@ -571,23 +571,58 @@ def removeLobby(request):
 @csrf_exempt
 @api_view(['POST'])
 @login_required
+def setSessionPongCustomGame(request):
+    try:
+        pongCustom = request.data.get('pongCustom')
+        logger.info('=======================')
+        logger.info(pongCustom)
+        request.session['customPong_data'] = pongCustom
+        logger.info('custom save at session')
+        logger.info(request.session['customPong_data'])
+        return JsonResponse({'status': 'success', 'message': 'Custom game saved.'}, status=200)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+@csrf_exempt
+@api_view(['GET'])
+@login_required
+def getSessionPongCustomGame(request):
+    try:
+        if 'customPong_data' not in request.session:
+            return JsonResponse({'status': 'error', 'message': 'No custom game data found in session.'}, status=200)
+        
+        customPong_data = request.session['customPong_data']
+        return JsonResponse({"customGame": {
+            "custom_ball": customPong_data.get('custom_ball'),
+            "custom_plateau": customPong_data.get('custom_plateau'),
+            "custom_paddle": customPong_data.get('custom_paddle'),
+            "custom_map": customPong_data.get('custom_map'),
+            "custom_score": customPong_data.get('custom_score'),
+            "custom_animation": customPong_data.get('custom_animation'),
+        }}, status=200)
+    except Exception as e:
+        return JsonResponse({'statusawef': 'error', 'message': str(e)}, status=500)
+
+@csrf_exempt
+@api_view(['POST'])
+@login_required
 def setPongCustomGame(request):
     try:
         idGame = request.data.get('idGame')
-        custom_data = request.data.get('data')
+        customPong_data = request.data.get('data')
         logger.info('idgame')
         logger.info(idGame)
         logger.info('custome data')
-        logger.info(custom_data)
+        logger.info(customPong_data)
 
 
         pong_custom_game = PongCustomGame.objects.create(
-            custom_ball=custom_data.get('custom_ball'),
-            custom_plateau=custom_data.get('custom_plateau'),
-            custom_paddle=custom_data.get('custom_paddle'),
-            custom_map=custom_data.get('custom_map'),
-            custom_score=custom_data.get('custom_score'),
-            custom_animation=custom_data.get('custom_animation'),
+            custom_ball=customPong_data.get('custom_ball'),
+            custom_plateau=customPong_data.get('custom_plateau'),
+            custom_paddle=customPong_data.get('custom_paddle'),
+            custom_map=customPong_data.get('custom_map'),
+            custom_score=customPong_data.get('custom_score'),
+            custom_animation=customPong_data.get('custom_animation'),
         )
 
         if idGame == -1:

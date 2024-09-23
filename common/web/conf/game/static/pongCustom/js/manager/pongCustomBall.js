@@ -2,7 +2,11 @@ import * as THREE from 'three';
 import * as pongCustomManager from '../pongCustom.js'
 import * as pongCustomAccessory from './pongCustomAccessory.js'
 import {game} from '../pongCustom.js'
-
+import {defaultCustomValue} from '../serializeCustomGame.js'
+import {serializeCustomGame} from '../serializeCustomGame.js'
+import {addCustomInputsToContainer} from '../pongCustomUtils.js'
+import {updateCustomInput} from '../pongCustomUtils.js'
+import {hexToHexString} from '../pongCustomUtils.js'
 
 /**
  * Object mapping input types to their respective update functions.
@@ -14,12 +18,12 @@ import {game} from '../pongCustom.js'
  * @type {Object<string, Function>}
  */
 const inputHandlers = {
-	'ball-size': updateBallSize,
-	'ball-color': updateBallColor,
-	'ball-accessory': updateBallAccessory,
-	'ball-Emissive-intensit': updateBallEmissiveIntensity,
-	'ball-light-intensity': updateBallLightIntensity,
-	'ball-light-color': updateBallLightColor
+	'color': updateBallColor,
+	'size': updateBallSize,
+	'emissiveIntensity': updateBallEmissiveIntensity,
+	'lightIntensity': updateBallLightIntensity,
+	'colorLight': updateBallLightColor,
+	'accessory': updateBallAccessory,
 };
 
 
@@ -110,54 +114,27 @@ function toggleChangeInput(event) {
  */
 async function innerCustomBallInput() {
 	try {
+		const customBall = defaultCustomValue.custom_ball;
 		let customBox = document.getElementById('custom-box');
 		customBox.innerHTML = `
-            <div class="title-custom">
-                <span>Ball</span>
-                <i class="fas fa-arrow-left" id="back_custom" data-type="ball"></i>
-            </div>
-            <div class="custom-option">
-                <div class="custom-option-element color">
-                    <label for="ball-color">Color :</label>
-                    <input type="color" id="ball-color" name="ball-color" value="#FFFFFF">
-                </div>  
-                <div class="custom-option-element">
-                    <label for="ball-size">Size :</label>
-                    <input type="range" class="size-input" id="ball-size" min="0.5" max="2" step="0.01" value="0.5">
-                </div>
-                <div class="custom-option-element">
-                    <label for="ball-Emissive-intensity">Emissive intensity :</label>
-                    <input type="range" class="size-input" id="ball-Emissive-intensit" min="10" max="300" step="1" value="10">
-                </div>
-                    <div class="custom-option-element">
-                    <label for="ball-light-intensity">Light intensity :</label>
-                    <input type="range" class="size-input" id="ball-light-intensity" min="10" max="400" step="1" value="10">
-                </div>
-                <div class="custom-option-element color">
-                    <label for="ball-light-color">Color Light :</label>
-                    <input type="color" id="ball-light-color" name="ball-light-color" value="#FFFFFF">
-                </div>  
-                <div class="custom-option-element">
-                    <label for="ball-accessory">Accessory :</label>
-                    <select id="ball-accessory">
-                        <option value="none" selected>None</option>
-                        <option value="option1">Option 1</option>
-                        <option value="option2">Option 2</option>
-                        <option value="option3">Option 3</option>
-                    </select>
-                </div>
-                <div class="change-cam">
-                    <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
-                    <span id="camera-mode">rotate</span>
-                    <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        `;
+			<div class="title-custom">
+				<span>Ball</span>
+				<i class="fas fa-arrow-left" id="back_custom" data-type="ball"></i>
+			</div>
+		`;
+		addCustomInputsToContainer(customBox, customBall);
+		customBox.innerHTML += `
+			<div class="change-cam">
+				<button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
+				<span id="camera-mode">rotate</span>
+				<button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
+			</div>
+		`;
+
 	} catch (e) {
-		console.error(e)
+		console.error('Error in innerCustomBallInput:', e);
 	}
 }
-
 
 // ===========================================================================
 // ==================== Init =================================================
@@ -177,7 +154,8 @@ async function initializeBall() {
     try {
         if (game.Customball) {
             game.showBall();
-            await updateCustomBallInput();
+			let data = await serializeCustomGame(game);
+            await updateCustomInput(defaultCustomValue.custom_ball, data.custom_ball);
         } else {
             await game.createBall();
         }
@@ -188,57 +166,14 @@ async function initializeBall() {
 
 
 // ===========================================================================
-// ==================== UPDATE INPUT =========================================
-// ===========================================================================
-
-
-/**
- * Updates the input fields related to custom Element settings.
- *
- * This function is intended to refresh the UI elements that control 
- * Element parameters. Specific implementation details should be 
- * added within the function.
- *
- * @returns {Promise<void>} - An async function that updates Element inputs.
- */
-async function updateCustomBallInput () {
-	try {
-        // let color = game.Customball.color;
-        // const hexColor = pongCustomManager.rgbToHex(color.r, color.g, color.b);
-		// let ballColor = document.getElementById('ball-color');
-		// ballColor.value = hexColor;
-
-		let ballSize = document.getElementById('ball-size');
-		ballSize.value = game.Customball.radius;
-
-		let ballEmissiveInensit = document.getElementById('ball-Emissive-intensit');
-		ballEmissiveInensit.value = game.Customball.intensity;
-
-		let ballLightIntensity = document.getElementById('ball-light-intensity');
-		ballLightIntensity.value = game.Customball.light.intensity;
-
-        // color = game.Customball.color;
-        // hexColor = pongCustomManager.rgbToHex(color.r, color.g, color.b);
-		// let ballLightColor = document.getElementById('ball-light-color');
-		// ballLightColor.value = hexColor;
-
-		let ballAccessory = document.getElementById('ball-accessory');
-		ballAccessory.value = game.Customball.option;
-	} catch {
-		console.error('error in updateCustomBallInput')
-	}
-}
-
-
-// ===========================================================================
 // ==================== UPDATE DATA ==========================================
 // ===========================================================================
-
 
 function updateBallColor(value) {
 	if (pongCustomManager.checkColor(value)) {
 		const color = pongCustomManager.hexToRgb(value);
 		game.Customball.color = new THREE.Color(`rgb(${color.r},${color.g},${color.b})`).convertSRGBToLinear();
+		game.Customball.colorValue = hexToHexString(value);
 	} else
 		console.error('Invalid hex color:', value);
 }
@@ -268,6 +203,7 @@ function updateBallLightColor(value) {
 	if (pongCustomManager.checkColor(value)) {
 		const color =  pongCustomManager.hexToRgb(value);
 		game.Customball.light.color = new THREE.Color(`rgb(${color.r},${color.g},${color.b})`).convertSRGBToLinear();
+		game.Customball.colorLightValue = hexToHexString(value);
 	} else
 		console.error('Invalid hex color:', value);
 }

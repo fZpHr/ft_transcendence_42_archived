@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import { CustomGame } from './class/CustomGame.js';
 
+import { serializeCustomGame } from './serializeCustomGame.js'
+
+
 import * as pongCustomBall from './manager/pongCustomBall.js'
 import * as pongCustomPlatform from './manager/pongCustomPlatform.js'
 import * as pongCustomPaddle from './manager/pongCustomPaddle.js'
@@ -28,6 +31,7 @@ function customInit() {
 // ===========================================================================
 // ==================== Show =================================================
 // ===========================================================================
+
 
 async function showCustomManager() {
 	try {
@@ -87,12 +91,20 @@ async function toggleBackCustomManager() {
 				game.scene.remove(game.Customball.group);
 				game.creationBall = false;
 			}
-			if (dataBtn == "plateau")
-			{
+			if (dataBtn == "plateau") {
 				game.scene.remove(game.CustomPlateau.group);
 				game.creationPlateau = false;
+				if (game.CustomPlateau.showball == true) {
+					game.CustomPlateau.showball = false;
+					game.scene.remove(game.Customball.group);
+					game.Customball.group.position.set(0, (game.Customball.radius), 0);
+				}
+			}
+			if (dataBtn == "paddle") {
+				game.scene.remove(game.CustomPaddle.group);
+				game.creationPaddle = false;
 			} else {
-				console.log(dataBtn);	
+				console.log(dataBtn);
 			}
 			hideCustomBox();
 			pongCustomAccessory.hideCustomAccessory();
@@ -133,18 +145,12 @@ async function toggleCustomManager() {
 async function toggleSaveCustomGame() {
 	try {
 		let saveBtn = document.getElementById('save-custom-game');
-		if (!saveBtn)
-			return;
+		if (!saveBtn) return;
 		saveBtn.addEventListener('click', async function () {
-			let urls = saveBtn.getAttribute('data-url');
-
 			let data = await serializeCustomGame(game);
-			console.log('data Serialized =>', data);
-			let reps = await APIsaveCustomGame(data, -1);
-			console.log('reps =>', reps);
-			console.log('urls' , urls)
-			window.location = urls + reps.customGame.idCustom;
-		});
+			await APIsaveCustomAtSession(data);
+			window.location = saveBtn.getAttribute('data-url');;
+		})
 	} catch {
 		console.error('error in toggleSaveCustomGame');
 	}
@@ -173,16 +179,13 @@ function hexToRgb(hex) {
 		b: parseInt(result[3], 16)
 	} : null;
 }
-
-function rgbToHex(r, g, b) {
-	r = Math.max(0, Math.min(255, r));
-	g = Math.max(0, Math.min(255, g));
-	b = Math.max(0, Math.min(255, b));
-
-	return '#' + ((1 << 24) + (r << 16) + (g << 8) + b)
-		.toString(16)
-		.slice(1)
-		.toUpperCase();
+  
+function rgbToHex(rgbColor) {
+    let r = rgbColor.r;
+    let g = rgbColor.g;
+    let b = rgbColor.b;
+	let hexaColor = "0x" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
+    return hexaColor.toLocaleUpperCase();
 }
 
 
@@ -245,124 +248,6 @@ function checkSelect(value, options) {
 	return (options.includes(value));
 }
 
-
-// ===========================================================================
-// ==================== SERIALIZE ============================================
-// ===========================================================================
-
-
-async function serializeCustomGame(game) {
-	try {
-		if (!game)
-			return null;
-		return {
-			custom_ball: await serializeCustomBall(),
-			custom_plateau: await serializeCustomPlateau(),
-			custom_paddle: await serializeCustomPaddle(),
-			custom_map: await serializeCustomMap(),
-			custom_score: await serializeCustomScore(),
-			custom_animation: await serializeCustomAnimation(),
-		};
-	} catch {
-		console.error('error in serializeCustomGame');
-	}
-}
-
-async function serializeCustomBall() {
-	try {
-		if (!game.Customball) {
-			return {
-				color: '#FFFFFF',
-				size: '0.5',
-				emissiveIntensity: '30',
-				lightIntensity: '150',
-				colorLight: '#FFFFFF',
-				accessory: null,
-			};
-		}
-		return {
-			color: game.Customball.color || '#FFFFFF',
-			size: game.Customball.radius || '0.5',
-			emissiveIntensity: game.Customball.intensity || '30',
-			lightIntensity: game.Customball.light.intensity || '150',
-			colorLight: game.Customball.light.color || '#FFFFFF',
-			accessory: game.Customball.option || null,
-		};
-	} catch {
-		console.error('error in serializeCustomBall')
-	}
-}
-
-async function serializeCustomPlateau() {
-	try {
-		if (!game.CustomPlateau)
-			return null;
-		return {
-			fontColor: null,
-			size: null,
-			reflexion: null,
-			light: null,
-			lightEmissive: null,
-			borderColor: null,
-			Bounth: null,
-		}
-	} catch {
-		console.error('error in serializeCustomPlateau')
-	}
-}
-
-async function serializeCustomPaddle() {
-	try {
-		if (!game.CustomPaddle)
-			return null;
-		return {
-			color: null,
-			light: null,
-			reflexion: null,
-			size: null,
-		}
-	} catch {
-		console.error('error in serializeCustomBall')
-	}
-}
-
-async function serializeCustomMap() {
-	try {
-		if (!game.CustomMap)
-			return null;
-		return {
-			background: null,
-		}
-	} catch {
-		console.error('error in serializeCustomBall')
-	}
-}
-
-async function serializeCustomScore() {
-	try {
-		if (!game.CustomScore)
-			return null;
-		return {
-			color: null,
-			light: null,
-			font: null,
-		}
-	} catch {
-		console.error('error in serializeCustomBall')
-	}
-}
-
-async function serializeCustomAnimation() {
-	try {
-		if (!game.CustomAnimation)
-			return null;
-		return {
-			animation: null,
-		}
-	} catch {
-		console.error('error in serializeCustomBall')
-	}
-}
 
 // ===========================================================================
 // ==================== Export ===============================================

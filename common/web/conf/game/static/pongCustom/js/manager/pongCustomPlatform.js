@@ -2,6 +2,11 @@ import * as THREE from 'three';
 import * as pongCustomManager from '../pongCustom.js'
 import * as pongCustomAccessory from './pongCustomAccessory.js'
 import {game} from '../pongCustom.js'
+import {defaultCustomValue} from '../serializeCustomGame.js'
+import {serializeCustomGame} from '../serializeCustomGame.js'
+import {addCustomInputsToContainer} from '../pongCustomUtils.js'
+import {updateCustomInput} from '../pongCustomUtils.js'
+import {hexToHexString} from '../pongCustomUtils.js'
 
 
 /**
@@ -14,13 +19,13 @@ import {game} from '../pongCustom.js'
  * @type {Object<string, Function>}
  */
 const inputHandlers = {
-	'platform-color': updatePlatformColor,
-	'platform-size': updatePlatformSize,
-	'platform-reflexion': updatePlatformReflexion,
-	'platform-light': updatePlatformLight,
-    'platform-emissive-light': updatePlatformEmissiveLight,
-	'border-color': updatePlatformBorderColor,
-	'limiteur-color': updatePlatformLimiteurColor,
+	'fontColor': updatePlatformColor,
+	'size': updatePlatformSize,
+	'reflexion': updatePlatformReflexion,
+	'light': updatePlatformLight,
+    'lightEmissive': updatePlatformEmissiveLight,
+	'borderColor': updatePlatformBorderColor,
+	'limiteurColor': updatePlatformLimiteurColor,
 };
 
 
@@ -45,7 +50,7 @@ async function togglePlatform() {
 		pongCustomAccessory.innerAccessory(2);
 		pongCustomAccessory.toggleCustonAccessory();
 		toggleCustomPlatformUpdate();
-		// toggleUpdateCAM();
+		toggleUpdateCAM(); 
 	} catch (e) {
 		console.error(e)
 	}
@@ -110,52 +115,75 @@ function toggleChangeInput(event) {
  *
  * @returns {Promise<void>} - An async function that sets up the Element UI.
  */
+// async function innerCustomPlatform() {
+// 	try {
+// 		let customBox = document.getElementById('custom-box');
+// 		customBox.innerHTML = `
+//             <div class="title-custom">
+//                 <span>Platform</span>
+//                 <i class="fas fa-arrow-left" id="back_custom" data-type="plateau"></i>
+//             </div>
+//             <div class="custom-option">
+//                 <div class="custom-option-element color">
+//                     <label for="platform-color">Fond color :</label>
+//                     <input type="color" id="platform-color" name="platform-color" value="#FF0000">
+//                 </div>
+//                 <div class="custom-option-element">
+//                     <label for="platform-size">Size :</label>
+//                     <input type="range" id="platform-size" class="size-input" min="20" max="60" step="1" value="41">
+//                 </div>
+//                 <div class="custom-option-element">
+//                     <label for="platform-reflexion">Reflexion :</label>
+//                     <input type="range" id="platform-reflexion" class="size-input" min="0" max="1" step="0.01" value="0">
+//                 </div>
+//                 <div class="custom-option-element">
+//                     <label for="platform-light">Light :</label>
+//                     <input type="range" id="platform-light" class="size-input" min="0" max="500" step="1" value="0">
+//                 </div>
+//                 <div class="custom-option-element">
+//                     <label for="platform-emissive-light">Emissive Light :</label>
+//                     <input type="range" id="platform-emissive-light" class="size-input" min="0" max="500" step="1" value="0">
+//                 </div>
+//                 <div class="custom-option-element color">
+//                     <label for="border-color">Border :</label>
+//                     <input type="color" id="border-color" name="border-color" value="#FF0000">
+//                 </div>
+//                 <div class="custom-option-element color">
+//                     <label for="limiteur-color">Boudth :</label>
+//                     <input type="color" id="limiteur-color" name="limiteur-color" value="#FF0000">
+//                 </div>
+//                 <div class="change-cam">
+//                     <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
+//                     <span id="camera-mode">rotate</span>
+//                     <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
+//                 </div>
+//             </div>
+//         `;
+// 	} catch (e) {
+// 		console.log(e)
+// 	}
+// }
+
 async function innerCustomPlatform() {
 	try {
+		const customPlateau = defaultCustomValue.custom_plateau;
 		let customBox = document.getElementById('custom-box');
 		customBox.innerHTML = `
             <div class="title-custom">
                 <span>Platform</span>
                 <i class="fas fa-arrow-left" id="back_custom" data-type="plateau"></i>
             </div>
-            <div class="custom-option">
-                <div class="custom-option-element color">
-                    <label for="platform-color">Fond color :</label>
-                    <input type="color" id="platform-color" name="platform-color" value="#FF0000">
-                </div>
-                <div class="custom-option-element">
-                    <label for="platform-size">Size :</label>
-                    <input type="range" id="platform-size" class="size-input" min="20" max="60" step="1" value="41">
-                </div>
-                <div class="custom-option-element">
-                    <label for="platform-reflexion">Reflexion :</label>
-                    <input type="range" id="platform-reflexion" class="size-input" min="0" max="1" step="0.01" value="0">
-                </div>
-                <div class="custom-option-element">
-                    <label for="platform-light">Light :</label>
-                    <input type="range" id="platform-light" class="size-input" min="0" max="500" step="1" value="0">
-                </div>
-                <div class="custom-option-element">
-                    <label for="platform-emissive-light">Emissive Light :</label>
-                    <input type="range" id="platform-emissive-light" class="size-input" min="0" max="500" step="1" value="0">
-                </div>
-                <div class="custom-option-element color">
-                    <label for="border-color">Border :</label>
-                    <input type="color" id="border-color" name="border-color" value="#FF0000">
-                </div>
-                <div class="custom-option-element color">
-                    <label for="limiteur-color">Boudth :</label>
-                    <input type="color" id="limiteur-color" name="limiteur-color" value="#FF0000">
-                </div>
-                <div class="change-cam">
-                    <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
-                    <span id="camera-mode">rotate</span>
-                    <button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        `;
+		`;
+		addCustomInputsToContainer(customBox, customPlateau);
+		customBox.innerHTML += `
+			<div class="change-cam">
+				<button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
+				<span id="camera-mode">rotate</span>
+				<button id="right-arrow"><i class="fas fa-arrow-right"></i></button>
+			</div>
+		`;
 	} catch (e) {
-		console.log(e)
+		console.error('Error in innerCustomPlatform:', e);
 	}
 }
 
@@ -178,36 +206,14 @@ async function initializePlatform() {
     try {
         if (game.CustomPlateau) {
             game.showPlateau();
-            await updateCustomPlatformInput();
+            let data = await serializeCustomGame(game);
+            await updateCustomInput(defaultCustomValue.custom_plateau, data.custom_plateau);
         } else {
             await game.createPlateau();
         }
-    } catch {
-        console.error('error in initializePlatform');
+    } catch (e) {
+        console.error(`error in initializePlatform ${e}`);
     }
-}
-
-
-// ===========================================================================
-// ==================== UPDATE INPUT =========================================
-// ===========================================================================
-
-
-/**
- * Updates the input fields related to custom Element settings.
- *
- * This function is intended to refresh the UI elements that control 
- * Element parameters. Specific implementation details should be 
- * added within the function.
- *
- * @returns {Promise<void>} - An async function that updates Element inputs.
- */
-async function updateCustomPlatformInput () {
-	try {
-
-	} catch {
-		console.error('error in updateCustomPlatformInput')
-	}
 }
 
 
@@ -220,12 +226,15 @@ async function updatePlatformColor(value) {
     let colorPlateau = pongCustomManager.hexToRgb(event.target.value);
     game.CustomPlateau.plateau_data.color = new THREE.Color(`rgb(${colorPlateau.r},${colorPlateau.g},${colorPlateau.b})`).convertSRGBToLinear();
     game.CustomPlateau.plateau_data.THREEcolor = new THREE.Color(`rgb(${colorPlateau.r},${colorPlateau.g},${colorPlateau.b})`).convertSRGBToLinear();
+    game.CustomPlateau.fontColorValue = hexToHexString(value);
     game.CustomPlateau.updatePlateau('plateau');
 }
 
 async function updatePlatformSize(value) {
     game.CustomPlateau.radius = parseFloat(event.target.value);
     game.CustomPlateau.updatePlateau("all");
+    if (game.CustomPlateau.showball == true)
+        game.CustomPlateau.resetCenter();
 }
 
 async function updatePlatformReflexion(value) {
@@ -239,22 +248,6 @@ async function updatePlatformLight(value) {
     game.CustomPlateau.updatePlateau('lights');
 }
 
-async function updatePlatformBorderColor(value) {
-    let colorBorder = pongCustomManager.hexToRgb(event.target.value);
-    game.CustomPlateau.wall.color = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
-    game.CustomPlateau.wall.THREEcolor = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
-    game.CustomPlateau.light.THREEcolor = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
-    game.CustomPlateau.updatePlateau('lights');
-    game.CustomPlateau.updatePlateau('border');
-}
-
-async function updatePlatformLimiteurColor(value) {
-    let colorBorder = pongCustomManager.hexToRgb(event.target.value);
-    game.CustomPlateau.boudth.THREEcolor = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
-    game.CustomPlateau.updatePlateau('boudth');
-}
-
-
 async function updatePlatformEmissiveLight(value) {
     let float = parseFloat(event.target.value);
     game.CustomPlateau.plateau_data.intensity = float;
@@ -263,12 +256,66 @@ async function updatePlatformEmissiveLight(value) {
     game.CustomPlateau.updatePlateau('plateau');
 }
 
+async function updatePlatformBorderColor(value) {
+    let colorBorder = pongCustomManager.hexToRgb(event.target.value);
+    game.CustomPlateau.wall.color = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
+    game.CustomPlateau.wall.THREEcolor = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
+    game.CustomPlateau.light.THREEcolor = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
+    game.CustomPlateau.borderColorValue = hexToHexString(value);
+    game.CustomPlateau.updatePlateau('lights');
+    game.CustomPlateau.updatePlateau('border');
+}
+
+async function updatePlatformLimiteurColor(value) {
+    let colorBorder = pongCustomManager.hexToRgb(event.target.value);
+    game.CustomPlateau.boudth.THREEcolor = new THREE.Color(`rgb(${colorBorder.r},${colorBorder.g},${colorBorder.b})`).convertSRGBToLinear();
+    game.CustomPlateau.limiteurColorValue = hexToHexString(value);
+    game.CustomPlateau.updatePlateau('boudth');
+}
+
+
 // ===========================================================================
 // ==================== CAM ==================================================
 // ===========================================================================
 
 
+async function toggleUpdateCAM(){
+    try {
+		const cameraModes = ['rotate', 'focus ball', 'libre'];
+		let currentModeIndex = 0;
 
+		let updateCameraModeDisplay = () => {
+			document.getElementById('camera-mode').textContent = cameraModes[currentModeIndex];
+			switch (currentModeIndex) {
+				case 1:
+					game.CustomPlateau.toggle_cam = true;
+					break;
+				case 2:
+					game.CustomPlateau.toggle_cam = false;
+					game.CustomPlateau.move_cam = false;
+					break;
+				case 0:
+					game.CustomPlateau.toggle_cam = false;
+					game.CustomPlateau.move_cam = true;
+					break;
+			}
+		}
+
+		document.getElementById('left-arrow').addEventListener('click', () => {
+			currentModeIndex = (currentModeIndex - 1 + cameraModes.length) % cameraModes.length;
+			updateCameraModeDisplay();
+		});
+
+		document.getElementById('right-arrow').addEventListener('click', () => {
+			currentModeIndex = (currentModeIndex + 1) % cameraModes.length;
+			updateCameraModeDisplay();
+		});
+
+		updateCameraModeDisplay();
+	} catch (e) {
+		console.error(e)
+	}
+}
 
 // ===========================================================================
 // ==================== Export ===============================================

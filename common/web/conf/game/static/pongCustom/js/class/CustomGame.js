@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { CustomBall } from './CustomBall.js';
 import { CustomPlateau } from './CustomPlateau.js';
+import { CustomPaddle } from './CustomPaddle.js';
 import { InfiniteGridHelper } from './grid.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -35,6 +36,7 @@ class CustomGame {
 
 		this.creationBall = false;
 		this.creationPlateau = false;
+		this.creationPaddle = false;
 		// this.init();
 	}
 
@@ -63,6 +65,7 @@ class CustomGame {
 	async showBall() {
 		this.createSpotLight();
 		this.creationBall = true;
+		this.Customball.group.position.set(0, (this.Customball.radius), 0);
 		this.scene.add(this.Customball.group);
 	}
 
@@ -78,6 +81,20 @@ class CustomGame {
 	async showPlateau() {
 		this.creationPlateau = true;
 		this.scene.add(this.CustomPlateau.group);
+	}
+
+	async createPaddle(){
+		return new Promise(async (resolve, reject) => {
+			this.CustomPaddle = new CustomPaddle(this);
+			await this.CustomPaddle.init();
+			this.showPaddle();
+			resolve(true);
+		});
+	}
+
+	async showPaddle(){
+		this.creationPaddle = true;
+		this.scene.add(this.CustomPaddle.group);
 	}
 
 	async createScene() {
@@ -182,6 +199,8 @@ class CustomGame {
 			return (this.Customball.rendering());
 		if (this.creationPlateau)
 			return (this.CustomPlateau.rendering());
+		if (this.creationPaddle)
+			return (this.CustomPaddle.rendering());
 		this.cameraAngle += this.move_angle;
 		this.camera.position.x = this.cameraDistance * Math.sin(this.cameraAngle);
 		this.camera.position.z = this.cameraDistance * Math.cos(this.cameraAngle);

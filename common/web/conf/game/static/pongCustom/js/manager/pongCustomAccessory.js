@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as pongCustomManager from '../pongCustom.js'
-import {game} from '../pongCustom.js'
-
+import { game } from '../pongCustom.js'
+import { CustomBall } from '../class/CustomBall.js';
 
 // ===========================================================================
 // ==================== Toggle ===============================================
@@ -20,10 +20,10 @@ import {game} from '../pongCustom.js'
 async function toggleCustonAccessory() {
 	try {
 		let allInput = document.getElementsByClassName('accessory-btn');
-		
+
 		Array.from(allInput).forEach(input => {
 			let accessoryName = input.getAttribute('data-accessory');
-			input.addEventListener('change', function() {
+			input.addEventListener('change', function () {
 				let type = input.getAttribute('data-accessory')
 				let func = getAccessoryChangeFunc(type);
 				if (func) func(input.checked);
@@ -52,7 +52,7 @@ async function toggleCustonAccessory() {
 async function innerAccessory(levels) {
 	try {
 		let boxCustome = document.getElementById('pongCustom-accessory');
-		boxCustome.style.display = ""; 
+		boxCustome.style.display = "";
 		const accessories = [
 			{ name: 'Grid', checked: true },
 			{ name: 'Ball', checked: false },
@@ -60,7 +60,7 @@ async function innerAccessory(levels) {
 			{ name: 'Paddle', checked: false },
 			{ name: 'Map', checked: false },
 			{ name: 'Score', checked: false },
-		];	
+		];
 		let accessoriesToShow = accessories.slice(0, levels);
 		let innerHTML = `
 			<div class="title-custom-lst">
@@ -77,7 +77,7 @@ async function innerAccessory(levels) {
 			`;
 		});
 		innerHTML += '</div>';
-		boxCustome.innerHTML = innerHTML; 
+		boxCustome.innerHTML = innerHTML;
 	} catch (error) {
 		console.error('error in innerAccessory', error);
 	}
@@ -93,7 +93,7 @@ async function hideCustomAccessory() {
 	try {
 		let customAccessory = document.getElementById('pongCustom-accessory');
 		customAccessory.innerHTML = '';
-        customAccessory.style.display = "none";
+		customAccessory.style.display = "none";
 		game.scene.add(game.grid);
 	} catch (e) {
 		console.error(e)
@@ -120,21 +120,24 @@ function accessoryUpdateGrid(isCheck) {
 	console.log("Grid accessoryUpdated! =>", isCheck);
 }
 
-function accessoryUpdateBall(isCheck) {
+async function accessoryUpdateBall(isCheck) {
 	console.log("Ball accessoryUpdated! =>", isCheck);
-	if (isCheck)
-	{
-		if (game.creationPlateau)
-		{
+	if (isCheck) {
+		if (game.creationPlateau) {
+			if (game.Customball == undefined) {
+				game.Customball = new CustomBall(game);
+				await game.Customball.init();
+			}
 			game.scene.add(game.Customball.group);
 			game.CustomPlateau.showball = true;
+			game.CustomPlateau.ballDirection = new THREE.Vector3(0.2, 0, 0.2);
 			game.Customball.group.position.y = 10 + (game.Customball.radius / 2);
 		}
 	}
-	else
-	{
-
+	else {
+		game.CustomPlateau.showball = false;
 		game.scene.remove(game.Customball.group);
+		game.Customball.group.position.set(0, (game.Customball.radius), 0);
 	}
 }
 
@@ -186,6 +189,6 @@ function getAccessoryChangeFunc(accessoryName) {
 
 export {
 	innerAccessory,
-    toggleCustonAccessory,
-    hideCustomAccessory,
+	toggleCustonAccessory,
+	hideCustomAccessory,
 }

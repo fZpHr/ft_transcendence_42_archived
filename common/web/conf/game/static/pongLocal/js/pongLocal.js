@@ -1,9 +1,28 @@
 import { startGame } from '../../pong3D/js/local/pong3D.js';
+import { serializeCustomGame } from '../../pongCustom/js/serializeCustomGame.js'
+
+let pongCustom;
+
 
 async function toggleMenu() {
-    toggleChangeControls();
-    toggleCustomGame();
-    toggleStartGame();
+    try {
+        pongCustom = await APIgetSessionPongCustomGame();    
+        if (pongCustom.status) {
+            console.log('[1.2] CustomGame not set');
+            pongCustom = null;
+            pongCustom = await serializeCustomGame(pongCustom);
+            await APIsaveCustomAtSession(pongCustom);
+        }
+        else
+            pongCustom = pongCustom.customGame;
+        console.log('[1.3] CustomGame = ', pongCustom);
+    
+        toggleChangeControls();
+        toggleCustomGame();
+        toggleStartGame();
+    } catch (e) {
+        console.error(`error toggleMenu ${e}`);
+    }
 };
 // ================== UPDATE CONTROLS ================== //
 
@@ -120,13 +139,13 @@ function getGameUserInfo() {
 
 // ================== TOGGLE MODAL ================== //
 
+
 async function toggleCustomGame() {
     try {
         let customGame = document.getElementById('curstom-game');
         
-        customGame.addEventListener('click', function() {
-            console.log('click custom game');
-            window.location.href = '/game/pong/custom/?data-url=/game/pong/local/?customId=';
+        customGame.addEventListener('click', async function() {
+            window.location.href = '/game/pong/custom/?data-url=/game/pong/local/';
         });
     } catch (error) {
         console.error(error);
@@ -136,10 +155,9 @@ async function toggleCustomGame() {
 async function toggleStartGame() {
     try {
         let startGameBox = document.getElementById('start-game');
-        console.log('startGameBox => ', startGameBox);
         startGameBox.addEventListener('click', async function() {
             let gameInfo = getGameUserInfo();
-            // console.log('game user info => ', gameInfo);
+
             let player1 = gameInfo.player1;
             let player2 = gameInfo.player2;
             let box = document.getElementById('container-pong3D');
@@ -147,13 +165,9 @@ async function toggleStartGame() {
             footer.style.display = 'none';
             box.innerHTML = '';
 
-            // let customId = 
-            let customGame = await APIgetDataCustomGame(25);
-            console.log(customGame.customGame);
-            console.log(customGame.customGame.custom_ball);
-            // await updatePongData(customGame.customGame);
+            console.log('[2.0] CustomGame In start = ', pongCustom);
 
-            startGame(player1, player2, gameInfo.nameBord, customGame.customGame);
+            startGame(player1, player2, gameInfo.nameBord, pongCustom);
         });
     } catch (error) {
         console.error(error);

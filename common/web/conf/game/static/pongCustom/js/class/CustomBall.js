@@ -4,8 +4,11 @@ class CustomBall {
 		this.custom_ball;
 		this.light = {
 			intensity: 10,
-			color: 0xffffff
+			color: 0xffffff,
 		};
+
+		this.colorLightValue;
+
 		this.intensity = 10;
 
 		this.scene = game.scene;
@@ -27,7 +30,6 @@ class CustomBall {
 		this.move_torus = false;
 		this.torus_rotation = 0.05;
 		this.option == undefined;
-		// this.init();
 	}
 
 	async init() {

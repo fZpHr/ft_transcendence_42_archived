@@ -26,9 +26,9 @@ class Ball {
             metalness: ball.metalness,
         });
         this.sphere3D = new THREE.Mesh(this.geometrySphere, this.materialSphere);
-        this.sphere3D.position.set(0, 1, 0);
+        this.sphere3D.position.set(0, 1 + ball.radius / 2, 0);
         this.ballDirection = new THREE.Vector3(0.5, 0, 0);
-
+        ballTorusGeo.radius = ball.radius
         this.balltorusGeometry = new THREE.TorusGeometry(ballTorusGeo.radius, ballTorusGeo.tube, ballTorusGeo.radialSegments, ballTorusGeo.tubularSegments);
         this.balltorusMaterial = new THREE.MeshPhysicalMaterial({
             color: balltorusMaterial.color, transparent: false,

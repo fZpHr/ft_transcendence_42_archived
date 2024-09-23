@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as pongCustomManager from '../pongCustom.js'
 import * as pongCustomAccessory from './pongCustomAccessory.js'
-import {game} from '../pongCustom.js'
+import { game } from '../pongCustom.js'
 
 
 /**
@@ -14,10 +14,11 @@ import {game} from '../pongCustom.js'
  * @type {Object<string, Function>}
  */
 const inputHandlers = {
-	'paddle-color': updatePaddleColor,
-	'paddle-size': updatePaddleSize,
-	'paddle-reflexion': updatePaddleReflexion,
-	'paddle-light': updatePaddleLight,
+    'paddle-color': updatePaddleColor,
+    'paddle-size': updatePaddleSize,
+    'paddle-reflexion': updatePaddleReflexion,
+    'paddle-light': updatePaddleLight,
+    'paddle-light-color': updatePaddleLightColor
 };
 
 
@@ -36,16 +37,16 @@ const inputHandlers = {
  * @returns {Promise<void>} - An async function that manages element settings.
  */
 async function togglePaddle() {
-	try {
-		innerCustomPaddle();
+    try {
+        innerCustomPaddle();
         pongCustomManager.toggleBackCustomManager();
-		pongCustomAccessory.innerAccessory(2);
-		pongCustomAccessory.toggleCustonAccessory();
-		toggleCustomPaddleUpdate();
-		// toggleUpdateCAM();
-	} catch (e) {
-		console.error(e)
-	}
+        pongCustomAccessory.innerAccessory(3);
+        pongCustomAccessory.toggleCustonAccessory();
+        toggleCustomPaddleUpdate();
+        // toggleUpdateCAM();
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 
@@ -60,14 +61,14 @@ async function togglePaddle() {
  */
 async function toggleCustomPaddleUpdate() {
     await initializePaddle();
-	try {
-		const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
-		inputs.forEach(input => {
+    try {
+        const inputs = document.querySelectorAll('#custom-box input, #custom-box select');
+        inputs.forEach(input => {
             input.addEventListener('input', toggleChangeInput);
-		});
-	} catch (e) {
-		console.error(e)
-	}
+        });
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 /**
@@ -81,14 +82,14 @@ async function toggleCustomPaddleUpdate() {
  * @param {Event} event - The input event triggered by the user.
  */
 function toggleChangeInput(event) {
-	const { id, value } = event.target;
+    const { id, value } = event.target;
 
-	if (inputHandlers[id]) {
-		inputHandlers[id](value);
-		game.CustomPaddle.updatePaddle();
-	} else {
-		console.warn(`Unrecognized input id: ${id}`);
-	}
+    if (inputHandlers[id]) {
+        inputHandlers[id](value);
+        game.CustomPaddle.updatePaddle();
+    } else {
+        console.warn(`Unrecognized input id: ${id}`);
+    }
 }
 
 
@@ -108,9 +109,9 @@ function toggleChangeInput(event) {
  * @returns {Promise<void>} - An async function that sets up the Element UI.
  */
 async function innerCustomPaddle() {
-	try {
-		let customBox = document.getElementById('custom-box');
-		customBox.innerHTML = `
+    try {
+        let customBox = document.getElementById('custom-box');
+        customBox.innerHTML = `
             <div class="title-custom">
                 <span>Paddle</span>
                 <i class="fas fa-arrow-left" id="back_custom"></i>
@@ -120,17 +121,21 @@ async function innerCustomPaddle() {
                     <label for="paddle-color">Color :</label>
                     <input type="color" id="paddle-color" name="paddle-color" value="#FF0000">
                 </div>
-                <div class="custom-option-element">
-                    <label for="paddle-light">Light :</label>
-                    <input type="range" id="paddle-light" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
+                 <div class="custom-option-element color">
+                    <label for="paddle-light-color">Light Color :</label>
+                    <input type="color" id="paddle-light-color" name="paddle-light-color" value="#FF0000">
                 </div>
                 <div class="custom-option-element">
-                    <label for="paddle-reflexion">Reflexion :</label>
-                    <input type="range" id="paddle-reflexion" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
+                    <label for="paddle-light">Light :</label>
+                    <input type="range" id="paddle-light" class="size-input" min="0" max="500" step="1" value="0">
+                </div>
+                <div class="custom-option-element">
+                    <label for="paddle-reflexion">Emissive :</label>
+                    <input type="range" id="paddle-reflexion" class="size-input" min="0" max="500" step="1" value="0">
                 </div>
                 <div class="custom-option-element">
                     <label for="paddle-size">Size :</label>
-                    <input type="range" id="paddle-size" class="size-input" min="0.1" max="1" step="0.01" value="0.5">
+                    <input type="range" id="paddle-size" class="size-input" min="0.26179938779" max="0.78539816339" step="0.01" value="0.52359877559">
                 </div>
                 <div class="change-cam">
                     <button id="left-arrow"><i class="fas fa-arrow-left"></i></button>
@@ -139,9 +144,9 @@ async function innerCustomPaddle() {
                 </div>
             </div>
         `;
-	} catch (e) {
-		console.log(e)
-	}
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 
@@ -187,12 +192,12 @@ async function initializePaddle() {
  *
  * @returns {Promise<void>} - An async function that updates Element inputs.
  */
-async function updateCustomPaddleInput () {
-	try {
+async function updateCustomPaddleInput() {
+    try {
 
-	} catch {
-		console.error('error in updateCustomPaddleInput')
-	}
+    } catch {
+        console.error('error in updateCustomPaddleInput')
+    }
 }
 
 
@@ -201,38 +206,50 @@ async function updateCustomPaddleInput () {
 // ===========================================================================
 
 
-function updatePaddleColor(value) {
-	if (pongCustomManager.checkColor(value)) {
-		const color =  pongCustomManager.hexToRgb(value);
-		// game.CustomPaddle. = new THREE.Color(`rgb(${color.r},${color.g},${color.b})`).convertSRGBToLinear();
-	} else
-		console.error('Invalid hex color:', value);
+async function updatePaddleColor(value) {
+    if (pongCustomManager.checkColor(value)) {
+        const color = pongCustomManager.hexToRgb(value);
+        game.CustomPaddle.THREEcolor = new THREE.Color(`rgb(${color.r},${color.g},${color.b})`).convertSRGBToLinear();
+        await game.CustomPaddle.updatePaddle();
+    } else
+        console.error('Invalid hex color:', value);
 }
 
-function updatePaddleLight(value) {
-    if (pongCustomManager.checkRange(value, 0.1, 1, 0.01, 'paddle-light')) {
-        // game.CustomPaddle. = parseFloat(value);
+async function updatePaddleLight(value) {
+    if (pongCustomManager.checkRange(value, 0, 500, 1, 'paddle-light')) {
+        game.CustomPaddle.light.intensity = parseFloat(value);
+        await game.CustomPaddle.updatePaddle();
     }
     else
         console.error('Invalide paddle-light');
 }
 
-function updatePaddleReflexion(value) {
-    if (pongCustomManager.checkRange(value, 0.1, 1, 0.01, 'paddle-reflexion')) {
-		// game.CustomPaddle. = parseFloat(value);
+async function updatePaddleReflexion(value) {
+    if (pongCustomManager.checkRange(value, 0, 500, 1, 'paddle-reflexion')) {
+        game.CustomPaddle.material.emissiveIntensity = parseFloat(value);
+        await game.CustomPaddle.updatePaddle();
     }
     else
         console.error('Invalide paddle-reflexion');
 }
 
-function updatePaddleSize(value) {
-    if (pongCustomManager.checkRange(value, 0.1, 1, 0.01, 'paddle-size')) {
-        // game.CustomPaddle. = parseFloat(value);
+async function updatePaddleSize(value) {
+    if (pongCustomManager.checkRange(value, 0.26179938779, 0.78539816339, 0.01, 'paddle-size')) {
+        game.CustomPaddle.geo.arc = parseFloat(value);
+        await game.CustomPaddle.updatePaddle();
     }
     else
         console.error('Invalide ');
 }
 
+async function updatePaddleLightColor(value) {
+    if (pongCustomManager.checkColor(value)) {
+        const color = pongCustomManager.hexToRgb(value);
+        game.CustomPaddle.light.THREEcolor = new THREE.Color(`rgb(${color.r},${color.g},${color.b})`).convertSRGBToLinear();
+        await game.CustomPaddle.updatePaddle();
+    } else
+        console.error('Invalid hex color:', value);
+}
 
 // ===========================================================================
 // ==================== CAM ==================================================

@@ -74,12 +74,27 @@ def gameHome(request):
 
 @login_required
 def pongLocal(request):
+    dataUrl = request.GET.get('customId', 'none')
+    if dataUrl:
+        context = {'dataUrl': dataUrl}
+    else:
+        context = {'dataUrl': 1}
     if request.htmx:
-        return render(request, "pongLocal/pongLocal.html")
-    return render(request, "pongLocal/pongLocal_full.html")
+        return render(request, "pongLocal/pongLocal.html", context)
+    return render(request, "pongLocal/pongLocal_full.html", context)
 
 @login_required
 def pongCustom(request):
+    dataUrl = request.GET.get('data-url', 'none')
+    context = {
+        'dataUrl': dataUrl
+    }
+    if request.htmx:
+        return render(request, "pongCustom/pongCustom.html", context)
+    return render(request, "pongCustom/pongCustom_full.html", context)
+
+@login_required
+def pongCustomLocal(request):
     dataUrl = request.GET.get('data-url', 'none')
     context = {
         'dataUrl': dataUrl

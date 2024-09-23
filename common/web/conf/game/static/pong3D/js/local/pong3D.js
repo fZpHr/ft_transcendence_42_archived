@@ -5,48 +5,48 @@ import { Game } from './class/games.js'
 import { Player } from './class/player.js'
 // import { RGBELoader } from 'https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/loaders/RGBELoader.js';
 
-async function startGame(player1, player2, nameBord, customGame) {
+async function startGame(player1, player2, nameBord, pongCustom) {
     let element = [];
     let game = new Game();
 
     let ground = new Plateau(
-        { radius: 40, segments: 64, },
+        { radius: parseInt(pongCustom.custom_plateau.size), segments: 64, },
         { color: 0xb5b5b5 },
-        { color: 0x000000, emissive: 0x000000, emissiveIntensity: 200, opacity: 0.5 },
-        { radius: 41, tube: 1, radialSegments: 32, tubularSegments: 200 },
-        { color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 200, opacity: 0.5, roughness: 0.1, metalness: 1 }
+        { color: parseInt(pongCustom.custom_plateau.fontColorValue), emissive: parseInt(pongCustom.custom_plateau.fontColorValue), emissiveIntensity: 200, opacity: 0.5 },
+        { radius: parseInt(pongCustom.custom_plateau.size) + 1 , tube: 1, radialSegments: 32, tubularSegments: 200 },
+        { color: parseInt(pongCustom.custom_plateau.borderColorValue), emissive: parseInt(pongCustom.custom_plateau.borderColorValue), emissiveIntensity: 200, opacity: 0.5, roughness: 0.1, metalness: 1 }
     );
 
     let player_1 = new Player(
-        { radius: 41, tube: 1.1, radialSegments: 32, tubularSegments: 200, arc: Math.PI / 6 },
+        { radius: (parseInt(pongCustom.custom_plateau.size) + 1), tube: 1.1, radialSegments: 32, tubularSegments: 200, arc: Math.PI / 6 },
         { color: 0xffffff, opacity: 0.8, roughness: 0.1, metalness: 0, emissive: 0xffffff, emissiveIntensity: 100 },
         { y: 1, angleX: - Math.PI / 2, angleZ: Math.PI - (Math.PI / 12) },
         {
             radius: 1, tube: 1.1, radialSegments: 32, tubularSegments: 200,
-            arc: 2 * Math.PI, color: 0xffffff, opacity: 0.8, roughness: 0.1, metalness: 0.1, emissive: 0xffffff,
+            arc: 2 * Math.PI, color: parseInt(pongCustom.custom_plateau.limiteurColorValue), opacity: 0.8, roughness: 0.1, metalness: 0.1, emissive: parseInt(pongCustom.custom_plateau.limiteurColorValue),
             position_up: {
-                x: 40 * Math.cos(Math.PI / 4) + 1 / 2,
+                x: parseInt(pongCustom.custom_plateau.size) * Math.cos(Math.PI / 4) + 1 / 2,
                 y: 1,
-                z: 40 * Math.sin(Math.PI / 4) + 1 / 1.1
+                z: parseInt(pongCustom.custom_plateau.size) * Math.sin(Math.PI / 4) + 1 / 1.1
             },
             position_down: {
-                x: 40 * Math.cos(Math.PI / 4) + 1 / 2,
+                x: parseInt(pongCustom.custom_plateau.size) * Math.cos(Math.PI / 4) + 1 / 2,
                 y: 1,
-                z: 40 * Math.sin(-Math.PI / 4) - 1 / 1.1,
+                z: parseInt(pongCustom.custom_plateau.size) * Math.sin(-Math.PI / 4) - 1 / 1.1,
             },
             lights: {
                 color: 0x00ffff,
                 intensity: 250,
                 position_up: {
-                    x: 41 * -Math.cos(Math.PI / 12),
+                    x: (parseInt(pongCustom.custom_plateau.size) + 1) * -Math.cos(Math.PI / 12),
                     y: 1,
-                    z: 41 * -Math.sin(Math.PI / 12),
+                    z: (parseInt(pongCustom.custom_plateau.size) + 1) * -Math.sin(Math.PI / 12),
                     radius: -1
                 },
                 position_down: {
-                    x: 41 * -Math.cos(Math.PI / 12),
+                    x: (parseInt(pongCustom.custom_plateau.size) + 1) * -Math.cos(Math.PI / 12),
                     y: 1,
-                    z: 41 * -Math.sin(-Math.PI / 12),
+                    z: (parseInt(pongCustom.custom_plateau.size) + 1) * -Math.sin(-Math.PI / 12),
                     radius: 1
                 }
             }
@@ -55,35 +55,35 @@ async function startGame(player1, player2, nameBord, customGame) {
         { name: player1.name, img: player1.img }
     )
     let player_2 = new Player(
-        { radius: 41, tube: 1.1, radialSegments: 32, tubularSegments: 200, arc: Math.PI / 6 },
-        { color: 0xffffff, opacity: 0.8, roughness: 0.1, metalness: 0, emissive: 0xffffff, emissiveIntensity: 100 },
+        { radius: (parseInt(pongCustom.custom_plateau.size) + 1), tube: 1.1, radialSegments: 32, tubularSegments: 200, arc: Math.PI / 6 },
+        { color: parseInt(pongCustom.custom_plateau.size), opacity: 0.8, roughness: 0.1, metalness: 0, emissive: parseInt(pongCustom.custom_plateau.size), emissiveIntensity: 100 },
         { y: 1, angleX: -Math.PI / 2, angleZ: 0 - (Math.PI / 12) },
         {
             radius: 1, tube: 1.1, radialSegments: 32, tubularSegments: 200,
             arc: 2 * Math.PI, color: 0xffffff, opacity: 0.8, roughness: 0.1, metalness: 0.1, emissive: 0xffffff,
             position_up: {
-                x: -(40 * Math.cos(Math.PI / 4) + 1 / 2),
+                x: -((parseInt(pongCustom.custom_plateau.size)) * Math.cos(Math.PI / 4) + 1 / 2),
                 y: 1,
-                z: 40 * Math.sin(Math.PI / 4) + 1 / 1.1
+                z: (parseInt(pongCustom.custom_plateau.size)) * Math.sin(Math.PI / 4) + 1 / 1.1
             },
             position_down: {
-                x: -(40 * Math.cos(Math.PI / 4) + 1 / 2),
+                x: -((parseInt(pongCustom.custom_plateau.size)) * Math.cos(Math.PI / 4) + 1 / 2),
                 y: 1,
-                z: 40 * Math.sin(-Math.PI / 4) - 1 / 1.1
+                z: (parseInt(pongCustom.custom_plateau.size)) * Math.sin(-Math.PI / 4) - 1 / 1.1
             },
             lights: {
                 color: 0x00ffff,
                 intensity: 250,
                 position_up: {
-                    x: 41 * Math.cos(Math.PI / 12),
+                    x: (parseInt(pongCustom.custom_plateau.size) + 1) * Math.cos(Math.PI / 12),
                     y: 1,
-                    z: 41 * Math.sin(Math.PI / 12),
+                    z: (parseInt(pongCustom.custom_plateau.size) + 1) * Math.sin(Math.PI / 12),
                     radius: 1
                 },
                 position_down: {
-                    x: 41 * Math.cos(Math.PI / 12),
+                    x: (parseInt(pongCustom.custom_plateau.size) + 1) * Math.cos(Math.PI / 12),
                     y: 1,
-                    z: 41 * Math.sin(-Math.PI / 12),
+                    z: (parseInt(pongCustom.custom_plateau.size) + 1) * Math.sin(-Math.PI / 12),
                     radius: -1
                 }
             }
@@ -92,15 +92,16 @@ async function startGame(player1, player2, nameBord, customGame) {
         { name: player2.name, img: player2.img }
     )
 
+
     const sphere = new Ball(
         {
-            radius: customGame.custom_ball.size,
+            radius: pongCustom.custom_ball.size,
             widthSegments: 32,
             heightSegments: 32,
-            color: 0x00ffff,
-            emissive: 0x00ffff,
+            color: parseInt(pongCustom.custom_ball.colorValue),
+            emissive: parseInt(pongCustom.custom_ball.colorValue),
 
-            emissiveIntensity: customGame.custom_ball.emissiveIntensity,
+            emissiveIntensity: pongCustom.custom_ball.emissiveIntensity,
             roughness: 0.7,
             metalness: 0.7
         },
@@ -119,8 +120,8 @@ async function startGame(player1, player2, nameBord, customGame) {
             emissiveIntensity: 50 
         },
         {
-            color: 0x00ffff,
-            intensity: customGame.custom_ball.lightIntensity,
+            color: parseInt(pongCustom.custom_ball.colorLightValue),
+            intensity: pongCustom.custom_ball.lightIntensity,
         },
         {
             nbrTorus: 3
@@ -257,19 +258,19 @@ async function startGame(player1, player2, nameBord, customGame) {
 
 
 
-    // CustomGameForBen
+    // pongCustomForBen
 
-    async function updateCustomGame() {
+    async function updatepongCustom() {
         return (new Promise(async(resolve, reject) => {
             try {
-                if (!customGame)
+                if (!pongCustom)
                     return;
-                if (customGame.custom_ball)
+                if (pongCustom.custom_ball)
                     await updateCustomBall();
                 else
                     console.log('NONE ERROR HERE');
             } catch {
-                console.error('error in updateCustomGame');
+                console.error('error in updatepongCustom');
                 resolve(true);
             }
             resolve(true);
@@ -280,22 +281,22 @@ async function startGame(player1, player2, nameBord, customGame) {
         return (new Promise(async(resolve, reject) => {
             try {
                 console.log('je passe par ici');
-                if (customGame.custom_ball.custom_animation)
+                if (pongCustom.custom_ball.custom_animation)
                     sphere.nbrTorus = 3;
                 else {
                     sphere.nbrTorus = 0;
                     console.log('je suis passer par la');
                 }
-                // if (customGame.custom_ball.color)
+                // if (pongCustom.custom_ball.color)
                 // 
-                // if (customGame.custom_ball.colorLight)
+                // if (pongCustom.custom_ball.colorLight)
                 //     // 
-                // if (customGame.custom_ball.emissiveIntensity)
+                // if (pongCustom.custom_ball.emissiveIntensity)
 
-                // if (customGame.custom_ball.lightIntensity)
+                // if (pongCustom.custom_ball.lightIntensity)
 
-                if (customGame.custom_ball.size)
-                    sphere.radius = customGame.custom_ball.size;
+                if (pongCustom.custom_ball.size)
+                    sphere.radius = pongCustom.custom_ball.size;
             } catch {
                 console.error('error in updateCustomBall');
                 resolve(true);

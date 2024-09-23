@@ -17,9 +17,7 @@ class CustomPlateau {
 		this.camera = game.camera;
 		this.move_angle = 0.01;
 		this.cameraAngle = 0;
-		this.cameraDistance = 16 / 1.5;
-		this.cameraHeight = 16 / 1.5;
-		this.move_cam = false;
+        this.move_cam = true;
 		this.toggle_cam = false;
 
 		this.group = new THREE.Group();
@@ -41,6 +39,8 @@ class CustomPlateau {
 
 		this.lights = [];
 		this.radius = 41;
+		this.cameraDistance = (this.radius * 2) / 1.5;
+		this.cameraHeight = (this.radius * 2) / 1.5;
 		this.limits_1 = {
 			radius: 1, tube: 1.1, radialSegments: 32, tubularSegments: 200,
 			arc: 2 * Math.PI, color: 0xffffff, opacity: 0.8, roughness: 0.1, metalness: 0.1, emissive: 0xffffff,
@@ -108,8 +108,7 @@ class CustomPlateau {
 		this.limits = [];
 
 		this.showball = false;
-		this.ballDirection = new THREE.Vector3(0.2, 0, 0);
-		// this.init();
+		this.ballDirection = new THREE.Vector3(0.2, 0, 0.2);
 	}
 
 	async init() {
@@ -367,6 +366,8 @@ class CustomPlateau {
 			this.plateau == undefined ? await this.createPlat() : await this.updatePlat();
 			this.lights.length == 0 ? await this.createLights() : await this.updateLights();
 			this.limits.length == 0 ? (await this.createBoudth(this.limits_1), await this.createBoudth(this.limits_2)) : await this.updateBoudth();
+			this.cameraDistance = (this.radius * 2) / 1.5;
+			this.cameraHeight = (this.radius * 2) / 1.5;
 			resolve(true);
 		});
 	}
@@ -380,50 +381,83 @@ class CustomPlateau {
 			this.camera.lookAt(this.group.position)
 		}
 
-		for (const data of this.game.spotlight) {
-			let x = data.target.position.x;
-			let z = data.target.position.z;
-			data.target.position.x = x * Math.cos(0.05) + z * Math.sin(0.05);
-			data.target.position.z = z * Math.cos(0.05) - x * Math.sin(0.05);
-			this.game.scene.remove(data.target);
-			data.light.target = data.target;
-			this.game.scene.add(data.target);
-		}
+		this.moveSpotLight();
 
-		if (this.showball)
-		{
+		if (this.showball) 
+			await this.moveBall();
+		(this.toggle_cam == true && this.showball == true) ? this.camera.lookAt(this.game.Customball.group.position) : this.camera.lookAt(0, 10, 0);
+		this.renderer.render(this.scene, this.camera);
+	}).bind(this);
+
+	async moveSpotLight(){
+		return new Promise(async(resolve, reject)=>{
+			for (const data of this.game.spotlight) {
+				let x = data.target.position.x;
+				let z = data.target.position.z;
+				data.target.position.x = x * Math.cos(0.05) + z * Math.sin(0.05);
+				data.target.position.z = z * Math.cos(0.05) - x * Math.sin(0.05);
+				this.game.scene.remove(data.target);
+				data.light.target = data.target;
+				this.game.scene.add(data.target);
+			}
+			resolve(true);
+		});
+	}
+
+	async moveBall(){
+		return new Promise(async(resolve, reject)=>{
 			if (this.game.Customball.move_torus)
 				this.game.Customball.moveTorus();
 			this.move();
 			const distanceFromCenter = Math.sqrt(this.game.Customball.group.position.x * this.game.Customball.group.position.x + this.game.Customball.group.position.z * this.game.Customball.group.position.z);;
 			if ((distanceFromCenter + this.game.Customball.radius >= (this.radius - 1))) {
-				await this.bounce();
+				await this.bounce(distanceFromCenter);
+				if (distanceFromCenter + this.game.Customball.radius > this.radius + 1)
+					this.resetCenter();
 			}
-		}
-		this.toggle_cam == true ? this.camera.lookAt(this.group.position) : this.camera.lookAt(0, 1, 0);
-		this.renderer.render(this.scene, this.camera);
-	}).bind(this);
+			resolve(true);
+		});
+	}
 
 	async move() {
-        this.game.Customball.group.position.add(this.ballDirection);
+		this.game.Customball.group.position.x += this.ballDirection.x;
+		this.game.Customball.group.position.y += this.ballDirection.y;
+		this.game.Customball.group.position.z += this.ballDirection.z;
 		if (this.game.Customball.group.position.y >= 20)
 			this.ballDirection.y = -0.05;
 		if (this.game.Customball.group.position.y - (this.game.Customball.radius / 2) == 10)
 			this.ballDirection.y = 0;
-    }
+	}
 
-    async bounce() {
-        return new Promise(async (resolve, reject) => {
-            const normal = this.game.Customball.group.position.clone().normalize();
-            const dotProduct = this.ballDirection.dot(normal);
-            const newVelocity = this.ballDirection.clone().sub(normal.clone().multiplyScalar(Math.abs(dotProduct * (1 + 1))));
-            newVelocity.x += Math.abs(Math.random() * 0.2 - 0.2 / 2);
-            newVelocity.z += Math.abs(Math.random() * 0.2 - 0.2 / 2);
-			newVelocity.y = 0.05;
-            this.ballDirection.copy(newVelocity);
-            resolve(true);
-        });
-    }
+	async bounce(distanceFromCenter) {
+		return new Promise(async (resolve, reject) => {
+			const normal = this.game.Customball.group.position.clone().setY(0).normalize();
+			const dotProduct = this.ballDirection.dot(normal);
+			const newVelocity = this.ballDirection.clone().setY(0).sub(normal.clone().multiplyScalar(Math.abs(dotProduct * (1 + 1))));
+			
+			newVelocity.x += Math.abs(Math.random() * 0.2 - 0.2 / 2);
+			newVelocity.z += Math.abs(Math.random() * 0.2 - 0.2 / 2);
+			
+			const originalMagnitude = Math.sqrt(this.ballDirection.x * this.ballDirection.x + this.ballDirection.z * this.ballDirection.z);
+			const newMagnitude = Math.sqrt(newVelocity.x * newVelocity.x + newVelocity.z * newVelocity.z);
+			const scaleFactor = originalMagnitude / newMagnitude;
+			
+			newVelocity.x *= scaleFactor;
+			newVelocity.z *= scaleFactor;
+			if (this.ballDirection.y == 0)
+				newVelocity.y = 0.05;
+			else
+				newVelocity.y = this.ballDirection.y;
+			this.ballDirection.copy(newVelocity);
+
+			resolve(true);
+		});
+	}
+
+	async resetCenter() {
+		this.game.Customball.group.position.set(0, 10 + (this.game.Customball.radius / 2), 0);
+		this.ballDirection.y = 0;
+	}
 }
 
 export {

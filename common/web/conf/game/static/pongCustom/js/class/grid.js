@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 export class InfiniteGridHelper extends THREE.Mesh {
-  constructor(size1 = 10, size2 = 100, color = new THREE.Color('white'), distance = 8000, axes = 'xzy') {
+  constructor(size1 = 10, size2 = 100, color = new THREE.Color('grey'), distance = 8000, axes = 'xzy') {
     const planeAxes = axes.slice(0, 2);
 
     const geometry = new THREE.PlaneGeometry(2, 2, 1, 1);
