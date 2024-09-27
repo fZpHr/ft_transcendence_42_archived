@@ -252,7 +252,7 @@ async function moveBall(data) {
 			game.setRender();
 		game.ball.acceleration.x = parseFloat(data.x);
 		game.ball.acceleration.z = parseFloat(data.y);
-		game.ball.move(game.ball.acceleration);
+		game.ball.move(game.ball.acceleration, true);
 		// console.log("collision", new Date().getTime(), game.ball.group.position.x, game.ball.group.position.y);
 		// moveSphere(game, parseFloat(data.message));
 	} catch (error) {
@@ -271,7 +271,7 @@ async function info(data) {
 async function resetBall(data) {
 	try {
 		// console.log('[WS-G]=>(' + data.message + ')');
-		game.ball.resetCenter(game.ball.bouncing.speed)
+		game.ball.resetCenter()
 	} catch (error) {
 		console.error(error);
 	}

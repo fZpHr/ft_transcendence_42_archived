@@ -57,6 +57,7 @@ class Ball {
 			z: 0
 		};
 		this.group;
+		this.isMoving = false;
 		this.initTorus(nbr.nbrTorus);
 	}
 
@@ -88,8 +89,8 @@ class Ball {
 		}
 	}
 
-	async move(acceleration) {
-		this.collisionLight.position.set(this.group.position.x, 1, this.group.position.z);
+	async move(acceleration, isWS) {
+		if (isWS) this.collisionLight.position.set(this.group.position.x, 1, this.group.position.z);
 		this.ballDirection.x = acceleration.x;
 		this.ballDirection.z = acceleration.z;
 		this.ballDirection.y = 0;
@@ -100,10 +101,10 @@ class Ball {
 		return new Promise(async (resolve, reject) => {
 			const normal = this.group.position.clone().setY(0).normalize();
 			const dotProduct = this.ballDirection.dot(normal);
-			const newVelocity = this.ballDirection.clone().setY(0).sub(normal.clone().multiplyScalar(Math.abs(dotProduct * (1 + 1))));
+			const newVelocity = this.ballDirection.clone().setY(0).sub(normal.clone().multiplyScalar(Math.abs(dotProduct * (1 + this.coefficientOfRestitution))));
 
-			newVelocity.x += Math.abs(Math.random() * 0.2 - 0.2 / 2);
-			newVelocity.z += Math.abs(Math.random() * 0.2 - 0.2 / 2);
+			newVelocity.x += Math.abs(Math.random() * this.randomnessFactor - this.randomnessFactor / 2);
+			newVelocity.z += Math.abs(Math.random() * this.randomnessFactor - this.randomnessFactor / 2);
 
 			const originalMagnitude = Math.sqrt(this.ballDirection.x * this.ballDirection.x + this.ballDirection.z * this.ballDirection.z);
 			const newMagnitude = Math.sqrt(newVelocity.x * newVelocity.x + newVelocity.z * newVelocity.z);
@@ -112,17 +113,15 @@ class Ball {
 			newVelocity.x *= scaleFactor;
 			newVelocity.z *= scaleFactor;
 			newVelocity.y = 0;
-			// this.ballDirection.copy(newVelocity);
+
 			resolve(newVelocity);
 		});
 	}
 
 
-	async resetCenter(speed) {
-		// await this.genRandomsAngle();
-		this.ballDirection.x = 0.5;
-		// this.ballDirection.z = Math.sin(0.6) * speed;
-		this.group.position.set(0, 0, 0);
+	async resetCenter() {
+		this.ballDirection = new THREE.Vector3(0.5, 0, 0);
+		this.group.position.set(0, 1, 0);
 	}
 }
 

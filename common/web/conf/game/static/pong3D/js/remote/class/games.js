@@ -132,18 +132,6 @@ class Game {
 	handleKeyUp = (async (event) => {
 		console.log(this.players[0].id)
 		switch (event.keyCode) {
-			// case this.players[1].controls.up:
-			//     this.players[1].paddle.move_right = false;
-			//     break;
-			// case this.players[1].controls.down:
-			//     this.players[1].paddle.move_left = false;
-			//     break;
-			// case this.players[0].controls.up:
-			//     this.players[0].paddle.move_right = false;
-			//     break;
-			// case this.players[0].controls.down:
-			//     this.players[0].paddle.move_left = false;
-			//     break;
 			case 9:
 				this.updateScore();
 				break;
@@ -154,18 +142,6 @@ class Game {
 
 	handleKeyDown = (async (event) => {
 		switch (event.keyCode) {
-			// case this.players[1].controls.up:
-			//     this.players[1].paddle.move_right = true;
-			//     break;
-			// case this.players[1].controls.down:
-			//     this.players[1].paddle.move_left = true;
-			//     break;
-			// case this.players[0].controls.up:
-			//     this.players[0].paddle.move_right = true;
-			//     break;
-			// case this.players[0].controls.down:
-			//     this.players[0].paddle.move_left = true;
-			//     break;
 			case 9:
 				this.camera.focus_ball = this.camera.focus_ball == false ? true : false;
 				if (this.camera.focus_ball == false) {
@@ -217,10 +193,8 @@ class Game {
 				console.log(this.players[1].paddle.limit_down.physic.position.z, this.ball.group.position.z);
 				console.log(minY, maxY, this.ball.group.position.z);
 				if (!(this.ball.group.position.z >= minY && this.ball.group.position.z <= maxY)) {
-					// this.ball.resetCenter(this.ball.bouncing.angle, this.ball.bouncing.speed);
 					// this.players[0].score++;
 					// this.updateScore(this.players[0].score, this.players[1].score);
-					console.log("reset");
 					this.reset();
 				} else return this.sendCollision();
 			}
@@ -232,28 +206,15 @@ class Game {
 				let minY = Math.min(limitY1, limitY2);
 				let maxY = Math.max(limitY1, limitY2);
 				if (!(this.ball.group.position.z >= minY && this.ball.group.position.z <= maxY)) {
-					// this.ball.resetCenter(this.ball.bouncing.angle, -this.ball.bouncing.speed);
 					// this.players[1].score++;
 					// this.updateScore(this.players[0].score, this.players[1].score);
 					this.reset();
-					console.log("reset");
 				} else return this.sendCollision();
 			} else
 				return this.sendCollision();
 		}
 	}
 
-	// async movePaddles() {
-	//     // if (this.players[0].paddle.move_right && (this.players[0].group.rotation.y - Math.PI / 12 > -Math.PI / 4))
-	//     //     this.players[0].group.rotateY(-0.01);
-	//     // if (this.players[0].paddle.move_left && (this.players[0].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
-	//     //     this.players[0].group.rotateY(0.01);
-
-	//     // if (this.players[1].paddle.move_right && (this.players[1].group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
-	//     //     this.players[1].group.rotateY(0.01);
-	//     // if (this.players[1].paddle.move_left && this.players[1].group.rotation.y - Math.PI / 12 > -Math.PI / 4)
-	//     //     this.players[1].group.rotateY(-0.01);
-	// }
 }
 
 export {

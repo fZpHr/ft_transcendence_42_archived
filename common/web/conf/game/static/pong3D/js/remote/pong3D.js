@@ -98,7 +98,7 @@ async function startGame(players, game, { up, down, userId }) {
 		{ color: 0x00ffff, intensity: 150 },
 		{ nbrTorus: 3 },
 		{
-			coefficientOfRestitution: 1.05, randomnessFactor: 0.4,
+			coefficientOfRestitution: 1, randomnessFactor: 0.2,
 			lights: { color: 0xff0000, intensity: 200, x: 0, y: -1, z: 0 }
 		},
 		{ max: 0.5, min: -0.5, speed: 0.1 }
@@ -148,6 +148,7 @@ async function startGame(players, game, { up, down, userId }) {
 	game.ball = sphere;
 	game.ground = ground;
 
+	userId == players[1].id ? (game.camera.camera3D.position.set(80, 15, 0), paddle_2_grp.add(game.camera.camera3D)) : (game.camera.camera3D.position.set(-80, 15, 0), paddle_1_grp.add(game.camera.camera3D));
 	createLights();
 
 
@@ -172,7 +173,7 @@ async function startGame(players, game, { up, down, userId }) {
 		if (game.render) {
 			console.log("rendering");
 			game.handleCamera();
-			sphere.move(game.ball.acceleration);
+			sphere.move(game.ball.acceleration, false);
 			game.checkCollision(ground);
 		}
 		game.renderer.render(game.scene, game.camera.camera3D);
@@ -190,10 +191,6 @@ async function startGame(players, game, { up, down, userId }) {
 		let msg = userId + ' | reset';
 		sendToWsGame('reset', msg);
 	}
-	// setInterval(() => {
-	// 	let msg = userId + ' | info | ' + game.ball.group.position.x + ' | ' + game.ball.group.position.y + ' | ' + game.ball.group.position.z + ' | ' + game.distanceFromCenter;
-	// 	sendToWsGame('info', msg);
-	// }, (1 / 60) * 1000);
 
 	async function createLights() {
 
@@ -277,19 +274,17 @@ async function startGame(players, game, { up, down, userId }) {
 			if (object.material.isMaterial) {
 				cleanMaterial(object.material);
 			} else {
-				// an array of materials
 				for (const material of object.material) cleanMaterial(material);
 			}
 		});
 
-		// Dispose of renderer
+
 		game.renderer.dispose();
 	});
 
 	function cleanMaterial(material) {
 		material.dispose();
 
-		// Dispose of textures
 		for (const key in material) {
 			if (material[key] && material[key].isTexture) {
 				material[key].dispose();
@@ -306,11 +301,13 @@ async function movePaddles(game, id, type) {
 					data.group.rotateY(0.01)
 				else if (type == 'down' && (data.group.rotation.y - Math.PI / 12 > -Math.PI / 4))
 					data.group.rotateY(-0.01);
+				game.camera.camera3D.position.z = data.group.rotation.y;
 			} else {
 				if (type == 'up' && (data.group.rotation.y - Math.PI / 12 > -Math.PI / 4))
 					data.group.rotateY(-0.01);
 				else if (type == 'down' && (data.group.rotation.y + (Math.PI / 12)) < Math.PI / 4)
 					data.group.rotateY(0.01)
+				game.camera.camera3D.position.z = data.group.rotation.y;
 			}
 		}
 	}
@@ -318,17 +315,6 @@ async function movePaddles(game, id, type) {
 
 async function moveSphere(game, data) {
 	console.log(data, "moving ball");
-	// game.ball.group.position.add({ x: data, y: 0, z: 0 });
-	// for (let i = game.ball.group.position.x; i <= data; i += 0.01) {
-	// 	game.ball.group.position.add({ x: i, y: 0, z: 0 });
-	// }
-	// // console.log(game.ball.group.position.x, "current position", data, "new position");
-	// // for (let i = game.ball.group.position.x; i < data; i += 0.01) {
-	// // 	console.log(i);
-	// // 	game.ball.group.position.x += i;
-	// // 	// game.ball.move(i);
-	// // 	// game.checkCollision(game.floor);
-	// // }
 }
 
 
